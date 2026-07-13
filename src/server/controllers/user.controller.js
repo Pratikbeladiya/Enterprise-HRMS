@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate required fields
+    // Check required fields
     if (!username || !password) {
       return res.status(400).json({
         success: false,
@@ -64,20 +64,18 @@ const loginUser = async (req, res) => {
     }
 
     // Find user
-    const isUserExist = await userModel.findOne({ username });
+    const user = await userModel.findOne({ username });
 
-    if (!isUserExist) {
+    if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User account not found"
+        message: "User not found"
       });
     }
 
-    // Temporary password check
+    // Temporary password comparison
     // bcrypt will be added in Issue #6
-    const isPasswordValid = password === isUserExist.password;
-
-    if (!isPasswordValid) {
+    if (password !== user.password) {
       return res.status(401).json({
         success: false,
         message: "Invalid password"
@@ -86,7 +84,13 @@ const loginUser = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "User logged in successfully"
+      message: "Login successful",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }
     });
 
   } catch (error) {
