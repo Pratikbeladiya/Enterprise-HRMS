@@ -1,0 +1,31 @@
+{
+  "name": "enterprise-hrms",
+  "version": "1.0.0",
+  "description": "A secure, full-stack Human Resource Management System (HRMS) built with the MERN stack featuring JWT authentication, Role-Based Access Control (RBAC), employee management, attendance, leave management, payroll automation, and downloadable PDF payslips.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pratikbeladiya/Enterprise-HRMS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Pratikbeladiya/Enterprise-HRMS/issues"
+  },
+  "homepage": "https://github.com/Pratikbeladiya/Enterprise-HRMS#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
