@@ -4,7 +4,9 @@ const authRoute = require("./routes/user.route");
 
 app.use(express.json());
 
-app.use("/api",authRoute);
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/user",authRoute);
 
 
 

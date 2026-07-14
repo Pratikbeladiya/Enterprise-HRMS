@@ -26,21 +26,22 @@ const userSchema = new mongoose.Schema(
       required: true
     },
 
-    role: {
-      type: String,
-      enum: ["Admin", "HR", "Employee"],
-      default: "Employee"
-    },
+  //   role: {
+  //     type: String,
+  //     enum: ["Admin", "HR", "Employee"],
+  //     default: "Employee"
+  //   },
 
-    department: {
-      type: String,
-      default: "General"
-    }
-  },
-  {
-    timestamps: true
-  }
-);
+  //   department: {
+  //     type: String,
+  //     default: "General"
+  //   }
+  // },
+  // {
+  //   timestamps: true
+  // }
+
+  });
 
 const userModel = mongoose.model("User", userSchema);
 

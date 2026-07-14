@@ -1,11 +1,12 @@
 const userModel = require("../model/user.model");
+const bcrypt = require("bcrypt");
 
 // ============================
 // Register User
 // ============================
 const registerUser = async (req, res) => {
   try {
-    const { username, email, contactNumber, password } = req.body;
+    const { username, email, contactNumber, password} = req.body;
 
     // Validate required fields
     if (!username || !email || !contactNumber || !password) {
@@ -24,14 +25,16 @@ const registerUser = async (req, res) => {
         message: "Email already exists"
       });
     }
-
+    const hashedPassword = await bcrypt.hash(password, 10);
     // Create new user
     const user = await userModel.create({
       username,
       email,
       contactNumber,
-      password
+      password: hashedPassword,
+      
     });
+
 
     return res.status(201).json({
       success: true,
@@ -75,13 +78,17 @@ const loginUser = async (req, res) => {
 
     // Temporary password comparison
     // bcrypt will be added in Issue #6
-    if (password !== user.password) {
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
         message: "Invalid password"
       });
     }
-
     return res.status(200).json({
       success: true,
       message: "Login successful",
