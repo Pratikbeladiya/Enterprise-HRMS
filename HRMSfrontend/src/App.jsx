@@ -10,6 +10,8 @@ function App() {
         <p className="text-slate-500 font-medium">
           Welcome to your new journey. The first step is always the most exciting one.
         </p>
+
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Adipisci quia quos similique. Quibusdam, non hic quam numquam esse quia blanditiis, quae atque molestias modi quidem aspernatur ab tenetur debitis sunt fugiat et.</p>
       </div>
     </div>
   )
