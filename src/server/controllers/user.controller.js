@@ -1,12 +1,13 @@
 const userModel = require("../model/user.model");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // ============================
 // Register User
 // ============================
 const registerUser = async (req, res) => {
   try {
-    const { username, email, contactNumber, password} = req.body;
+    const { username, email, contactNumber, password } = req.body;
 
     // Validate required fields
     if (!username || !email || !contactNumber || !password) {
@@ -32,7 +33,7 @@ const registerUser = async (req, res) => {
       email,
       contactNumber,
       password: hashedPassword,
-      
+
     });
 
 
@@ -89,14 +90,24 @@ const loginUser = async (req, res) => {
         message: "Invalid password"
       });
     }
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d"
+      }
+    );
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role
+        contactNumber: user.contactNumber
       }
     });
 
