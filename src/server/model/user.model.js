@@ -36,14 +36,14 @@ const userSchema = new mongoose.Schema(
        type: String,
        default: "General"
      },
+    },
    
     
-     timestamps:{
-       type: Date,
-       default: Date.now
+     {
+       timestamps:true
   }
 
-  });
+  );
 
 const userModel = mongoose.model("User", userSchema);
 
