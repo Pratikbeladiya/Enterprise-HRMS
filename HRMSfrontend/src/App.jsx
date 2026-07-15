@@ -12,6 +12,8 @@ function App() {
         </p>
 
         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Adipisci quia quos similique. Quibusdam, non hic quam numquam esse quia blanditiis, quae atque molestias modi quidem aspernatur ab tenetur debitis sunt fugiat et.</p>
+        <h3 className="bg-rose-950">Hello</h3>
+      
       </div>
     </div>
   )
