@@ -1,3 +1,4 @@
+// import API from "../services/api.js"; // Added the .js extension explicitly
 import DataTable from '../components/DataTable';
 
 export default function Dashboard() {
