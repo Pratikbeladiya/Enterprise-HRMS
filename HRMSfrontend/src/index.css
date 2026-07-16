@@ -1,18 +1,5 @@
 @import "tailwindcss";
 
-/* Configure Tailwind v4 selector-based dark mode using native classes */
-.dark {
-  color-scheme: dark;
-}
 
-/* Define your utilities within the native CSS layer at-rule */
-@layer utilities {
-  .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;             /* Safari and Chrome */
-  }
-}
+/* Configure Tailwind v4 selector-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));

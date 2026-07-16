@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 export default function useDarkMode() {
   const [theme, setTheme] = useState(() => {
-    // Check localStorage or fallback to system preference
     const saved = localStorage.getItem('theme');
     if (saved) return saved;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
