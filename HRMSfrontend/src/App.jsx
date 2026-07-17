@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, UserCheck, Calendar, FileText, 
   Settings, CheckSquare, Sun, Moon, Search, Filter, 
   Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut
 } from 'lucide-react';
+import Login from './Login'; // Importing the Login component
 
 export default function App() {
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Dashboard UI States
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile drawer
-  const [isCollapsed, setIsCollapsed] = useState(false); // For desktop hide/unhide
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const [isCollapsed, setIsCollapsed] = useState(false); 
 
-  // Fix: Handle Dark Mode globally by applying class to the <html> tag
+  // Handle Dark Mode globally
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -22,6 +27,16 @@ export default function App() {
   }, [darkMode]);
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setActiveTab('Dashboard'); // Reset to default view on next login
+  };
+
+  // If user is NOT authenticated, show the Login screen
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   // Helper to render active tab content
   const renderContent = () => {
@@ -432,7 +447,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Profile & Dark Mode Theme Switcher */}
+          {/* Profile, Dark Mode Theme Switcher & Logout */}
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleDarkMode}
@@ -442,16 +457,26 @@ export default function App() {
               <span className="hidden md:inline">{darkMode ? 'Light mode' : 'Dark mode'}</span>
             </button>
 
+            {/* Profile Section */}
             <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800">
               <img 
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80" 
-                alt="Sharon Profile" 
+                src="https://plus.unsplash.com/premium_photo-1672239496290-5061cfee7ebb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                alt="Pratik Beladiya" 
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20"
               />
-              <div className="hidden md:block text-left">
-                <h4 className="text-sm font-semibold leading-tight">Sharon</h4>
-                <span className="text-[11px] text-slate-400">katie@hriasesuite.com</span>
+              <div className="hidden md:block text-left mr-2">
+                <h4 className="text-sm font-semibold leading-tight">Pratik</h4>
+                <span className="text-[11px] text-slate-400">pratikbeladiya@gmail.com</span>
               </div>
+
+              {/* Logout Button */}
+              <button 
+                onClick={handleLogout}
+                title="Logout"
+                className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors"
+              >
+                <LogOut size={18} />
+              </button>
             </div>
           </div>
         </header>
