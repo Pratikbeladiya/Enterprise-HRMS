@@ -92,7 +92,7 @@ export default function Login({ onLogin }) {
           {/* Form Header */}
           <div className="text-center lg:text-left space-y-2">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Welcome back
+              Welcome back User !
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
               Please enter your details to access your dashboard.
