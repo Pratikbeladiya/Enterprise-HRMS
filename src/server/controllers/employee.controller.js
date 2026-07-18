@@ -1,13 +1,14 @@
 const Employee= require("../model/employee.model");
 
- const getAllEmployees = async (req, res) => {
+const getAllEmployees = async (req, res) => {
   try {
     const employees = await Employee.find()
-      .populate("department")
-      .populate("manager");
+      .populate("department", "departmentName location")
+      .populate("manager", "firstName lastName email");
 
     return res.status(200).json({
       success: true,
+      totalEmployees: employees.length,
       employees,
     });
   } catch (error) {
