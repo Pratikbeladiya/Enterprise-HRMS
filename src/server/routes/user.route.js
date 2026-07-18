@@ -15,6 +15,7 @@ routes.post("/login", loginUser);
 
 routes.get("/profile", authMiddleware, getProfile);
 
+
 routes.get(
     "/admin/dashboard", authMiddleware,
     roleMiddleware("Admin"),
