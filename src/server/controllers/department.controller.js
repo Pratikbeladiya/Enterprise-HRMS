@@ -52,6 +52,25 @@ const createDepartment = async (req, res) => {
   }
 };
 
+const getAllDepartments = async (req, res) => {
+  try {
+    const departments = await Department.find()
+      .populate("manager", "firstName lastName email");
+
+    return res.status(200).json({
+      success: true,
+      totalDepartments: departments.length,
+      departments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createDepartment,
+  getAllDepartments
 };
