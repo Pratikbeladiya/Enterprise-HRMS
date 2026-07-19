@@ -131,9 +131,35 @@ const updateDepartment = async (req, res) => {
     });
   }
 };
+
+const deleteDepartment = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedDepartment = await Department.findByIdAndDelete(id);
+
+    if (!deletedDepartment) {
+      return res.status(404).json({
+        success: false,
+        message: "Department not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Department deleted successfully.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createDepartment,
   getAllDepartments,
   getDepartmentById,
-  updateDepartment
+  updateDepartment,
+  deleteDepartment
 };
