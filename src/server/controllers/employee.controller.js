@@ -2,9 +2,24 @@ const Employee= require("../model/employee.model");
 
 const getAllEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find()
-      .populate("department", "departmentName location")
-      .populate("manager", "firstName lastName email");
+    const { search } = req.query;
+
+let filter = {};
+
+if (search) {
+  filter = {
+    $or: [
+      { firstName: { $regex: search, $options: "i" } },
+      { lastName: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } }
+    ]
+  };
+}
+
+const employees = await Employee.find(filter)
+  .populate("department", "departmentName location")
+  .populate("manager", "firstName lastName email");
+     
 
     return res.status(200).json({
       success: true,
