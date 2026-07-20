@@ -15,6 +15,9 @@ if (search) {
     ]
   };
 }
+if (department) {
+  filter.department = department;
+}
 
 const employees = await Employee.find(filter)
   .populate("department", "departmentName location")
