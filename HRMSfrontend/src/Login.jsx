@@ -19,13 +19,7 @@ export default function Login({ onLogin }) {
   };
 
   // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { duration: 0.6, staggerChildren: 0.15 } 
-    }
-  };
+  
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
