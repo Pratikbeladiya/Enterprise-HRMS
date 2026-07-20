@@ -2,7 +2,7 @@ const Employee= require("../model/employee.model");
 
 const getAllEmployees = async (req, res) => {
   try {
-    const { search } = req.query;
+  const { search, department, designation, isActive } = req.query;
 
 let filter = {};
 
@@ -17,6 +17,16 @@ if (search) {
 }
 if (department) {
   filter.department = department;
+}
+if (designation) {
+  filter.designation = {
+    $regex: designation,
+    $options: "i",
+  };
+}
+
+if (isActive !== undefined) {
+  filter.isActive = isActive === "true";
 }
 
 const employees = await Employee.find(filter)
