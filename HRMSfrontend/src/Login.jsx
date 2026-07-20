@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 export default function Login({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
 
+  //submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
     onLogin();
@@ -27,6 +28,7 @@ export default function Login({ onLogin }) {
     }
   };
 
+  //Items varients
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
