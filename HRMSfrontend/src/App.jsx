@@ -26,7 +26,7 @@ export default function App() {
     }
   }, [darkMode]);
 
-  
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
