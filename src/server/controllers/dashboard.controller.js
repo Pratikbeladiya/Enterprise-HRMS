@@ -38,6 +38,37 @@ const getEmployeeStats = async (req, res) => {
   }
 };
 
+const getSalaryStats = async (req, res) => {
+  try {
+    const salaryStats = await Employee.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalSalary: { $sum: "$salary" },
+          averageSalary: { $avg: "$salary" },
+          highestSalary: { $max: "$salary" },
+          lowestSalary: { $min: "$salary" },
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: salaryStats[0] || {
+        totalSalary: 0,
+        averageSalary: 0,
+        highestSalary: 0,
+        lowestSalary: 0,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   getEmployeeStats,
+  getSalaryStats,
 };
