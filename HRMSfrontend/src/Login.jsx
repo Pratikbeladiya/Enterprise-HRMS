@@ -35,7 +35,12 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen w-full flex bg-white dark:bg-slate-950 font-sans antialiased"
+    >
       {/* LEFT PANEL: Branding & Visuals */}
       <motion.div 
         initial={{ x: -100, opacity: 0 }}
