@@ -29,15 +29,19 @@ if (isActive !== undefined) {
   filter.isActive = isActive === "true";
 }
   
-
+//pagination
 const page = parseInt(req.query.page) || 1;
 const limit = parseInt(req.query.limit) || 10;
 const skip = (page - 1) * limit;
   
+// Sorting
+const sortBy = req.query.sortBy || "createdAt";
+const order = req.query.order === "asc" ? 1 : -1;
 
 const employees = await Employee.find(filter)
   .populate("department", "departmentName location")
   .populate("manager", "firstName lastName email")
+  .sort({ [sortBy]: order })
   .skip(skip)
   .limit(limit);
 
