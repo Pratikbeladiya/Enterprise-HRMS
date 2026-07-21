@@ -28,17 +28,27 @@ if (designation) {
 if (isActive !== undefined) {
   filter.isActive = isActive === "true";
 }
+  
+
+const page = parseInt(req.query.page) || 1;
+const limit = parseInt(req.query.limit) || 10;
+const skip = (page - 1) * limit;
+  
 
 const employees = await Employee.find(filter)
   .populate("department", "departmentName location")
-  .populate("manager", "firstName lastName email");
-     
+  .populate("manager", "firstName lastName email")
+  .skip(skip)
+  .limit(limit);
 
-    return res.status(200).json({
-      success: true,
-      totalEmployees: employees.length,
-      employees,
-    });
+const totalEmployees = await Employee.countDocuments(filter);
+   return res.status(200).json({
+  success: true,
+  totalEmployees,
+  currentPage: page,
+  totalPages: Math.ceil(totalEmployees / limit),
+  employees,
+});
   } catch (error) {
     return res.status(500).json({
       success: false,
