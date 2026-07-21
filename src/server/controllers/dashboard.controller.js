@@ -1,4 +1,5 @@
 const Employee = require("../model/employee.model");
+const Department = require("../model/department.model");
 
 const getEmployeeStats = async (req, res) => {
   try {
@@ -68,7 +69,45 @@ const getSalaryStats = async (req, res) => {
     });
   }
 };
+
+const getDepartmentEmployeeStats = async (req, res) => {
+  try {
+    const stats = await Department.aggregate([
+      {
+        $lookup: {
+          from: "employees",
+          localField: "_id",
+          foreignField: "department",
+          as: "employees",
+        },
+      },
+      {
+        $project: {
+          departmentName: 1,
+          employeeCount: { $size: "$employees" },
+        },
+      },
+      {
+        $sort: {
+          employeeCount: -1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: stats,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getEmployeeStats,
   getSalaryStats,
+  getDepartmentEmployeeStats
 };
