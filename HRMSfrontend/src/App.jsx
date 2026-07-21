@@ -18,7 +18,13 @@ export default function App() {
   const [isCollapsed, setIsCollapsed] = useState(false); 
 
   // Handle Dark Mode globally
-  
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
