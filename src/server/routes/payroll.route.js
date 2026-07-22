@@ -9,10 +9,12 @@ const {
   updatePayroll,
   deletePayroll,
  getEmployeePayrollHistory,
+   getMonthlyPayrollSummary,
 } = require("../controllers/payroll.controller");
 
 router.post("/", createPayroll);
 router.get("/", getAllPayrolls);
+router.get("/summary", getMonthlyPayrollSummary);
 router.get("/employee/:employeeId", getEmployeePayrollHistory);
 
 router.get("/:id", getPayrollById);

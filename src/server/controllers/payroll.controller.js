@@ -183,11 +183,60 @@ const getEmployeePayrollHistory = async (req, res) => {
   }
 };
 
+// Monthly Payroll Summary
+const getMonthlyPayrollSummary = async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const summary = await Payroll.aggregate([
+      {
+        $match: {
+          month: Number(month),
+          year: Number(year),
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalEmployees: { $sum: 1 },
+          totalBasicSalary: { $sum: "$basicSalary" },
+          totalAllowances: { $sum: "$allowances" },
+          totalDeductions: { $sum: "$deductions" },
+          totalBonus: { $sum: "$bonus" },
+          totalNetSalary: { $sum: "$netSalary" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalEmployees: 1,
+          totalBasicSalary: 1,
+          totalAllowances: 1,
+          totalDeductions: 1,
+          totalBonus: 1,
+          totalNetSalary: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPayroll,
   getAllPayrolls,
   getPayrollById,
   updatePayroll,
   deletePayroll,
-  getEmployeePayrollHistory
+  getEmployeePayrollHistory,
+  getMonthlyPayrollSummary,
 };
