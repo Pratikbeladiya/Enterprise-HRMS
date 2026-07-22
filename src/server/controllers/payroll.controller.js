@@ -272,6 +272,52 @@ const getMonthlyPayrollSummary = async (req, res) => {
   }
 };
 
+// Payroll Dashboard Analytics
+const getPayrollDashboard = async (req, res) => {
+  try {
+    const dashboard = await Payroll.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPayrolls: { $sum: 1 },
+          totalSalaryPaid: { $sum: "$netSalary" },
+          averageSalary: { $avg: "$netSalary" },
+          paidPayrolls: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "Paid"] }, 1, 0],
+            },
+          },
+          pendingPayrolls: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalPayrolls: 1,
+          paidPayrolls: 1,
+          pendingPayrolls: 1,
+          totalSalaryPaid: 1,
+          averageSalary: { $round: ["$averageSalary", 2] },
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: dashboard[0] || {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPayroll,
   getAllPayrolls,
@@ -280,4 +326,5 @@ module.exports = {
   deletePayroll,
   getEmployeePayrollHistory,
   getMonthlyPayrollSummary,
+  getPayrollDashboard,
 };
