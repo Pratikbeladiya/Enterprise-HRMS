@@ -7,11 +7,13 @@ const {
   getAttendanceById,
   updateAttendance,
   deleteAttendance,
-  getEmployeeAttendanceHistory
+  getEmployeeAttendanceHistory,
+  getAttendanceSummary
 } = require("../controllers/attendance.controller");
 
 router.post("/", createAttendance);
 router.get("/", getAllAttendance);
+router.get("/summary", getAttendanceSummary);
 router.get("/employee/:employeeId", getEmployeeAttendanceHistory);
 router.get("/:id", getAttendanceById);
 router.put("/:id", updateAttendance);

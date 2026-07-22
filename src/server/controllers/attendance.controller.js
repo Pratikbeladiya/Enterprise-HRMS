@@ -143,11 +143,49 @@ const getEmployeeAttendanceHistory = async (req, res) => {
   }
 };
 
+
+// Attendance Summary
+const getAttendanceSummary = async (req, res) => {
+  try {
+    const summary = await Attendance.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          total: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: "$_id",
+          total: 1,
+        },
+      },
+      {
+        $sort: {
+          total: -1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createAttendance,
   getAllAttendance,
   getAttendanceById,
   getEmployeeAttendanceHistory,
+  getAttendanceSummary,
   updateAttendance,
   deleteAttendance,
 };
