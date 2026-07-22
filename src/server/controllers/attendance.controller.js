@@ -119,10 +119,35 @@ const deleteAttendance = async (req, res) => {
   }
 };
 
+// Get Employee Attendance History
+const getEmployeeAttendanceHistory = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+
+    const attendance = await Attendance.find({
+      employee: employeeId,
+    })
+      .populate("employee", "employeeId firstName lastName designation")
+      .sort({ date: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: attendance.length,
+      data: attendance,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createAttendance,
   getAllAttendance,
   getAttendanceById,
+  getEmployeeAttendanceHistory,
   updateAttendance,
   deleteAttendance,
 };
