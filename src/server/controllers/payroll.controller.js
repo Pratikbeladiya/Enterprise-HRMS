@@ -158,10 +158,36 @@ const deletePayroll = async (req, res) => {
   }
 };
 
+// Get Employee Payroll History
+const getEmployeePayrollHistory = async (req, res) => {
+  try {
+    const payrollHistory = await Payroll.find({
+      employee: req.params.employeeId,
+    })
+      .populate(
+        "employee",
+        "employeeId firstName lastName designation department"
+      )
+      .sort({ year: -1, month: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: payrollHistory.length,
+      data: payrollHistory,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPayroll,
   getAllPayrolls,
   getPayrollById,
   updatePayroll,
   deletePayroll,
+  getEmployeePayrollHistory
 };
