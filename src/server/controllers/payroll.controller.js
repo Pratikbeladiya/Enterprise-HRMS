@@ -3,7 +3,31 @@ const Payroll = require("../model/payroll.model");
 // Create Payroll
 const createPayroll = async (req, res) => {
   try {
-    const payroll = await Payroll.create(req.body);
+    const{
+  deductions,
+  bonus,
+  paymentStatus,
+  paymentDate,
+} = req.body;
+
+const netSalary =
+  Number(basicSalary) +
+  Number(allowances || 0) +
+  Number(bonus || 0) -
+  Number(deductions || 0);
+
+const payroll = await Payroll.create({
+  employee,
+  month,
+  year,
+  basicSalary,
+  allowances,
+  deductions,
+  bonus,
+  netSalary,
+  paymentStatus,
+  paymentDate,
+});
 
     return res.status(201).json({
       success: true,
@@ -69,11 +93,26 @@ const getPayrollById = async (req, res) => {
 // Update Payroll
 const updatePayroll = async (req, res) => {
   try {
-    const payroll = await Payroll.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+   const {
+  basicSalary,
+  allowances,
+  deductions,
+  bonus,
+} = req.body;
+
+const netSalary =
+  Number(basicSalary) +
+  Number(allowances || 0) +
+  Number(bonus || 0) -
+  Number(deductions || 0);
+
+req.body.netSalary = netSalary;
+
+const payroll = await Payroll.findByIdAndUpdate(
+  req.params.id,
+  req.body,
+  { new: true }
+);
 
     if (!payroll) {
       return res.status(404).json({
