@@ -24,7 +24,7 @@ function Login() {
 
   // Future માં અહીં API call આવશે
 
-  navigate("/home");
+  navigate("/Dashboard");
 
 };
 

@@ -2,7 +2,11 @@ import React from "react";
 import "./Dashboard.css";
 
 import {
+  FaBell,
+  FaSearch,
+  FaCog,
   FaCalendarCheck,
+  FaSignOutAlt,
   FaUserTimes,
   FaUmbrellaBeach,
   FaWallet,
@@ -15,6 +19,77 @@ import {
 function Dashboard() {
   return (
     <div className="dashboard-page">
+
+    
+      
+            {/* Sidebar */}
+      
+            <div className="sidebar">
+      
+              <div className="logo">
+                <h2>HRMS</h2>
+                <p>Dashboard</p>
+              </div>
+      
+              <ul className="menu">
+               <li
+                
+                  onClick={() => navigate("/home")}
+                  style={{ cursor: "pointer" }}
+                >
+                  🏠 Dashboard
+                </li>
+                <li>👨 Employees</li>
+                <li className="active">📝 Attendance</li>
+                <li>💰 Payroll</li>
+                <li>📅 Leave</li>
+                <li>📊 Reports</li>
+      
+                <li>
+                  <FaCog /> Settings
+                </li>
+      
+                <li>
+                  <FaSignOutAlt /> Logout
+                </li>
+              </ul>
+      
+            </div>
+      
+            {/* Main */}
+      
+            <div className="main">
+      
+              {/* Topbar */}
+      
+              <div className="topbar">
+      
+                <div>
+                  <h1>Attendance</h1>
+                  <p>Employee Attendance Management</p>
+                </div>
+      
+                <div className="top-right">
+      
+                  <div className="search-box">
+                    <FaSearch />
+                    <input
+                      type="text"
+                      placeholder="Search Employee..."
+                    />
+                  </div>
+      
+                  <FaBell className="bell" />
+      
+                  <img
+                    src="https://i.pravatar.cc/150?img=12"
+                    alt="profile"
+                    className="profile"
+                  />
+      
+                </div>
+      
+              </div>
 
       {/* Welcome */}
       <div className="welcome-card">
@@ -137,6 +212,7 @@ function Dashboard() {
 
       </div>
 
+    </div>
     </div>
   );
 }
