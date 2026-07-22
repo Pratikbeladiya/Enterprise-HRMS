@@ -180,12 +180,59 @@ const getAttendanceSummary = async (req, res) => {
   }
 };
 
+// Monthly Attendance Report
+const getMonthlyAttendanceReport = async (req, res) => {
+  try {
+    const { month, year, employeeId } = req.query;
+
+    if (!month || !year || !employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: "month, year and employeeId are required",
+      });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
+
+    const report = await Attendance.aggregate([
+      {
+        $match: {
+          employee: new mongoose.Types.ObjectId(employeeId),
+          date: {
+            $gte: startDate,
+            $lt: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$status",
+          totalDays: { $sum: 1 },
+          totalWorkingHours: { $sum: "$workingHours" },
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: report,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createAttendance,
   getAllAttendance,
   getAttendanceById,
   getEmployeeAttendanceHistory,
   getAttendanceSummary,
+  getMonthlyAttendanceReport,
   updateAttendance,
   deleteAttendance,
 };
