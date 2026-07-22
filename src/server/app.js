@@ -9,6 +9,7 @@ const authRoute = require("./routes/user.route");
 const employeeRouter =require ("./routes/employee.route.js");
 const departmentRoute = require("./routes/department.route");
 const dashboardRoute = require("./routes/dashboard.route");
+const attendanceRoute = require("./routes/attendance.route");
 
 // Body Parsing Middleware
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use("/api/user", authRoute);
 app.use("/api/employees", employeeRouter);
 app.use("/api/departments", departmentRoute);
 app.use("/api/dashboard", dashboardRoute);
+app.use("/api/attendance", attendanceRoute);
 
 
 module.exports = app;
