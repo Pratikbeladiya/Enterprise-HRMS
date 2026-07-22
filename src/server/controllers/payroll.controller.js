@@ -45,14 +45,42 @@ const payroll = await Payroll.create({
 // Get All Payrolls
 const getAllPayrolls = async (req, res) => {
   try {
-    const payrolls = await Payroll.find().populate(
-      "employee",
-      "employeeId firstName lastName designation"
-    );
+    const {
+      month,
+      year,
+      paymentStatus,
+      page = 1,
+      limit = 10,
+      sortBy = "createdAt",
+      order = "desc",
+    } = req.query;
+
+    const filter = {};
+
+    if (month) filter.month = Number(month);
+    if (year) filter.year = Number(year);
+    if (paymentStatus) filter.paymentStatus = paymentStatus;
+
+    const skip = (page - 1) * limit;
+
+    const payrolls = await Payroll.find(filter)
+      .populate(
+        "employee",
+        "employeeId firstName lastName designation"
+      )
+      .sort({
+        [sortBy]: order === "asc" ? 1 : -1,
+      })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await Payroll.countDocuments(filter);
 
     return res.status(200).json({
       success: true,
-      count: payrolls.length,
+      totalRecords: total,
+      currentPage: Number(page),
+      totalPages: Math.ceil(total / limit),
       data: payrolls,
     });
   } catch (error) {
