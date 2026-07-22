@@ -26,12 +26,13 @@ function Attendance() {
         </div>
 
         <ul className="menu">
-        <li
-  className="active"
-  onClick={() => navigate("/home")}
->
-  🏠 Dashboard
-</li>
+         <li
+          
+            onClick={() => navigate("/home")}
+            style={{ cursor: "pointer" }}
+          >
+            🏠 Dashboard
+          </li>
           <li>👨 Employees</li>
           <li className="active">📝 Attendance</li>
           <li>💰 Payroll</li>

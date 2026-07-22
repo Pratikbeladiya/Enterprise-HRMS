@@ -5,7 +5,6 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Attendance from "./pages/Attendance";
 import Payroll from "./pages/Payroll";
-import Leave from "./pages/Leave";
 
 function App() {
   return (
@@ -28,10 +27,7 @@ function App() {
           element={<Payroll />}
         />
 
-        <Route
-          path="/leave"
-          element={<Leave />}
-        />
+       
 
       </Routes>
     </BrowserRouter>
