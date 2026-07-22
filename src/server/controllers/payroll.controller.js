@@ -16,6 +16,19 @@ const netSalary =
   Number(bonus || 0) -
   Number(deductions || 0);
 
+  const existingPayroll = await Payroll.findOne({
+  employee,
+  month,
+  year,
+});
+
+if (existingPayroll) {
+  return res.status(409).json({
+    success: false,
+    message: "Payroll already exists for this employee for the selected month and year",
+  });
+}
+
 const payroll = await Payroll.create({
   employee,
   month,
