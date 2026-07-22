@@ -1,183 +1,68 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import "./Home.css";
+import "./Dashboard.css";
 
 import {
-  FaUsers,
-  FaUserCheck,
-  FaCalendarAlt,
-  FaMoneyBillWave,
-  FaBell,
-  FaSearch,
-  FaCog,
-  FaSignOutAlt,
+  FaCalendarCheck,
+  FaUserTimes,
+  FaUmbrellaBeach,
+  FaWallet,
+  FaUser,
+  FaEnvelope,
+  FaBuilding,
+  FaIdBadge,
 } from "react-icons/fa";
 
-function Home() {
-  const navigate = useNavigate();
-
+function Dashboard() {
   return (
-    <div className="home">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="logo">
-          <h2>HRMS</h2>
-          <p>Dashboard</p>
-        </div>
+    <div className="dashboard-page">
 
-        <ul className="menu">
-          <li
-            className="active"
-            onClick={() => navigate("/home")}
-            style={{ cursor: "pointer" }}
-          >
-            🏠 Dashboard
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            👨 Employees
-          </li>
-
-          <li
-            onClick={() => navigate("/attendance")}
-            style={{ cursor: "pointer" }}
-          >
-            📝 Attendance
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            💰 Payroll
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            📅 Leave
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            📊 Reports
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            <FaCog /> Settings
-          </li>
-
-          <li style={{ cursor: "pointer" }}>
-            <FaSignOutAlt /> Logout
-          </li>
-        </ul>
+      {/* Welcome */}
+      <div className="welcome-card">
+        <h2>Welcome 👋</h2>
+        <p>Employee Dashboard</p>
       </div>
 
-      {/* Main */}
-      <div className="main">
-        {/* Topbar */}
-        <div className="topbar">
-          <div>
-            <h1>Dashboard</h1>
-            <p>Welcome to Human Resource Management System</p>
-          </div>
+      {/* Cards */}
+      <div className="dashboard-cards">
 
-          <div className="top-right">
-            <div className="search-box">
-              <FaSearch />
-              <input type="text" placeholder="Search..." />
-            </div>
-
-            <FaBell className="bell" />
-
-            <img
-              src="https://i.pravatar.cc/150?img=12"
-              alt="profile"
-              className="profile"
-            />
-          </div>
+        <div className="dashboard-card">
+          <FaCalendarCheck className="icon green" />
+          <h2>0</h2>
+          <p>Present Days</p>
         </div>
 
-        {/* Cards */}
-        <div className="cards">
-          <div className="card">
-            <FaUsers className="card-icon blue" />
-            <div>
-              <h2>0</h2>
-              <p>Total Employees</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <FaUserCheck className="card-icon green" />
-            <div>
-              <h2>0</h2>
-              <p>Present Today</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <FaCalendarAlt className="card-icon orange" />
-            <div>
-              <h2>0</h2>
-              <p>Leave Requests</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <FaMoneyBillWave className="card-icon purple" />
-            <div>
-              <h2>₹0</h2>
-              <p>Monthly Payroll</p>
-            </div>
-          </div>
+        <div className="dashboard-card">
+          <FaUserTimes className="icon red" />
+          <h2>0</h2>
+          <p>Absent Days</p>
         </div>
 
-        {/* Dashboard Content */}
-        <div className="dashboard-content">
-          <div className="overview">
-            <h2>Employee Overview</h2>
-
-            <div className="chart-box">
-              <div className="empty-chart">
-                <h3>0</h3>
-                <p>No employee records available</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="summary">
-            <h2>Quick Summary</h2>
-
-            <div className="summary-card">
-              <span>Active Employees</span>
-              <h3>0</h3>
-            </div>
-
-            <div className="summary-card">
-              <span>On Leave</span>
-              <h3>0</h3>
-            </div>
-
-            <div className="summary-card">
-              <span>Absent Today</span>
-              <h3>0</h3>
-            </div>
-
-            <div className="summary-card">
-              <span>Pending Requests</span>
-              <h3>0</h3>
-            </div>
-          </div>
+        <div className="dashboard-card">
+          <FaUmbrellaBeach className="icon orange" />
+          <h2>0</h2>
+          <p>Leave Balance</p>
         </div>
 
-        {/* Recent Employees */}
-        <div className="employee-table">
-          <div className="table-header">
-            <h2>Recent Employees</h2>
-            <button>View All</button>
-          </div>
+        <div className="dashboard-card">
+          <FaWallet className="icon blue" />
+          <h2>₹0</h2>
+          <p>Current Salary</p>
+        </div>
+
+      </div>
+
+      {/* Attendance & Leave */}
+      <div className="dashboard-grid">
+
+        <div className="dashboard-box">
+          <h3>My Attendance</h3>
 
           <table>
             <thead>
               <tr>
-                <th>Employee ID</th>
-                <th>Name</th>
-                <th>Department</th>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -185,15 +70,75 @@ function Home() {
             <tbody>
               <tr>
                 <td colSpan="4" className="no-data">
-                  No Employee Data Available
+                  No Attendance Records Available
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div className="dashboard-box">
+          <h3>My Leave Requests</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td colSpan="4" className="no-data">
+                  No Leave Requests Available
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
+
+      {/* Profile */}
+      <div className="profile-box">
+
+        <h3>My Profile</h3>
+
+        <div className="profile-grid">
+
+          <div>
+            <FaUser /> <strong>Name:</strong> 0
+          </div>
+
+          <div>
+            <FaIdBadge /> <strong>Employee ID:</strong> 0
+          </div>
+
+          <div>
+            <FaBuilding /> <strong>Department:</strong> 0
+          </div>
+
+          <div>
+            <FaEnvelope /> <strong>Email:</strong> 0
+          </div>
+
+          <div>
+            <FaUser /> <strong>Designation:</strong> 0
+          </div>
+
+          <div>
+            <FaUser /> <strong>Phone:</strong> 0
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
 
-export default Home;
+export default Dashboard;
