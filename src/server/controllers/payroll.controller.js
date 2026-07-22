@@ -10,6 +10,27 @@ const createPayroll = async (req, res) => {
   paymentDate,
 } = req.body;
 
+if (!employee || !month || !year || basicSalary === undefined) {
+  return res.status(400).json({
+    success: false,
+    message: "Employee, month, year and basic salary are required",
+  });
+}
+
+if (month < 1 || month > 12) {
+  return res.status(400).json({
+    success: false,
+    message: "Month must be between 1 and 12",
+  });
+}
+
+if (basicSalary < 0 || allowances < 0 || deductions < 0 || bonus < 0) {
+  return res.status(400).json({
+    success: false,
+    message: "Salary values cannot be negative",
+  });
+}
+
 const netSalary =
   Number(basicSalary) +
   Number(allowances || 0) +
@@ -133,7 +154,28 @@ const getPayrollById = async (req, res) => {
 
 // Update Payroll
 const updatePayroll = async (req, res) => {
+
   try {
+
+    if (req.body.month && (req.body.month < 1 || req.body.month > 12)) {
+  return res.status(400).json({
+    success: false,
+    message: "Month must be between 1 and 12",
+  });
+}
+
+if (
+  req.body.basicSalary < 0 ||
+  req.body.allowances < 0 ||
+  req.body.deductions < 0 ||
+  req.body.bonus < 0
+) {
+  return res.status(400).json({
+    success: false,
+    message: "Salary values cannot be negative",
+  });
+}
+
    const {
   basicSalary,
   allowances,
