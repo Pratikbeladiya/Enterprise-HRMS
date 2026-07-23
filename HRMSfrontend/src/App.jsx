@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, UserCheck, Calendar, FileText, 
   Settings, CheckSquare, Sun, Moon, Search, Filter, 
   Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield, Download, Printer, BarChart3
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield, Download, Clock
 } from 'lucide-react';
 import Login from './Login';
 
@@ -47,9 +47,9 @@ export default function App() {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('hrise_tasks');
     return saved ? JSON.parse(saved) : [
-      { id: 1, title: 'Migrate server infrastructure', assignee: 'Cameron Williamson', status: 'In Progress', priority: 'High' },
-      { id: 2, title: 'Design onboarding wireframes', assignee: 'Albert Flores', status: 'Completed', priority: 'Medium' },
-      { id: 3, title: 'Quarterly financial audit', assignee: 'Arlene McCoy', status: 'Pending', priority: 'High' }
+      { id: 1, title: 'Migrate server infrastructure', assignee: 'Cameron Williamson', status: 'In Progress', priority: 'High', dueDate: '2026-07-30' },
+      { id: 2, title: 'Design onboarding wireframes', assignee: 'Albert Flores', status: 'Completed', priority: 'Medium', dueDate: '2026-07-25' },
+      { id: 3, title: 'Quarterly financial audit', assignee: 'Arlene McCoy', status: 'Pending', priority: 'High', dueDate: '2026-08-05' }
     ];
   });
 
@@ -93,8 +93,13 @@ export default function App() {
   const [leaveDates, setLeaveDates] = useState('');
   const [leaveReason, setLeaveReason] = useState('');
 
-  // Reports Tab Local States
-  const [reportFilter, setReportFilter] = useState('All');
+  // Tasks Tab Local States
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [taskTitle, setTaskTitle] = useState('');
+  const [taskAssignee, setTaskAssignee] = useState('');
+  const [taskPriority, setTaskPriority] = useState('Medium');
+  const [taskDueDate, setTaskDueDate] = useState('');
+  const [taskFilter, setTaskFilter] = useState('All');
 
   // Sync state changes with localStorage
   useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
@@ -211,6 +216,38 @@ export default function App() {
     setLeaves(leaves.filter(l => l.id !== id));
   };
 
+  // Task Handlers
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    const newTask = {
+      id: Date.now(),
+      title: taskTitle,
+      assignee: taskAssignee || employees[0]?.name || 'Unassigned',
+      status: 'In Progress',
+      priority: taskPriority,
+      dueDate: taskDueDate || new Date().toISOString().split('T')[0]
+    };
+    setTasks([...tasks, newTask]);
+    setTaskTitle('');
+    setTaskAssignee('');
+    setTaskDueDate('');
+    setShowAddTaskModal(false);
+  };
+
+  const handleToggleTaskStatus = (id) => {
+    setTasks(tasks.map(t => {
+      if (t.id === id) {
+        const nextStatus = t.status === 'Completed' ? 'In Progress' : 'Completed';
+        return { ...t, status: nextStatus };
+      }
+      return t;
+    }));
+  };
+
+  const handleDeleteTask = (id) => {
+    setTasks(tasks.filter(t => t.id !== id));
+  };
+
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
     return <Login onLogin={handleLoginSuccess} />;
@@ -241,11 +278,11 @@ export default function App() {
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Pending Leaves</span>
-                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{leaves.filter(l => l.status === 'Pending').length}</h3>
-                  <span className="text-[11px] text-amber-500 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">Awaiting Approval</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Tasks</span>
+                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{tasks.filter(t => t.status !== 'Completed').length}</h3>
+                  <span className="text-[11px] text-violet-500 bg-violet-50 dark:bg-violet-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">In Progress / Pending</span>
                 </div>
-                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl"><Calendar size={22} /></div>
+                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><CheckSquare size={22} /></div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
@@ -755,6 +792,138 @@ export default function App() {
       );
     }
 
+    if (activeTab === 'Tasks') {
+      const filteredTasks = tasks.filter(task => {
+        if (taskFilter === 'All') return true;
+        return task.status === taskFilter;
+      });
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          {/* Header Action Bar */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Workspace Task Management</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Assign projects, monitor milestones, and track execution status</p>
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <select 
+                value={taskFilter} 
+                onChange={(e) => setTaskFilter(e.target.value)}
+                className="px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium outline-none text-slate-800 dark:text-slate-100 cursor-pointer"
+              >
+                <option value="All">All Statuses</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <button onClick={() => setShowAddTaskModal(true)} className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm whitespace-nowrap">
+                <Plus size={14} /> New Task
+              </button>
+            </div>
+          </div>
+
+          {/* Add Task Modal */}
+          {showAddTaskModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Assign New Workspace Task</h3>
+                  <button onClick={() => setShowAddTaskModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleAddTask} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Task Title / Description</label>
+                    <input type="text" required value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} placeholder="e.g. Implement OAuth Security Patch" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Assignee</label>
+                    <select value={taskAssignee} onChange={(e) => setTaskAssignee(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="">Select Employee...</option>
+                      {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Priority</label>
+                    <select value={taskPriority} onChange={(e) => setTaskPriority(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="High">High Priority</option>
+                      <option value="Medium">Medium Priority</option>
+                      <option value="Low">Low Priority</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Due Date</label>
+                    <input type="date" value={taskDueDate} onChange={(e) => setTaskDueDate(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddTaskModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Create Task</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Tasks Table */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th className="p-4">Task Description</th>
+                    <th className="p-4">Assignee</th>
+                    <th className="p-4">Priority</th>
+                    <th className="p-4">Due Date</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                  {filteredTasks.length > 0 ? filteredTasks.map((task) => (
+                    <tr key={task.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white max-w-xs truncate">{task.title}</td>
+                      <td className="p-4 text-slate-600 dark:text-slate-400">{task.assignee}</td>
+                      <td className="p-4">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          task.priority === 'High' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' :
+                          task.priority === 'Medium' ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400' :
+                          'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                        }`}>
+                          {task.priority}
+                        </span>
+                      </td>
+                      <td className="p-4 text-slate-400 flex items-center gap-1"><Clock size={12} /> {task.dueDate || 'No Date'}</td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          task.status === 'Completed' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                          task.status === 'In Progress' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400' :
+                          'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
+                        }`}>
+                          {task.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right space-x-2">
+                        <button onClick={() => handleToggleTaskStatus(task.id)} className="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-[11px] font-semibold transition-colors">
+                          Toggle Status
+                        </button>
+                        <button onClick={() => handleDeleteTask(task.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors inline-block" title="Delete Task">
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="6" className="p-8 text-center text-slate-400">No tasks found matching filter criteria.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     if (activeTab === 'Reports') {
       const handleExportReport = () => {
         const reportData = {
@@ -775,7 +944,6 @@ export default function App() {
 
       return (
         <div className="xl:col-span-4 space-y-6">
-          {/* Header Action Bar */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
               <h3 className="font-bold text-base text-slate-900 dark:text-white">Organizational Reports & Analytics</h3>
@@ -788,7 +956,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Quick Metrics Summary Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
               <span className="text-xs text-slate-400 uppercase tracking-wider">Total Headcount</span>
@@ -813,56 +980,6 @@ export default function App() {
               <span className="text-xs text-slate-400 uppercase tracking-wider">Active Departments</span>
               <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{teams.length} Units</h3>
               <span className="text-[11px] text-amber-500 mt-2 block font-medium">Functional divisions</span>
-            </div>
-          </div>
-
-          {/* Detailed Reports Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Department Headcount Breakdown */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-4">
-              <h4 className="font-semibold text-sm text-slate-900 dark:text-white">Department Headcount Ratio</h4>
-              <div className="space-y-3">
-                {teams.map(team => {
-                  const count = employees.filter(e => e.dept === team.name).length;
-                  const percentage = Math.round((count / (employees.length || 1)) * 100);
-                  return (
-                    <div key={team.id} className="space-y-1">
-                      <div className="flex justify-between text-xs font-medium">
-                        <span className="text-slate-700 dark:text-slate-300">{team.name}</span>
-                        <span className="text-slate-500">{count} members ({percentage}%)</span>
-                      </div>
-                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${team.color}`} style={{ width: `${percentage}%` }}></div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Leave Status Audit */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-4">
-              <h4 className="font-semibold text-sm text-slate-900 dark:text-white">Leave Status Summary</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Pending Approvals</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">
-                    {leaves.filter(l => l.status === 'Pending').length} requests
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Approved Leaves</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
-                    {leaves.filter(l => l.status === 'Approved').length} requests
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Rejected Leaves</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600">
-                    {leaves.filter(l => l.status === 'Rejected').length} requests
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -925,108 +1042,6 @@ export default function App() {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
-      );
-    }
-
-    if (activeTab === 'Tasks') {
-      const [newTaskTitle, setNewTaskTitle] = useState('');
-      const [newAssignee, setNewAssignee] = useState(employees[0]?.name || '');
-      const [newPriority, setNewPriority] = useState('Medium');
-
-      const handleAddTask = (e) => {
-        e.preventDefault();
-        const newTask = {
-          id: Date.now(),
-          title: newTaskTitle,
-          assignee: newAssignee,
-          status: 'In Progress',
-          priority: newPriority
-        };
-        setTasks([...tasks, newTask]);
-        setNewTaskTitle('');
-      };
-
-      const handleToggleTaskStatus = (id) => {
-        setTasks(tasks.map(task => {
-          if (task.id === id) {
-            const nextStatus = task.status === 'In Progress' ? 'Completed' : 'In Progress';
-            return { ...task, status: nextStatus };
-          }
-          return task;
-        }));
-      };
-
-      const handleDeleteTask = (id) => {
-        setTasks(tasks.filter(t => t.id !== id));
-      };
-
-      return (
-        <div className="xl:col-span-4 space-y-6">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
-            <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">Create New Task</h3>
-            <form onSubmit={handleAddTask} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <input 
-                type="text" 
-                required
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                placeholder="Task description..." 
-                className="sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" 
-              />
-              <select 
-                value={newAssignee}
-                onChange={(e) => setNewAssignee(e.target.value)}
-                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100"
-              >
-                {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
-              </select>
-              <button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold py-2 transition-colors">
-                Add Task
-              </button>
-            </form>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">Workspace Task Assignment</h3>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                    <th className="p-4">Task</th>
-                    <th className="p-4">Assignee</th>
-                    <th className="p-4">Priority</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
-                  {tasks.map(task => (
-                    <tr key={task.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                      <td className="p-4 font-semibold text-slate-900 dark:text-white">{task.title}</td>
-                      <td className="p-4 text-slate-500">{task.assignee}</td>
-                      <td className="p-4"><span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-600">{task.priority}</span></td>
-                      <td className="p-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${task.status === 'Completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'}`}>
-                          {task.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-right space-x-2">
-                        <button onClick={() => handleToggleTaskStatus(task.id)} className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-[11px] font-semibold hover:bg-slate-200">
-                          Toggle Status
-                        </button>
-                        <button onClick={() => handleDeleteTask(task.id)} className="p-1 text-rose-500 hover:bg-rose-50 rounded">
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
       );
