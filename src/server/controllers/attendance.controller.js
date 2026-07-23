@@ -1,20 +1,23 @@
+const mongoose = require("mongoose");
 const Attendance = require("../model/attendance.model");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/apiResponse");
 
 // Create Attendance
 const createAttendance = async (req, res) => {
   try {
     const attendance = await Attendance.create(req.body);
 
-    return res.status(201).json({
-      success: true,
-      message: "Attendance created successfully",
-      data: attendance,
-    });
+    return successResponse(
+      res,
+      201,
+      "Attendance created successfully",
+      attendance
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -26,16 +29,17 @@ const getAllAttendance = async (req, res) => {
       "employeeId firstName lastName"
     );
 
-    return res.status(200).json({
-      success: true,
-      count: attendance.length,
-      data: attendance,
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance fetched successfully",
+      {
+        count: attendance.length,
+        attendance,
+      }
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -48,21 +52,21 @@ const getAttendanceById = async (req, res) => {
     );
 
     if (!attendance) {
-      return res.status(404).json({
-        success: false,
-        message: "Attendance not found",
-      });
+      return errorResponse(
+        res,
+        404,
+        "Attendance not found"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      data: attendance,
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance fetched successfully",
+      attendance
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -76,22 +80,21 @@ const updateAttendance = async (req, res) => {
     );
 
     if (!attendance) {
-      return res.status(404).json({
-        success: false,
-        message: "Attendance not found",
-      });
+      return errorResponse(
+        res,
+        404,
+        "Attendance not found"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Attendance updated successfully",
-      data: attendance,
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance updated successfully",
+      attendance
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -101,21 +104,20 @@ const deleteAttendance = async (req, res) => {
     const attendance = await Attendance.findByIdAndDelete(req.params.id);
 
     if (!attendance) {
-      return res.status(404).json({
-        success: false,
-        message: "Attendance not found",
-      });
+      return errorResponse(
+        res,
+        404,
+        "Attendance not found"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Attendance deleted successfully",
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance deleted successfully"
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -130,16 +132,17 @@ const getEmployeeAttendanceHistory = async (req, res) => {
       .populate("employee", "employeeId firstName lastName designation")
       .sort({ date: -1 });
 
-    return res.status(200).json({
-      success: true,
-      count: attendance.length,
-      data: attendance,
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance history fetched successfully",
+      {
+        count: attendance.length,
+        attendance,
+      }
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -168,15 +171,14 @@ const getAttendanceSummary = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data: summary,
-    });
+    return successResponse(
+      res,
+      200,
+      "Attendance summary fetched successfully",
+      summary
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -186,10 +188,11 @@ const getMonthlyAttendanceReport = async (req, res) => {
     const { month, year, employeeId } = req.query;
 
     if (!month || !year || !employeeId) {
-      return res.status(400).json({
-        success: false,
-        message: "month, year and employeeId are required",
-      });
+      return errorResponse(
+        res,
+        400,
+        "month, year and employeeId are required"
+      );
     }
 
     const startDate = new Date(year, month - 1, 1);
@@ -214,15 +217,14 @@ const getMonthlyAttendanceReport = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data: report,
-    });
+    return successResponse(
+      res,
+      200,
+      "Monthly attendance report fetched successfully",
+      report
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 

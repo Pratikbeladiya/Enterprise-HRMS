@@ -1,78 +1,91 @@
 const Payroll = require("../model/payroll.model");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/apiResponse");
 
 // Create Payroll
 const createPayroll = async (req, res) => {
   try {
-    const{
-  deductions,
-  bonus,
-  paymentStatus,
-  paymentDate,
-} = req.body;
-
-if (!employee || !month || !year || basicSalary === undefined) {
-  return res.status(400).json({
-    success: false,
-    message: "Employee, month, year and basic salary are required",
-  });
-}
-
-if (month < 1 || month > 12) {
-  return res.status(400).json({
-    success: false,
-    message: "Month must be between 1 and 12",
-  });
-}
-
-if (basicSalary < 0 || allowances < 0 || deductions < 0 || bonus < 0) {
-  return res.status(400).json({
-    success: false,
-    message: "Salary values cannot be negative",
-  });
-}
-
-const netSalary =
-  Number(basicSalary) +
-  Number(allowances || 0) +
-  Number(bonus || 0) -
-  Number(deductions || 0);
-
-  const existingPayroll = await Payroll.findOne({
-  employee,
-  month,
-  year,
-});
-
-if (existingPayroll) {
-  return res.status(409).json({
-    success: false,
-    message: "Payroll already exists for this employee for the selected month and year",
-  });
-}
-
-const payroll = await Payroll.create({
-  employee,
+    const {
+       employee,
   month,
   year,
   basicSalary,
   allowances,
   deductions,
   bonus,
-  netSalary,
   paymentStatus,
   paymentDate,
-});
+    } = req.body;
 
-    return res.status(201).json({
-      success: true,
-      message: "Payroll created successfully",
-      data: payroll,
+    if (!employee || !month || !year || basicSalary === undefined) {
+      return errorResponse(
+        res,
+        400,
+        "Employee, month, year and basic salary are required"
+      );
+    }
+
+    if (month < 1 || month > 12) {
+      return errorResponse(
+        res,
+        400,
+        "Month must be between 1 and 12"
+      );
+    }
+
+    if (basicSalary < 0 || allowances < 0 || deductions < 0 || bonus < 0) {
+      return errorResponse(
+        res,
+        400,
+        "Salary values cannot be negative"
+      );
+    }
+
+    const netSalary =
+      Number(basicSalary) +
+      Number(allowances || 0) +
+      Number(bonus || 0) -
+      Number(deductions || 0);
+
+    const existingPayroll = await Payroll.findOne({
+      employee,
+      month,
+      year,
     });
+
+    if (existingPayroll) {
+      return errorResponse(
+        res,
+        409,
+        "Payroll already exists for this employee for the selected month and year"
+      );
+    }
+
+    const payroll = await Payroll.create({
+      employee,
+      month,
+      year,
+      basicSalary,
+      allowances,
+      deductions,
+      bonus,
+      netSalary,
+      paymentStatus,
+      paymentDate,
+    });
+
+    return successResponse(
+      res,
+      201,
+      "Payroll created successfully",
+      payroll
+    );
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
+
   }
 };
 
@@ -110,18 +123,22 @@ const getAllPayrolls = async (req, res) => {
 
     const total = await Payroll.countDocuments(filter);
 
-    return res.status(200).json({
-      success: true,
-      totalRecords: total,
-      currentPage: Number(page),
-      totalPages: Math.ceil(total / limit),
-      data: payrolls,
-    });
+    return successResponse(
+      res,
+      200,
+      "Payrolls fetched successfully",
+      {
+        totalRecords: total,
+        currentPage: Number(page),
+        totalPages: Math.ceil(total / limit),
+        payrolls,
+      }
+    );
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+
+    return errorResponse(res, 500, error.message);
+
   }
 };
 
@@ -134,21 +151,22 @@ const getPayrollById = async (req, res) => {
     );
 
     if (!payroll) {
-      return res.status(404).json({
-        success: false,
-        message: "Payroll not found",
-      });
+      return errorResponse(
+        res,
+        404,
+        "Payroll not found"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      data: payroll,
-    });
+    return successResponse(
+      res,
+      200,
+      "Payroll fetched successfully",
+      payroll
+    );
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -158,62 +176,64 @@ const updatePayroll = async (req, res) => {
   try {
 
     if (req.body.month && (req.body.month < 1 || req.body.month > 12)) {
-  return res.status(400).json({
-    success: false,
-    message: "Month must be between 1 and 12",
-  });
-}
-
-if (
-  req.body.basicSalary < 0 ||
-  req.body.allowances < 0 ||
-  req.body.deductions < 0 ||
-  req.body.bonus < 0
-) {
-  return res.status(400).json({
-    success: false,
-    message: "Salary values cannot be negative",
-  });
-}
-
-   const {
-  basicSalary,
-  allowances,
-  deductions,
-  bonus,
-} = req.body;
-
-const netSalary =
-  Number(basicSalary) +
-  Number(allowances || 0) +
-  Number(bonus || 0) -
-  Number(deductions || 0);
-
-req.body.netSalary = netSalary;
-
-const payroll = await Payroll.findByIdAndUpdate(
-  req.params.id,
-  req.body,
-  { new: true }
-);
-
-    if (!payroll) {
-      return res.status(404).json({
-        success: false,
-        message: "Payroll not found",
-      });
+      return errorResponse(
+        res,
+        400,
+        "Month must be between 1 and 12"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Payroll updated successfully",
-      data: payroll,
-    });
+    if (
+      req.body.basicSalary < 0 ||
+      req.body.allowances < 0 ||
+      req.body.deductions < 0 ||
+      req.body.bonus < 0
+    ) {
+      return errorResponse(
+        res,
+        400,
+        "Salary values cannot be negative"
+      );
+    }
+
+    const {
+      basicSalary,
+      allowances,
+      deductions,
+      bonus,
+    } = req.body;
+
+    const netSalary =
+      Number(basicSalary) +
+      Number(allowances || 0) +
+      Number(bonus || 0) -
+      Number(deductions || 0);
+
+    req.body.netSalary = netSalary;
+
+    const payroll = await Payroll.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!payroll) {
+      return errorResponse(
+        res,
+        404,
+        "Payroll not found"
+      );
+    }
+
+    return successResponse(
+      res,
+      200,
+      "Payroll updated successfully",
+      payroll
+    );
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -223,21 +243,20 @@ const deletePayroll = async (req, res) => {
     const payroll = await Payroll.findByIdAndDelete(req.params.id);
 
     if (!payroll) {
-      return res.status(404).json({
-        success: false,
-        message: "Payroll not found",
-      });
+      return errorResponse(
+        res,
+        404,
+        "Payroll not found"
+      );
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Payroll deleted successfully",
-    });
+    return successResponse(
+      res,
+      200,
+      "Payroll deleted successfully"
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -253,16 +272,17 @@ const getEmployeePayrollHistory = async (req, res) => {
       )
       .sort({ year: -1, month: -1 });
 
-    return res.status(200).json({
-      success: true,
-      count: payrollHistory.length,
-      data: payrollHistory,
-    });
+    return successResponse(
+      res,
+      200,
+      "Payroll history fetched successfully",
+      {
+        count: payrollHistory.length,
+        payrollHistory,
+      }
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -302,15 +322,14 @@ const getMonthlyPayrollSummary = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data: summary,
-    });
+    return successResponse(
+      res,
+      200,
+      "Monthly payroll summary fetched successfully",
+      summary
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -348,15 +367,14 @@ const getPayrollDashboard = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data: dashboard[0] || {},
-    });
+    return successResponse(
+      res,
+      200,
+      "Payroll dashboard fetched successfully",
+      dashboard[0] || {}
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 

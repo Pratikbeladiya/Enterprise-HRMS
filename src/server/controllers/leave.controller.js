@@ -1,20 +1,22 @@
 const Leave = require("../model/leave.model");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/apiResponse");
 
 // Create Leave
 const createLeave = async (req, res) => {
   try {
     const leave = await Leave.create(req.body);
 
-    return res.status(201).json({
-      success: true,
-      message: "Leave request created successfully",
-      data: leave,
-    });
+    return successResponse(
+  res,
+  201,
+  "Leave request created successfully",
+  leave
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -48,18 +50,19 @@ const getAllLeaves = async (req, res) => {
 
     const total = await Leave.countDocuments(filter);
 
-    return res.status(200).json({
-      success: true,
-      totalRecords: total,
-      currentPage: Number(page),
-      totalPages: Math.ceil(total / limit),
-      data: leaves,
-    });
+   return successResponse(
+  res,
+  200,
+  "Leaves fetched successfully",
+  {
+    totalRecords: total,
+    currentPage: Number(page),
+    totalPages: Math.ceil(total / limit),
+    leaves,
+  }
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -72,21 +75,21 @@ const getLeaveById = async (req, res) => {
     );
 
     if (!leave) {
-      return res.status(404).json({
-        success: false,
-        message: "Leave record not found",
-      });
+     return errorResponse(
+  res,
+  404,
+  "Leave record not found"
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      data: leave,
-    });
+    return successResponse(
+  res,
+  200,
+  "Leave fetched successfully",
+  leave
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res,500,error.message);
   }
 };
 
@@ -98,10 +101,11 @@ const updateLeave = async (req, res) => {
       req.body.totalDays !== undefined &&
       req.body.totalDays <= 0
     ) {
-      return res.status(400).json({
-        success: false,
-        message: "Total leave days must be greater than zero",
-      });
+     return errorResponse(
+  res,
+  400,
+  "Total leave days must be greater than zero"
+);
     }
 
     // Validate dates
@@ -110,10 +114,11 @@ const updateLeave = async (req, res) => {
       req.body.endDate &&
       new Date(req.body.startDate) > new Date(req.body.endDate)
     ) {
-      return res.status(400).json({
-        success: false,
-        message: "Start date cannot be after end date",
-      });
+      return errorResponse(
+  res,
+  400,
+  "Start date cannot be after end date"
+);
     }
 
     const leave = await Leave.findByIdAndUpdate(
@@ -126,22 +131,21 @@ const updateLeave = async (req, res) => {
     );
 
     if (!leave) {
-      return res.status(404).json({
-        success: false,
-        message: "Leave record not found",
-      });
+      return errorResponse(
+  res,
+  404,
+  "Leave record not found"
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Leave updated successfully",
-      data: leave,
-    });
+    return successResponse(
+  res,
+  200,
+  "Leave updated successfully",
+  leave
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -151,21 +155,20 @@ const deleteLeave = async (req, res) => {
     const leave = await Leave.findByIdAndDelete(req.params.id);
 
     if (!leave) {
-      return res.status(404).json({
-        success: false,
-        message: "Leave record not found",
-      });
+      return errorResponse(
+  res,
+  404,
+  "Leave record not found"
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Leave deleted successfully",
-    });
+    return successResponse(
+  res,
+  200,
+  "Leave deleted successfully"
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res,500,error.message);
   }
 };
 
@@ -192,26 +195,29 @@ const applyLeave = async (req, res) => {
       !totalDays ||
       !reason
     ) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+     return errorResponse(
+  res,
+  400,
+  "All fields are required"
+);
     }
 
     // 👇 STEP 3 (Total Days Validation)
     if (totalDays <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Total leave days must be greater than zero",
-      });
+      return errorResponse(
+  res,
+  400,
+  "Total leave days must be greater than zero"
+);
     }
 
     // 👇 STEP 4 (Date Validation)
     if (new Date(startDate) > new Date(endDate)) {
-      return res.status(400).json({
-        success: false,
-        message: "Start date cannot be after end date",
-      });
+     return errorResponse(
+  res,
+  400,
+  "Start date cannot be after end date"
+);
     }
 
     // 👇 STEP 5 (Overlap Validation)
@@ -227,26 +233,25 @@ const applyLeave = async (req, res) => {
     });
 
     if (existingLeave) {
-      return res.status(409).json({
-        success: false,
-        message: "Leave request overlaps with an existing leave",
-      });
+      return errorResponse(
+  res,
+  409,
+  "Leave request overlaps with an existing leave"
+);
     }
 
     // 👇 Create Leave
     const leave = await Leave.create(req.body);
 
-    return res.status(201).json({
-      success: true,
-      message: "Leave applied successfully",
-      data: leave,
-    });
+   return successResponse(
+  res,
+  201,
+  "Leave applied successfully",
+  leave
+);
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res,500,error.message);
   }
 };
 
@@ -264,22 +269,21 @@ const approveLeave = async (req, res) => {
     );
 
     if (!leave) {
-      return res.status(404).json({
-        success: false,
-        message: "Leave request not found",
-      });
+     return errorResponse(
+  res,
+  404,
+  "Leave request not found"
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Leave approved successfully",
-      data: leave,
-    });
+    return successResponse(
+  res,
+  200,
+  "Leave approved successfully",
+  leave
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -296,22 +300,21 @@ const rejectLeave = async (req, res) => {
     );
 
     if (!leave) {
-      return res.status(404).json({
-        success: false,
-        message: "Leave request not found",
-      });
+      return errorResponse(
+  res,
+  404,
+  "Leave request not found"
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Leave rejected successfully",
-      data: leave,
-    });
+   return successResponse(
+  res,
+  200,
+  "Leave rejected successfully",
+  leave
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -326,16 +329,17 @@ const getEmployeeLeaveHistory = async (req, res) => {
       )
       .sort({ createdAt: -1 });
 
-    return res.status(200).json({
-      success: true,
-      count: leaves.length,
-      data: leaves,
-    });
+    return successResponse(
+  res,
+  200,
+  "Leave history fetched successfully",
+  {
+    count: leaves.length,
+    leaves,
+  }
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res,500,error.message);
   }
 };
 
@@ -364,15 +368,14 @@ const getLeaveSummary = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data: summary,
-    });
+   return successResponse(
+  res,
+  200,
+  "Leave summary fetched successfully",
+  summary
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res,500,error.message);
   }
 };
 
