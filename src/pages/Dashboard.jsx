@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate} from "react-router-dom";
 import "./Dashboard.css";
 
 import {
@@ -17,6 +18,7 @@ import {
 } from "react-icons/fa";
 
 function Dashboard() {
+  const navigate = useNavigate();
   return (
     <div className="dashboard-page">
 
@@ -32,15 +34,9 @@ function Dashboard() {
               </div>
       
               <ul className="menu">
-               <li
-                
-                  onClick={() => navigate("/home")}
-                  style={{ cursor: "pointer" }}
-                >
-                  🏠 Dashboard
-                </li>
+              <li className="active">🏠 Dashboard</li>
                 <li>👨 Employees</li>
-                <li className="active">📝 Attendance</li>
+                <li>📝 Attendance</li>
                 <li>💰 Payroll</li>
                 <li>📅 Leave</li>
                 <li>📊 Reports</li>
@@ -214,6 +210,7 @@ function Dashboard() {
 
     </div>
     </div>
+    
   );
 }
 
