@@ -22,6 +22,9 @@ export default function Login({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
+<<<<<<< HEAD
+  //submit handler
+=======
   const showMessage = (text, type) => {
     setMessage({ text, type });
     setTimeout(() => {
@@ -73,6 +76,7 @@ export default function Login({ onLogin }) {
   // ---------------------------------------------------------
   // STANDARD EMAIL/PASSWORD LOGIC
   // ---------------------------------------------------------
+>>>>>>> 38d3169 (Add register functionality in login #2)
   const handleSubmit = (e) => {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem('hrise_users')) || [];
@@ -115,6 +119,7 @@ export default function Login({ onLogin }) {
     }
   };
 
+  //Items varients
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
