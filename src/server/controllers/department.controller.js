@@ -1,4 +1,8 @@
 const Department = require("../model/department.model");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/apiResponse");
 
 const createDepartment = async (req, res) => {
   try {
@@ -12,10 +16,11 @@ const createDepartment = async (req, res) => {
 
     // Validation
     if (!departmentName || !description || !location) {
-      return res.status(400).json({
-        success: false,
-        message: "Department name, description and location are required.",
-      });
+     return errorResponse(
+  res,
+  400,
+  "Department name, description and location are required."
+);
     }
 
     // Duplicate check
@@ -24,10 +29,11 @@ const createDepartment = async (req, res) => {
     });
 
     if (existingDepartment) {
-      return res.status(409).json({
-        success: false,
-        message: "Department already exists.",
-      });
+     return errorResponse(
+  res,
+  409,
+  "Department already exists."
+);
     }
 
     // Create Department
@@ -39,16 +45,14 @@ const createDepartment = async (req, res) => {
       employeeCount,
     });
 
-    return res.status(201).json({
-      success: true,
-      message: "Department created successfully.",
-      department,
-    });
+    return successResponse(
+  res,
+  201,
+  "Department created successfully.",
+  department
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res, 500, error.message);
   }
 };
 
@@ -57,16 +61,17 @@ const getAllDepartments = async (req, res) => {
     const departments = await Department.find()
       .populate("manager", "firstName lastName email");
 
-    return res.status(200).json({
-      success: true,
-      totalDepartments: departments.length,
-      departments,
-    });
+   return successResponse(
+  res,
+  200,
+  "Departments fetched successfully",
+  {
+    totalDepartments: departments.length,
+    departments,
+  }
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -79,22 +84,22 @@ const getDepartmentById = async (req, res) => {
       .populate("manager", "firstName lastName email");
 
     if (!department) {
-      return res.status(404).json({
-        success: false,
-        message: "Department not found.",
-      });
+      return errorResponse(
+  res,
+  404,
+  "Department not found."
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      department,
-    });
+    return successResponse(
+  res,
+  200,
+  "Department fetched successfully",
+  department
+);
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -113,23 +118,23 @@ const updateDepartment = async (req, res) => {
     );
 
     if (!updatedDepartment) {
-      return res.status(404).json({
-        success: false,
-        message: "Department not found.",
-      });
+     return errorResponse(
+  res,
+  404,
+  "Department not found."
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Department updated successfully.",
-      department: updatedDepartment,
-    });
+    return successResponse(
+  res,
+  200,
+  "Department updated successfully.",
+  updatedDepartment
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
+  
 };
 
 const deleteDepartment = async (req, res) => {
@@ -139,21 +144,20 @@ const deleteDepartment = async (req, res) => {
     const deletedDepartment = await Department.findByIdAndDelete(id);
 
     if (!deletedDepartment) {
-      return res.status(404).json({
-        success: false,
-        message: "Department not found.",
-      });
+     return errorResponse(
+  res,
+  404,
+  "Department not found."
+);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Department deleted successfully.",
-    });
+    return successResponse(
+  res,
+  200,
+  "Department deleted successfully."
+);
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+   return errorResponse(res, 500, error.message);
   }
 };
 module.exports = {
