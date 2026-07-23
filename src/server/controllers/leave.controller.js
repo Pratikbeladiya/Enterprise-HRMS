@@ -93,10 +93,36 @@ const getLeaveById = async (req, res) => {
 // Update Leave
 const updateLeave = async (req, res) => {
   try {
+    // Validate totalDays
+    if (
+      req.body.totalDays !== undefined &&
+      req.body.totalDays <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Total leave days must be greater than zero",
+      });
+    }
+
+    // Validate dates
+    if (
+      req.body.startDate &&
+      req.body.endDate &&
+      new Date(req.body.startDate) > new Date(req.body.endDate)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date cannot be after end date",
+      });
+    }
+
     const leave = await Leave.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
     if (!leave) {
@@ -146,6 +172,68 @@ const deleteLeave = async (req, res) => {
 // Apply Leave
 const applyLeave = async (req, res) => {
   try {
+
+    // 👇 STEP 1
+    const {
+      employee,
+      leaveType,
+      startDate,
+      endDate,
+      totalDays,
+      reason,
+    } = req.body;
+
+    // 👇 STEP 2 (Required Field Validation)
+    if (
+      !employee ||
+      !leaveType ||
+      !startDate ||
+      !endDate ||
+      !totalDays ||
+      !reason
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    // 👇 STEP 3 (Total Days Validation)
+    if (totalDays <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Total leave days must be greater than zero",
+      });
+    }
+
+    // 👇 STEP 4 (Date Validation)
+    if (new Date(startDate) > new Date(endDate)) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date cannot be after end date",
+      });
+    }
+
+    // 👇 STEP 5 (Overlap Validation)
+    const existingLeave = await Leave.findOne({
+      employee,
+      status: { $ne: "Rejected" },
+      $or: [
+        {
+          startDate: { $lte: endDate },
+          endDate: { $gte: startDate },
+        },
+      ],
+    });
+
+    if (existingLeave) {
+      return res.status(409).json({
+        success: false,
+        message: "Leave request overlaps with an existing leave",
+      });
+    }
+
+    // 👇 Create Leave
     const leave = await Leave.create(req.body);
 
     return res.status(201).json({
@@ -153,6 +241,7 @@ const applyLeave = async (req, res) => {
       message: "Leave applied successfully",
       data: leave,
     });
+
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -160,6 +249,7 @@ const applyLeave = async (req, res) => {
     });
   }
 };
+
 
 const approveLeave = async (req, res) => {
   try {
