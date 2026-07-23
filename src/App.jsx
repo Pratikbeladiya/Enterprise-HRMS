@@ -7,6 +7,7 @@ import Attendance from "./pages/Attendance";
 import Payroll from "./pages/Payroll";
 import Leave from "./pages/Leave";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/leave" element={<Leave />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/settings" element={<Settings />} />
 
       </Routes>
     </BrowserRouter>

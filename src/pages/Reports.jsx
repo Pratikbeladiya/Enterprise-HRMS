@@ -66,7 +66,10 @@ function Reports() {
             📊 Reports
           </li>
 
-          <li>
+            <li
+            onClick={() => navigate("/settings")}
+            style={{ cursor: "pointer" }}
+          >
             <FaCog /> Settings
           </li>
 

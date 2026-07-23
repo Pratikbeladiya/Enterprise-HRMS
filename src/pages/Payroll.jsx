@@ -66,10 +66,13 @@ function Payroll() {
   📊 Reports
 </li>
 
-          <li>
-            <FaCog /> Settings
-          </li>
-
+          <li
+          onClick={() => navigate("/settings")}
+          style={{ cursor: "pointer" }}
+        >
+          <FaCog /> Settings
+        </li>
+        
           <li>
             <FaSignOutAlt /> Logout
           </li>
