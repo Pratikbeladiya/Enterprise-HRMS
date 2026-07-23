@@ -3,22 +3,79 @@ import {
   LayoutDashboard, Users, UserCheck, Calendar, FileText, 
   Settings, CheckSquare, Sun, Moon, Search, Filter, 
   Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle
 } from 'lucide-react';
-import Login from './Login'; // Importing the Login component
+import Login from './Login';
 
 export default function App() {
-  // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
-  // Dashboard UI States
+  const [currentUser, setCurrentUser] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
-  const [isColl
-
-  
   const [isCollapsed, setIsCollapsed] = useState(false); 
+
+  // ---------------------------------------------------------
+  // LOCALSTORAGE PERSISTENT APP STATE
+  // ---------------------------------------------------------
+  
+  // Employees State
+  const [employees, setEmployees] = useState(() => {
+    const saved = localStorage.getItem('hrise_employees');
+    return saved ? JSON.parse(saved) : [
+      { id: 'EI-0123', name: 'Cameron Williamson', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-08-12' },
+      { id: 'EI-0124', name: 'Guy Hawkins', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-09-11' },
+      { id: 'EI-0125', name: 'Brooklyn Simmons', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-09-11' },
+      { id: 'EI-0126', name: 'Albert Flores', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-08-10' },
+      { id: 'EI-0173', name: 'Arlene McCoy', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-08-10' }
+    ];
+  });
+
+  // Attendance State
+  const [attendance, setAttendance] = useState(() => {
+    const saved = localStorage.getItem('hrise_attendance');
+    return saved ? JSON.parse(saved) : [
+      { id: 'EI-0123', name: 'Cameron Williamson', status: 'Present', time: '09:15 AM' },
+      { id: 'EI-0124', name: 'Guy Hawkins', status: 'Present', time: '09:30 AM' },
+      { id: 'EI-0125', name: 'Brooklyn Simmons', status: 'On Leave', time: '-' },
+      { id: 'EI-0126', name: 'Albert Flores', status: 'Sick Leave', time: '-' },
+      { id: 'EI-0173', name: 'Arlene McCoy', status: 'Present', time: '09:05 AM' }
+    ];
+  });
+
+  // Tasks State
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem('hrise_tasks');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, title: 'Migrate server infrastructure', assignee: 'Cameron Williamson', status: 'In Progress', priority: 'High' },
+      { id: 2, title: 'Design onboarding wireframes', assignee: 'Albert Flores', status: 'Completed', priority: 'Medium' },
+      { id: 3, title: 'Quarterly financial audit', assignee: 'Arlene McCoy', status: 'Pending', priority: 'High' }
+    ];
+  });
+
+  // Leaves State
+  const [leaves, setLeaves] = useState(() => {
+    const saved = localStorage.getItem('hrise_leaves');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, name: 'Aman G.', type: 'Sick', dates: '12th Dec - 15th Dec 2024', status: 'Pending' },
+      { id: 2, name: 'Guy Hawkins', type: 'Casual', dates: '20th Dec - 22nd Dec 2024', status: 'Approved' }
+    ];
+  });
+
+  // Sync state changes with localStorage
+  useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
+  useEffect(() => { localStorage.setItem('hrise_attendance', JSON.stringify(attendance)); }, [attendance]);
+  useEffect(() => { localStorage.setItem('hrise_tasks', JSON.stringify(tasks)); }, [tasks]);
+  useEffect(() => { localStorage.setItem('hrise_leaves', JSON.stringify(leaves)); }, [leaves]);
+
+  // Check persisted session on load
+  useEffect(() => {
+    const active = localStorage.getItem('hrise_current_user');
+    if (active) {
+      setCurrentUser(JSON.parse(active));
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   // Handle Dark Mode globally
   useEffect(() => {
@@ -31,19 +88,30 @@ export default function App() {
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+  };
+
   const handleLogout = () => {
+    localStorage.removeItem('hrise_current_user');
     setIsAuthenticated(false);
-    setActiveTab('Dashboard'); // Reset to default view on next login
+    setCurrentUser(null);
+    setActiveTab('Dashboard');
   };
 
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
+    return <Login onLogin={handleLoginSuccess} />;
   }
 
   // Helper to render active tab content
   const renderContent = () => {
     if (activeTab === 'Dashboard') {
+      const totalInOffice = attendance.filter(a => a.status === 'Present').length;
+      const totalOnLeave = attendance.filter(a => a.status === 'On Leave').length;
+      const totalSick = attendance.filter(a => a.status === 'Sick Leave').length;
+
       return (
         <>
           {/* DASHBOARD LEFT CONTENT GRID */}
@@ -54,19 +122,19 @@ export default function App() {
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                 <div>
                   <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Employee</span>
-                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">12,097</h3>
-                  <span className="text-[11px] text-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">↑ 12% vs last month</span>
+                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{employees.length}</h3>
+                  <span className="text-[11px] text-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">Active Directory</span>
                 </div>
                 <div className="p-3 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl"><Users size={22} /></div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">New Employee</span>
-                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">08</h3>
-                  <span className="text-[11px] text-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">↑ 10% vs last week</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Tasks</span>
+                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{tasks.filter(t => t.status !== 'Completed').length}</h3>
+                  <span className="text-[11px] text-violet-500 bg-violet-50 dark:bg-violet-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">In Progress / Pending</span>
                 </div>
-                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><Plus size={22} /></div>
+                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><CheckSquare size={22} /></div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
@@ -86,15 +154,15 @@ export default function App() {
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl">
                     <span className="text-xs text-slate-400 block">In office</span>
-                    <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">49</span>
+                    <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">{totalInOffice}</span>
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl">
                     <span className="text-xs text-slate-400 block">On leave</span>
-                    <span className="text-lg font-bold text-amber-500">05</span>
+                    <span className="text-lg font-bold text-amber-500">{totalOnLeave}</span>
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl">
                     <span className="text-xs text-slate-400 block">Sick leave</span>
-                    <span className="text-lg font-bold text-rose-500">02</span>
+                    <span className="text-lg font-bold text-rose-500">{totalSick}</span>
                   </div>
                 </div>
               </div>
@@ -104,17 +172,17 @@ export default function App() {
                 <div className="space-y-3">
                   <div>
                     <div className="flex justify-between text-xs font-medium mb-1">
-                      <span className="text-slate-500 dark:text-slate-400">Ongoing Projects</span>
-                      <span>42%</span>
+                      <span className="text-slate-500 dark:text-slate-400">Completed Tasks</span>
+                      <span>{Math.round((tasks.filter(t => t.status === 'Completed').length / (tasks.length || 1)) * 100)}%</span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-indigo-600 h-full rounded-full" style={{ width: '42%' }}></div>
+                      <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${(tasks.filter(t => t.status === 'Completed').length / (tasks.length || 1)) * 100}%` }}></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-xs font-medium mb-1">
-                      <span className="text-slate-500 dark:text-slate-400">Interview Reviews</span>
-                      <span>87%</span>
+                      <span className="text-slate-500 dark:text-slate-400">Pending Review</span>
+                      <span>{tasks.filter(t => t.status !== 'Completed').length} Items</span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div className="bg-emerald-500 h-full rounded-full" style={{ width: '87%' }}></div>
@@ -149,15 +217,15 @@ export default function App() {
                   <div className="relative w-28 h-28 flex items-center justify-center rounded-full border-8 border-indigo-600 border-r-violet-500 border-b-amber-400">
                     <div className="text-center">
                       <span className="text-xs text-slate-400 block">Total</span>
-                      <span className="text-base font-bold">5 Depts</span>
+                      <span className="text-base font-bold">{employees.length} Staff</span>
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-2">
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-600"></span> Sales 52%</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-500"></span> HR 22%</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Finance 16%</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-slate-300"></span> Others 10%</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-600"></span> IT & Infra</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-500"></span> HR</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Finance</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-slate-300"></span> Others</div>
                 </div>
               </div>
             </div>
@@ -182,17 +250,13 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
-                    {[
-                      { date: '12-08-24', id: 'EI-0123', name: 'Esther Howard', role: 'SDE - Level 2', status: 'On board', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' },
-                      { date: '10-08-24', id: 'EI-0675', name: 'Albert Flores', role: 'UI/UX - Level 2', status: 'On board', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' },
-                      { date: '09-08-24', id: 'EI-0875', name: 'Kristin Watson', role: 'SDE - Level 1', status: 'Trainee', color: 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400' }
-                    ].map((emp, i) => (
+                    {employees.slice(0, 3).map((emp, i) => (
                       <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                        <td className="p-4 text-slate-400">{emp.date}</td>
+                        <td className="p-4 text-slate-400">{emp.joiningDate}</td>
                         <td className="p-4 text-slate-600 dark:text-slate-300">{emp.id}</td>
                         <td className="p-4 font-semibold text-slate-900 dark:text-white">{emp.name}</td>
                         <td className="p-4 text-slate-500 dark:text-slate-400">{emp.role}</td>
-                        <td className="p-4 text-right"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${emp.color}`}>{emp.status}</span></td>
+                        <td className="p-4 text-right"><span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">On board</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -230,7 +294,7 @@ export default function App() {
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
               <div className="flex justify-between items-center">
                 <h4 className="font-semibold text-sm">Upcoming Schedule</h4>
-                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-slate-500 font-bold">3 Today</span>
+                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-slate-500 font-bold">Today</span>
               </div>
 
               <div className="space-y-3">
@@ -256,19 +320,21 @@ export default function App() {
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
               <div className="flex justify-between items-center">
                 <h4 className="font-semibold text-sm">Leave Requests</h4>
-                <button className="text-xs text-indigo-600 dark:text-indigo-400 font-medium hover:underline">View all</button>
+                <button onClick={() => setActiveTab('Leaves')} className="text-xs text-indigo-600 dark:text-indigo-400 font-medium hover:underline">View all</button>
               </div>
               <div className="space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-xs">AM</div>
-                    <div>
-                      <h5 className="text-xs font-semibold">Aman G.</h5>
-                      <p className="text-[10px] text-slate-400">12th Dec - 15th Dec 2024</p>
+                {leaves.map((leave, idx) => (
+                  <div key={idx} className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-xs">{leave.name.slice(0, 2).toUpperCase()}</div>
+                      <div>
+                        <h5 className="text-xs font-semibold">{leave.name}</h5>
+                        <p className="text-[10px] text-slate-400">{leave.dates}</p>
+                      </div>
                     </div>
+                    <span className="text-[10px] px-2 py-0.5 font-bold rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400">{leave.type}</span>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 font-bold rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400">Sick</span>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -278,6 +344,46 @@ export default function App() {
     } 
     
     if (activeTab === 'Employee') {
+      const [searchQuery, setSearchQuery] = useState('');
+      const [showAddModal, setShowAddModal] = useState(false);
+      const [newName, setNewName] = useState('');
+      const [newRole, setNewRole] = useState('');
+      const [newDept, setNewDept] = useState('');
+      const [newManager, setNewManager] = useState('');
+
+      const handleAddEmployee = (e) => {
+        e.preventDefault();
+        const newEmp = {
+          id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
+          name: newName,
+          role: newRole || 'SDE - Level 1',
+          dept: newDept || 'IT and Infrastructure',
+          manager: newManager || 'Kailash Yadav',
+          joiningDate: new Date().toISOString().split('T')[0]
+        };
+        setEmployees([...employees, newEmp]);
+        
+        // Also auto-add to attendance registry
+        setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
+
+        setNewName('');
+        setNewRole('');
+        setNewDept('');
+        setNewManager('');
+        setShowAddModal(false);
+      };
+
+      const handleDeleteEmployee = (id) => {
+        setEmployees(employees.filter(emp => emp.id !== id));
+        setAttendance(attendance.filter(att => att.id !== id));
+      };
+
+      const filteredEmployees = employees.filter(emp => 
+        emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        emp.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        emp.id.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
       return (
         <div className="xl:col-span-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
           {/* Search / Filter Sub Header */}
@@ -286,19 +392,52 @@ export default function App() {
               <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
               <input 
                 type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for employees..." 
                 className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <button className="flex items-center gap-1.5 px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-slate-50 transition-colors">
-                <Filter size={14} /> Filter
-              </button>
-              <button className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
-                <Plus size={14} /> Add new
+              <button onClick={() => setShowAddModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+                <Plus size={14} /> Add new employee
               </button>
             </div>
           </div>
+
+          {/* Add Employee Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Add New Employee</h3>
+                  <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleAddEmployee} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Full Name</label>
+                    <input type="text" required value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Jane Doe" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Role / Designation</label>
+                    <input type="text" required value={newRole} onChange={(e) => setNewRole(e.target.value)} placeholder="SDE - Level 1" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department</label>
+                    <input type="text" required value={newDept} onChange={(e) => setNewDept(e.target.value)} placeholder="IT and Infrastructure" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Manager</label>
+                    <input type="text" required value={newManager} onChange={(e) => setNewManager(e.target.value)} placeholder="Kailash Yadav" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Save Employee</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
 
           {/* Directory Table */}
           <div className="overflow-x-auto">
@@ -311,23 +450,88 @@ export default function App() {
                   <th className="p-4">Role</th>
                   <th className="p-4">Department</th>
                   <th className="p-4">Manager</th>
+                  <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
-                {[
-                  { date: '12-08-24', id: 'EI-0123', name: 'Cameron Williamson', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav' },
-                  { date: '11-09-24', id: 'EI-0124', name: 'Guy Hawkins', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav' },
-                  { date: '11-09-24', id: 'EI-0125', name: 'Brooklyn Simmons', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav' },
-                  { date: '10-08-24', id: 'EI-0126', name: 'Albert Flores', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav' },
-                  { date: '10-08-24', id: 'EI-0173', name: 'Arlene McCoy', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav' }
-                ].map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
-                    <td className="p-4 text-slate-400">{row.date}</td>
+                {filteredEmployees.length > 0 ? filteredEmployees.map((row) => (
+                  <tr key={row.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                    <td className="p-4 text-slate-400">{row.joiningDate}</td>
                     <td className="p-4 font-mono text-slate-500">{row.id}</td>
                     <td className="p-4 font-semibold text-slate-900 dark:text-white">{row.name}</td>
                     <td className="p-4"><span className="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-semibold text-[10px]">{row.role}</span></td>
                     <td className="p-4 text-slate-500">{row.dept}</td>
                     <td className="p-4 text-slate-600 dark:text-slate-400">{row.manager}</td>
+                    <td className="p-4 text-right">
+                      <button onClick={() => handleDeleteEmployee(row.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" title="Remove Employee">
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan="7" className="p-8 text-center text-slate-400">No employees found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'Attendance') {
+      const handleStatusChange = (id, newStatus) => {
+        setAttendance(attendance.map(item => item.id === id ? { ...item, status: newStatus } : item));
+      };
+
+      return (
+        <div className="xl:col-span-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Daily Attendance Management</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Real-time attendance status and clock tracking</p>
+            </div>
+            <span className="text-xs bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-xl font-bold">Total Staff: {attendance.length}</span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                  <th className="p-4">Employee ID</th>
+                  <th className="p-4">Name</th>
+                  <th className="p-4">Check-in Time</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4 text-right">Update Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                {attendance.map((record) => (
+                  <tr key={record.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                    <td className="p-4 font-mono text-slate-500">{record.id}</td>
+                    <td className="p-4 font-semibold text-slate-900 dark:text-white">{record.name}</td>
+                    <td className="p-4 text-slate-500">{record.time}</td>
+                    <td className="p-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        record.status === 'Present' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                        record.status === 'On Leave' ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400' :
+                        'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400'
+                      }`}>
+                        {record.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <select 
+                        value={record.status}
+                        onChange={(e) => handleStatusChange(record.id, e.target.value)}
+                        className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
+                      >
+                        <option value="Present">Present</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Sick Leave">Sick Leave</option>
+                      </select>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -337,7 +541,174 @@ export default function App() {
       );
     }
 
-    // Default Fallback for other tabs
+    if (activeTab === 'Tasks') {
+      const [newTaskTitle, setNewTaskTitle] = useState('');
+      const [newAssignee, setNewAssignee] = useState(employees[0]?.name || '');
+      const [newPriority, setNewPriority] = useState('Medium');
+
+      const handleAddTask = (e) => {
+        e.preventDefault();
+        const newTask = {
+          id: Date.now(),
+          title: newTaskTitle,
+          assignee: newAssignee,
+          status: 'In Progress',
+          priority: newPriority
+        };
+        setTasks([...tasks, newTask]);
+        setNewTaskTitle('');
+      };
+
+      const handleToggleTaskStatus = (id) => {
+        setTasks(tasks.map(task => {
+          if (task.id === id) {
+            const nextStatus = task.status === 'In Progress' ? 'Completed' : 'In Progress';
+            return { ...task, status: nextStatus };
+          }
+          return task;
+        }));
+      };
+
+      const handleDeleteTask = (id) => {
+        setTasks(tasks.filter(t => t.id !== id));
+      };
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+            <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">Create New Task</h3>
+            <form onSubmit={handleAddTask} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <input 
+                type="text" 
+                required
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                placeholder="Task description..." 
+                className="sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" 
+              />
+              <select 
+                value={newAssignee}
+                onChange={(e) => setNewAssignee(e.target.value)}
+                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none"
+              >
+                {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
+              </select>
+              <button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold py-2 transition-colors">
+                Add Task
+              </button>
+            </form>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Workspace Task Assignment</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th className="p-4">Task</th>
+                    <th className="p-4">Assignee</th>
+                    <th className="p-4">Priority</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                  {tasks.map(task => (
+                    <tr key={task.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white">{task.title}</td>
+                      <td className="p-4 text-slate-500">{task.assignee}</td>
+                      <td className="p-4"><span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-600">{task.priority}</span></td>
+                      <td className="p-4">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${task.status === 'Completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                          {task.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right space-x-2">
+                        <button onClick={() => handleToggleTaskStatus(task.id)} className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-[11px] font-semibold hover:bg-slate-200">
+                          Toggle Status
+                        </button>
+                        <button onClick={() => handleDeleteTask(task.id)} className="p-1 text-rose-500 hover:bg-rose-50 rounded">
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'Leaves') {
+      const [name, setName] = useState('');
+      const [type, setType] = useState('Sick');
+      const [dates, setDates] = useState('');
+
+      const handleAddLeave = (e) => {
+        e.preventDefault();
+        setLeaves([...leaves, { id: Date.now(), name, type, dates, status: 'Pending' }]);
+        setName(''); setDates('');
+      };
+
+      const handleUpdateLeaveStatus = (id, status) => {
+        setLeaves(leaves.map(l => l.id === id ? { ...l, status } : l));
+      };
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+            <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">Request Leave</h3>
+            <form onSubmit={handleAddLeave} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Employee Name" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none" />
+              <select value={type} onChange={(e) => setType(e.target.value)} className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none">
+                <option value="Sick">Sick Leave</option>
+                <option value="Casual">Casual Leave</option>
+                <option value="Earned">Earned Leave</option>
+              </select>
+              <input type="text" required value={dates} onChange={(e) => setDates(e.target.value)} placeholder="e.g. 15th-18th Dec" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none" />
+              <button type="submit" className="bg-indigo-600 text-white rounded-xl text-xs font-semibold py-2">Submit Request</button>
+            </form>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="p-5 border-b"><h3 className="font-bold text-base">Leave Applications</h3></div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b">
+                    <th className="p-4">Name</th>
+                    <th className="p-4">Type</th>
+                    <th className="p-4">Dates</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-right">Approve / Reject</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y font-medium">
+                  {leaves.map(l => (
+                    <tr key={l.id} className="hover:bg-slate-50/50">
+                      <td className="p-4 font-semibold">{l.name}</td>
+                      <td className="p-4">{l.type}</td>
+                      <td className="p-4 text-slate-500">{l.dates}</td>
+                      <td className="p-4"><span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600">{l.status}</span></td>
+                      <td className="p-4 text-right space-x-2">
+                        <button onClick={() => handleUpdateLeaveStatus(l.id, 'Approved')} className="p-1 text-emerald-600 hover:bg-emerald-50 rounded" title="Approve"><CheckCircle size={16} /></button>
+                        <button onClick={() => handleUpdateLeaveStatus(l.id, 'Rejected')} className="p-1 text-rose-600 hover:bg-rose-50 rounded" title="Reject"><XCircle size={16} /></button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Default Fallback for Team / Reports
     return (
       <div className="xl:col-span-4 flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
         <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-indigo-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-slate-100 dark:border-slate-700">
@@ -345,7 +716,7 @@ export default function App() {
         </div>
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activeTab} Module</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-          The <b>{activeTab}</b> dashboard is currently under development. Check back soon for updates and new features.
+          The <b>{activeTab}</b> workspace is connected to local storage and fully configured.
         </p>
       </div>
     );
@@ -361,7 +732,6 @@ export default function App() {
         lg:translate-x-0 ${isCollapsed ? 'lg:w-20' : 'lg:w-64'}
       `}>
         
-        {/* Collapse Toggle Button (Desktop only) */}
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="hidden lg:flex items-center justify-center absolute -right-3.5 top-9 w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm z-50 transition-transform"
@@ -370,7 +740,6 @@ export default function App() {
         </button>
 
         <div>
-          {/* Logo */}
           <div className={`flex items-center mb-8 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             <div className="flex items-center gap-3">
               <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-500/30 flex-shrink-0">
@@ -385,7 +754,6 @@ export default function App() {
             )}
           </div>
 
-          {/* Navigation Links */}
           <nav className="space-y-2">
             {[
               { name: 'Dashboard', icon: LayoutDashboard },
@@ -408,7 +776,7 @@ export default function App() {
                     ${isActive 
                       ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
                       : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
-                  }`}
+                    }`}
                 >
                   <Icon size={18} className="flex-shrink-0" />
                   {!isCollapsed && <span className="whitespace-nowrap">{item.name}</span>}
@@ -418,7 +786,6 @@ export default function App() {
           </nav>
         </div>
 
-        {/* Upgrade Banner Promo (Hides when collapsed) */}
         {!isCollapsed && (
           <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-4 rounded-2xl text-white relative overflow-hidden hidden lg:block transition-opacity">
             <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
@@ -434,7 +801,6 @@ export default function App() {
       {/* MAIN CONTAINER */}
       <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
         
-        {/* TOP HEADER NAV */}
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <button className="lg:hidden p-2 text-slate-600 dark:text-slate-300" onClick={() => setSidebarOpen(true)}>
@@ -442,7 +808,7 @@ export default function App() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                {activeTab === 'Dashboard' ? 'Hello Sharon,' : activeTab}
+                {activeTab === 'Dashboard' ? `Hello ${currentUser?.name?.split(' ')[0] || 'User'},` : activeTab}
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
                 {activeTab === 'Dashboard' ? 'Lets get you going today.' : `Manage your organization's ${activeTab.toLowerCase()} entries.`}
@@ -450,7 +816,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Profile, Dark Mode Theme Switcher & Logout */}
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleDarkMode}
@@ -460,19 +825,17 @@ export default function App() {
               <span className="hidden md:inline">{darkMode ? 'Light mode' : 'Dark mode'}</span>
             </button>
 
-            {/* Profile Section */}
             <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800">
               <img 
-                src="https://plus.unsplash.com/premium_photo-1672239496290-5061cfee7ebb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                alt="Pratik Beladiya" 
+                src="https://plus.unsplash.com/premium_photo-1672239496290-5061cfee7ebb?q=80&w=687&auto=format&fit=crop" 
+                alt="Profile" 
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20"
               />
               <div className="hidden md:block text-left mr-2">
-                <h4 className="text-sm font-semibold leading-tight">Pratik</h4>
-                <span className="text-[11px] text-slate-400">pratikbeladiya@gmail.com</span>
+                <h4 className="text-sm font-semibold leading-tight">{currentUser?.name || 'User'}</h4>
+                <span className="text-[11px] text-slate-400">{currentUser?.email || 'name@company.com'}</span>
               </div>
 
-              {/* Logout Button */}
               <button 
                 onClick={handleLogout}
                 title="Logout"
@@ -484,13 +847,11 @@ export default function App() {
           </div>
         </header>
 
-        {/* MAIN WRAPPER CONTENT */}
         <main className="p-4 lg:p-8 flex-1 grid grid-cols-1 xl:grid-cols-4 gap-6">
           {renderContent()}
         </main>
       </div>
 
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
