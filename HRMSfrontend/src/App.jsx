@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, UserCheck, Calendar, FileText, 
   Settings, CheckSquare, Sun, Moon, Search, Filter, 
   Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield
 } from 'lucide-react';
 import Login from './Login';
 
@@ -62,6 +62,16 @@ export default function App() {
     ];
   });
 
+  // Teams State
+  const [teams, setTeams] = useState(() => {
+    const saved = localStorage.getItem('hrise_teams');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, name: 'IT and Infrastructure', lead: 'Kailash Yadav', description: 'Core system architecture, cloud deployment, and network security.', color: 'bg-indigo-500' },
+      { id: 2, name: 'Human Resources', lead: 'Pratik Beladiya', description: 'Talent acquisition, employee onboarding, payroll, and culture.', color: 'bg-violet-500' },
+      { id: 3, name: 'Finance and Auditing', lead: 'Arlene McCoy', description: 'Budgeting, quarterly audits, expense tracking, and accounting.', color: 'bg-amber-500' }
+    ];
+  });
+
   // Employee Tab Local States
   const [employeeSearchQuery, setEmployeeSearchQuery] = useState('');
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
@@ -70,11 +80,18 @@ export default function App() {
   const [newEmpDept, setNewEmpDept] = useState('');
   const [newEmpManager, setNewEmpManager] = useState('');
 
+  // Team Tab Local States
+  const [showAddTeamModal, setShowAddTeamModal] = useState(false);
+  const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamLead, setNewTeamLead] = useState('');
+  const [newTeamDesc, setNewTeamDesc] = useState('');
+
   // Sync state changes with localStorage
   useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
   useEffect(() => { localStorage.setItem('hrise_attendance', JSON.stringify(attendance)); }, [attendance]);
   useEffect(() => { localStorage.setItem('hrise_tasks', JSON.stringify(tasks)); }, [tasks]);
   useEffect(() => { localStorage.setItem('hrise_leaves', JSON.stringify(leaves)); }, [leaves]);
+  useEffect(() => { localStorage.setItem('hrise_teams', JSON.stringify(teams)); }, [teams]);
 
   // Check persisted session on load
   useEffect(() => {
@@ -134,6 +151,30 @@ export default function App() {
     setAttendance(attendance.filter(att => att.id !== id));
   };
 
+  // Team Handlers
+  const handleAddTeam = (e) => {
+    e.preventDefault();
+    const colors = ['bg-indigo-500', 'bg-violet-500', 'bg-amber-500', 'bg-emerald-500', 'bg-rose-500'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    const newTeam = {
+      id: Date.now(),
+      name: newTeamName,
+      lead: newTeamLead || 'Unassigned',
+      description: newTeamDesc || 'Department workspace for collaborative operations.',
+      color: randomColor
+    };
+    setTeams([...teams, newTeam]);
+    setNewTeamName('');
+    setNewTeamLead('');
+    setNewTeamDesc('');
+    setShowAddTeamModal(false);
+  };
+
+  const handleDeleteTeam = (id) => {
+    setTeams(teams.filter(t => t.id !== id));
+  };
+
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
     return <Login onLogin={handleLoginSuccess} />;
@@ -164,11 +205,11 @@ export default function App() {
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Tasks</span>
-                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{tasks.filter(t => t.status !== 'Completed').length}</h3>
-                  <span className="text-[11px] text-violet-500 bg-violet-50 dark:bg-violet-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">In Progress / Pending</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Teams</span>
+                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{teams.length}</h3>
+                  <span className="text-[11px] text-violet-500 bg-violet-50 dark:bg-violet-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">Functional Units</span>
                 </div>
-                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><CheckSquare size={22} /></div>
+                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><Briefcase size={22} /></div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
@@ -251,15 +292,16 @@ export default function App() {
                   <div className="relative w-28 h-28 flex items-center justify-center rounded-full border-8 border-indigo-600 border-r-violet-500 border-b-amber-400">
                     <div className="text-center">
                       <span className="text-xs text-slate-400 block">Total</span>
-                      <span className="text-base font-bold">{employees.length} Staff</span>
+                      <span className="text-base font-bold">{teams.length} Units</span>
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-2">
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-600"></span> IT & Infra</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-500"></span> HR</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Finance</div>
-                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-slate-300"></span> Others</div>
+                  {teams.slice(0, 4).map((team, idx) => (
+                    <div key={idx} className="flex items-center gap-1.5 truncate">
+                      <span className={`w-2 h-2 rounded-full ${team.color}`}></span> {team.name}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -386,7 +428,6 @@ export default function App() {
 
       return (
         <div className="xl:col-span-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
-          {/* Search / Filter Sub Header */}
           <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-center justify-between">
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
@@ -405,7 +446,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Add Employee Modal */}
           {showAddEmployeeModal && (
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
@@ -423,8 +463,10 @@ export default function App() {
                     <input type="text" required value={newEmpRole} onChange={(e) => setNewEmpRole(e.target.value)} placeholder="SDE - Level 1" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department</label>
-                    <input type="text" required value={newEmpDept} onChange={(e) => setNewEmpDept(e.target.value)} placeholder="IT and Infrastructure" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department / Team</label>
+                    <select value={newEmpDept} onChange={(e) => setNewEmpDept(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      {teams.map(t => <option key={t.id} value={t.name}>{t.name}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Manager</label>
@@ -439,7 +481,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Directory Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
               <thead>
@@ -475,6 +516,88 @@ export default function App() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'Team') {
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Organization Teams</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Manage functional departments, leads, and division units</p>
+            </div>
+            <button onClick={() => setShowAddTeamModal(true)} className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+              <Plus size={14} /> Create New Team
+            </button>
+          </div>
+
+          {/* Add Team Modal */}
+          {showAddTeamModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Create Department Team</h3>
+                  <button onClick={() => setShowAddTeamModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleAddTeam} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Team / Department Name</label>
+                    <input type="text" required value={newTeamName} onChange={(e) => setNewTeamName(e.target.value)} placeholder="e.g. Marketing & Growth" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Team Lead</label>
+                    <input type="text" required value={newTeamLead} onChange={(e) => setNewTeamLead(e.target.value)} placeholder="e.g. Esther Howard" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Description</label>
+                    <textarea required value={newTeamDesc} onChange={(e) => setNewTeamDesc(e.target.value)} placeholder="Brief summary of department responsibilities..." rows="3" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100"></textarea>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddTeamModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Save Team</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Teams Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {teams.map((team) => {
+              const memberCount = employees.filter(emp => emp.dept === team.name).length;
+              return (
+                <div key={team.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col justify-between relative overflow-hidden group">
+                  <div className={`absolute top-0 left-0 w-full h-1.5 ${team.color}`}></div>
+                  
+                  <div>
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${team.color}`}></div>
+                        <h4 className="font-bold text-base text-slate-900 dark:text-white">{team.name}</h4>
+                      </div>
+                      <button onClick={() => handleDeleteTeam(team.id)} className="text-slate-400 hover:text-rose-500 transition-colors" title="Delete Team">
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">{team.description}</p>
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Team Lead:</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-200">{team.lead}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Assigned Members:</span>
+                      <span className="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">{memberCount} Staff</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       );
@@ -708,7 +831,7 @@ export default function App() {
       );
     }
 
-    // Default Fallback for Team / Reports
+    // Default Fallback for Reports
     return (
       <div className="xl:col-span-4 flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
         <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-indigo-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-slate-100 dark:border-slate-700">
