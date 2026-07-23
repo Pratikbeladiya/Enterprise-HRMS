@@ -18,6 +18,11 @@ import {
 function Settings() {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+  localStorage.clear();
+  navigate("/login");
+};
+
   return (
     <div className="home">
 
@@ -73,9 +78,12 @@ function Settings() {
             <FaCog /> Settings
           </li>
 
-          <li>
-            <FaSignOutAlt /> Logout
-          </li>
+         <li
+  onClick={handleLogout}
+  style={{ cursor: "pointer" }}
+>
+  <FaSignOutAlt /> Logout
+</li>
 
         </ul>
 

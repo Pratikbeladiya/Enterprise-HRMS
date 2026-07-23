@@ -19,6 +19,12 @@ import {
 
 function Dashboard() {
   const navigate = useNavigate();
+  
+const handleLogout = () => {
+  localStorage.clear();
+  navigate("/login");
+};
+
   return (
     <div className="dashboard-page">
 
@@ -68,9 +74,12 @@ function Dashboard() {
   <FaCog /> Settings
 </li>
       
-                <li>
-                  <FaSignOutAlt /> Logout
-                </li>
+               <li
+  onClick={handleLogout}
+  style={{ cursor: "pointer" }}
+>
+  <FaSignOutAlt /> Logout
+</li>
               </ul>
       
             </div>

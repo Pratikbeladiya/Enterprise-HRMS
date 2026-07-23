@@ -19,6 +19,11 @@ function Payroll() {
 
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+  localStorage.clear();
+  navigate("/login");
+};
+
   return (
     <div className="home">
 
@@ -72,11 +77,13 @@ function Payroll() {
         >
           <FaCog /> Settings
         </li>
-        
-          <li>
-            <FaSignOutAlt /> Logout
-          </li>
 
+          <li
+  onClick={handleLogout}
+  style={{ cursor: "pointer" }}
+>
+  <FaSignOutAlt /> Logout
+</li>
         </ul>
 
       </div>
