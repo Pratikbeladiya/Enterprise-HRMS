@@ -1,4 +1,5 @@
 import React from "react";
+import {  useNavigate} from "react-router-dom";
 import "./Payroll.css";
 
 import {
@@ -12,7 +13,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-import { useNavigate } from "react-router-dom";
+
 
 function Payroll() {
 
@@ -32,7 +33,7 @@ function Payroll() {
 
         <ul className="menu">
 
-          <li onClick={() => navigate("/home")}>
+          <li onClick={() => navigate("/Dashboard")}>
             🏠 Dashboard
           </li>
 

@@ -38,7 +38,12 @@ const navigate = useNavigate();
           </li>
           <li>👨 Employees</li>
           <li className="active">📝 Attendance</li>
-          <li>💰 Payroll</li>
+         <li
+  onClick={() => navigate("/payroll")}
+  style={{ cursor: "pointer" }}
+>
+  💰 Payroll
+</li>
           <li>📅 Leave</li>
           <li>📊 Reports</li>
 
