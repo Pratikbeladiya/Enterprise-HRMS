@@ -62,6 +62,14 @@ export default function App() {
     ];
   });
 
+  // Employee Tab Local States
+  const [employeeSearchQuery, setEmployeeSearchQuery] = useState('');
+  const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+  const [newEmpName, setNewEmpName] = useState('');
+  const [newEmpRole, setNewEmpRole] = useState('');
+  const [newEmpDept, setNewEmpDept] = useState('');
+  const [newEmpManager, setNewEmpManager] = useState('');
+
   // Sync state changes with localStorage
   useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
   useEffect(() => { localStorage.setItem('hrise_attendance', JSON.stringify(attendance)); }, [attendance]);
@@ -98,6 +106,32 @@ export default function App() {
     setIsAuthenticated(false);
     setCurrentUser(null);
     setActiveTab('Dashboard');
+  };
+
+  // Employee Handlers
+  const handleAddEmployee = (e) => {
+    e.preventDefault();
+    const newEmp = {
+      id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: newEmpName,
+      role: newEmpRole || 'SDE - Level 1',
+      dept: newEmpDept || 'IT and Infrastructure',
+      manager: newEmpManager || 'Kailash Yadav',
+      joiningDate: new Date().toISOString().split('T')[0]
+    };
+    setEmployees([...employees, newEmp]);
+    setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
+
+    setNewEmpName('');
+    setNewEmpRole('');
+    setNewEmpDept('');
+    setNewEmpManager('');
+    setShowAddEmployeeModal(false);
+  };
+
+  const handleDeleteEmployee = (id) => {
+    setEmployees(employees.filter(emp => emp.id !== id));
+    setAttendance(attendance.filter(att => att.id !== id));
   };
 
   // If user is NOT authenticated, show the Login screen
@@ -344,44 +378,10 @@ export default function App() {
     } 
     
     if (activeTab === 'Employee') {
-      const [searchQuery, setSearchQuery] = useState('');
-      const [showAddModal, setShowAddModal] = useState(false);
-      const [newName, setNewName] = useState('');
-      const [newRole, setNewRole] = useState('');
-      const [newDept, setNewDept] = useState('');
-      const [newManager, setNewManager] = useState('');
-
-      const handleAddEmployee = (e) => {
-        e.preventDefault();
-        const newEmp = {
-          id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
-          name: newName,
-          role: newRole || 'SDE - Level 1',
-          dept: newDept || 'IT and Infrastructure',
-          manager: newManager || 'Kailash Yadav',
-          joiningDate: new Date().toISOString().split('T')[0]
-        };
-        setEmployees([...employees, newEmp]);
-        
-        // Also auto-add to attendance registry
-        setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
-
-        setNewName('');
-        setNewRole('');
-        setNewDept('');
-        setNewManager('');
-        setShowAddModal(false);
-      };
-
-      const handleDeleteEmployee = (id) => {
-        setEmployees(employees.filter(emp => emp.id !== id));
-        setAttendance(attendance.filter(att => att.id !== id));
-      };
-
       const filteredEmployees = employees.filter(emp => 
-        emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        emp.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        emp.id.toLowerCase().includes(searchQuery.toLowerCase())
+        emp.name.toLowerCase().includes(employeeSearchQuery.toLowerCase()) || 
+        emp.role.toLowerCase().includes(employeeSearchQuery.toLowerCase()) ||
+        emp.id.toLowerCase().includes(employeeSearchQuery.toLowerCase())
       );
 
       return (
@@ -392,46 +392,46 @@ export default function App() {
               <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
               <input 
                 type="text" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={employeeSearchQuery}
+                onChange={(e) => setEmployeeSearchQuery(e.target.value)}
                 placeholder="Search for employees..." 
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100"
               />
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <button onClick={() => setShowAddModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+              <button onClick={() => setShowAddEmployeeModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
                 <Plus size={14} /> Add new employee
               </button>
             </div>
           </div>
 
           {/* Add Employee Modal */}
-          {showAddModal && (
+          {showAddEmployeeModal && (
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">Add New Employee</h3>
-                  <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                  <button onClick={() => setShowAddEmployeeModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
                 </div>
                 <form onSubmit={handleAddEmployee} className="space-y-3">
                   <div>
                     <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Full Name</label>
-                    <input type="text" required value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Jane Doe" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <input type="text" required value={newEmpName} onChange={(e) => setNewEmpName(e.target.value)} placeholder="Jane Doe" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Role / Designation</label>
-                    <input type="text" required value={newRole} onChange={(e) => setNewRole(e.target.value)} placeholder="SDE - Level 1" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <input type="text" required value={newEmpRole} onChange={(e) => setNewEmpRole(e.target.value)} placeholder="SDE - Level 1" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department</label>
-                    <input type="text" required value={newDept} onChange={(e) => setNewDept(e.target.value)} placeholder="IT and Infrastructure" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <input type="text" required value={newEmpDept} onChange={(e) => setNewEmpDept(e.target.value)} placeholder="IT and Infrastructure" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Manager</label>
-                    <input type="text" required value={newManager} onChange={(e) => setNewManager(e.target.value)} placeholder="Kailash Yadav" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <input type="text" required value={newEmpManager} onChange={(e) => setNewEmpManager(e.target.value)} placeholder="Kailash Yadav" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
-                    <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="button" onClick={() => setShowAddEmployeeModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
                     <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Save Employee</button>
                   </div>
                 </form>
@@ -525,7 +525,7 @@ export default function App() {
                       <select 
                         value={record.status}
                         onChange={(e) => handleStatusChange(record.id, e.target.value)}
-                        className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
+                        className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer text-slate-800 dark:text-slate-100"
                       >
                         <option value="Present">Present</option>
                         <option value="On Leave">On Leave</option>
@@ -584,12 +584,12 @@ export default function App() {
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
                 placeholder="Task description..." 
-                className="sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" 
+                className="sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" 
               />
               <select 
                 value={newAssignee}
                 onChange={(e) => setNewAssignee(e.target.value)}
-                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none"
+                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100"
               >
                 {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
               </select>
@@ -644,14 +644,14 @@ export default function App() {
     }
 
     if (activeTab === 'Leaves') {
-      const [name, setName] = useState('');
-      const [type, setType] = useState('Sick');
-      const [dates, setDates] = useState('');
+      const [leaveName, setLeaveName] = useState('');
+      const [leaveType, setLeaveType] = useState('Sick');
+      const [leaveDates, setLeaveDates] = useState('');
 
       const handleAddLeave = (e) => {
         e.preventDefault();
-        setLeaves([...leaves, { id: Date.now(), name, type, dates, status: 'Pending' }]);
-        setName(''); setDates('');
+        setLeaves([...leaves, { id: Date.now(), name: leaveName, type: leaveType, dates: leaveDates, status: 'Pending' }]);
+        setLeaveName(''); setLeaveDates('');
       };
 
       const handleUpdateLeaveStatus = (id, status) => {
@@ -663,13 +663,13 @@ export default function App() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
             <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">Request Leave</h3>
             <form onSubmit={handleAddLeave} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Employee Name" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none" />
-              <select value={type} onChange={(e) => setType(e.target.value)} className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none">
+              <input type="text" required value={leaveName} onChange={(e) => setLeaveName(e.target.value)} placeholder="Employee Name" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100" />
+              <select value={leaveType} onChange={(e) => setLeaveType(e.target.value)} className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100">
                 <option value="Sick">Sick Leave</option>
                 <option value="Casual">Casual Leave</option>
                 <option value="Earned">Earned Leave</option>
               </select>
-              <input type="text" required value={dates} onChange={(e) => setDates(e.target.value)} placeholder="e.g. 15th-18th Dec" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none" />
+              <input type="text" required value={leaveDates} onChange={(e) => setLeaveDates(e.target.value)} placeholder="e.g. 15th-18th Dec" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100" />
               <button type="submit" className="bg-indigo-600 text-white rounded-xl text-xs font-semibold py-2">Submit Request</button>
             </form>
           </div>
