@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, UserCheck, Calendar, FileText, 
   Settings, CheckSquare, Sun, Moon, Search, Filter, 
   Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield, Download, Printer, BarChart3
 } from 'lucide-react';
 import Login from './Login';
 
@@ -92,6 +92,9 @@ export default function App() {
   const [leaveType, setLeaveType] = useState('Sick');
   const [leaveDates, setLeaveDates] = useState('');
   const [leaveReason, setLeaveReason] = useState('');
+
+  // Reports Tab Local States
+  const [reportFilter, setReportFilter] = useState('All');
 
   // Sync state changes with localStorage
   useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
@@ -647,7 +650,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Add Leave Modal */}
           {showAddLeaveModal && (
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
@@ -689,7 +691,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Leaves Table */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="p-5 border-b border-slate-100 dark:border-slate-800">
               <h4 className="font-semibold text-sm">All Leave Applications</h4>
@@ -730,25 +731,13 @@ export default function App() {
                         </span>
                       </td>
                       <td className="p-4 text-right space-x-1">
-                        <button 
-                          onClick={() => handleUpdateLeaveStatus(leave.id, 'Approved')} 
-                          className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors" 
-                          title="Approve"
-                        >
+                        <button onClick={() => handleUpdateLeaveStatus(leave.id, 'Approved')} className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors" title="Approve">
                           <CheckCircle size={16} />
                         </button>
-                        <button 
-                          onClick={() => handleUpdateLeaveStatus(leave.id, 'Rejected')} 
-                          className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" 
-                          title="Reject"
-                        >
+                        <button onClick={() => handleUpdateLeaveStatus(leave.id, 'Rejected')} className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" title="Reject">
                           <XCircle size={16} />
                         </button>
-                        <button 
-                          onClick={() => handleDeleteLeave(leave.id)} 
-                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors" 
-                          title="Delete Request"
-                        >
+                        <button onClick={() => handleDeleteLeave(leave.id)} className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors" title="Delete Request">
                           <Trash2 size={16} />
                         </button>
                       </td>
@@ -760,6 +749,120 @@ export default function App() {
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'Reports') {
+      const handleExportReport = () => {
+        const reportData = {
+          generatedAt: new Date().toISOString(),
+          totalEmployees: employees.length,
+          totalTeams: teams.length,
+          attendanceOverview: attendance,
+          tasksSummary: tasks,
+          leavesSummary: leaves
+        };
+        const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `HRise_Analytics_Report_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+      };
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          {/* Header Action Bar */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Organizational Reports & Analytics</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Comprehensive performance reviews, staff metrics, and logs</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={handleExportReport} className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+                <Download size={14} /> Export JSON Report
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Metrics Summary Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 uppercase tracking-wider">Total Headcount</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{employees.length} Staff</h3>
+              <span className="text-[11px] text-emerald-500 mt-2 block font-medium">100% Active Profiles</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 uppercase tracking-wider">Attendance Rate</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {Math.round((attendance.filter(a => a.status === 'Present').length / (attendance.length || 1)) * 100)}%
+              </h3>
+              <span className="text-[11px] text-indigo-500 mt-2 block font-medium">Based on daily check-ins</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 uppercase tracking-wider">Task Completion</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {Math.round((tasks.filter(t => t.status === 'Completed').length / (tasks.length || 1)) * 100)}%
+              </h3>
+              <span className="text-[11px] text-violet-500 mt-2 block font-medium">Workspace efficiency</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 uppercase tracking-wider">Active Departments</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{teams.length} Units</h3>
+              <span className="text-[11px] text-amber-500 mt-2 block font-medium">Functional divisions</span>
+            </div>
+          </div>
+
+          {/* Detailed Reports Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Department Headcount Breakdown */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-4">
+              <h4 className="font-semibold text-sm text-slate-900 dark:text-white">Department Headcount Ratio</h4>
+              <div className="space-y-3">
+                {teams.map(team => {
+                  const count = employees.filter(e => e.dept === team.name).length;
+                  const percentage = Math.round((count / (employees.length || 1)) * 100);
+                  return (
+                    <div key={team.id} className="space-y-1">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-slate-700 dark:text-slate-300">{team.name}</span>
+                        <span className="text-slate-500">{count} members ({percentage}%)</span>
+                      </div>
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${team.color}`} style={{ width: `${percentage}%` }}></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Leave Status Audit */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-4">
+              <h4 className="font-semibold text-sm text-slate-900 dark:text-white">Leave Status Summary</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Pending Approvals</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">
+                    {leaves.filter(l => l.status === 'Pending').length} requests
+                  </span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Approved Leaves</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
+                    {leaves.filter(l => l.status === 'Approved').length} requests
+                  </span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                  <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Rejected Leaves</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600">
+                    {leaves.filter(l => l.status === 'Rejected').length} requests
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -929,18 +1032,7 @@ export default function App() {
       );
     }
 
-    // Default Fallback for Reports
-    return (
-      <div className="xl:col-span-4 flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
-        <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-indigo-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-slate-100 dark:border-slate-700">
-          <Hammer size={32} />
-        </div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activeTab} Module</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-          The <b>{activeTab}</b> workspace is connected to local storage and fully configured.
-        </p>
-      </div>
-    );
+    return null;
   };
 
   return (
