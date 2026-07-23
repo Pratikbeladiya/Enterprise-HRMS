@@ -11,6 +11,7 @@ const departmentRoute = require("./routes/department.route");
 const dashboardRoute = require("./routes/dashboard.route");
 const attendanceRoute = require("./routes/attendance.route");
 const payrollRoute = require("./routes/payroll.route");
+const leaveRoute = require("./routes/leave.route");
 
 // Body Parsing Middleware
 app.use(express.json());
@@ -47,6 +48,7 @@ app.use("/api/departments", departmentRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/payroll", payrollRoute);
+app.use("/api/leave", leaveRoute);
 
 
 module.exports = app;
