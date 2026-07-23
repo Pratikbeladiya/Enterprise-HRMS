@@ -59,9 +59,12 @@ function Payroll() {
   📅 Leave
 </li>
 
-          <li>
-            📊 Reports
-          </li>
+         <li
+  onClick={() => navigate("/reports")}
+  style={{ cursor: "pointer" }}
+>
+  📊 Reports
+</li>
 
           <li>
             <FaCog /> Settings

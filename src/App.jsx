@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Attendance from "./pages/Attendance";
 import Payroll from "./pages/Payroll";
 import Leave from "./pages/Leave";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -16,13 +17,12 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
-
         {/* HRMS Pages */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/leave" element={<Leave />} />
+        <Route path="/reports" element={<Reports />} />
 
       </Routes>
     </BrowserRouter>
