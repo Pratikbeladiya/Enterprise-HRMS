@@ -57,8 +57,8 @@ export default function App() {
   const [leaves, setLeaves] = useState(() => {
     const saved = localStorage.getItem('hrise_leaves');
     return saved ? JSON.parse(saved) : [
-      { id: 1, name: 'Aman G.', type: 'Sick', dates: '12th Dec - 15th Dec 2024', status: 'Pending' },
-      { id: 2, name: 'Guy Hawkins', type: 'Casual', dates: '20th Dec - 22nd Dec 2024', status: 'Approved' }
+      { id: 1, name: 'Aman G.', type: 'Sick', dates: '12th Dec - 15th Dec 2026', status: 'Pending' },
+      { id: 2, name: 'Guy Hawkins', type: 'Casual', dates: '20th Dec - 22nd Dec 2026', status: 'Approved' }
     ];
   });
 
@@ -85,6 +85,13 @@ export default function App() {
   const [newTeamName, setNewTeamName] = useState('');
   const [newTeamLead, setNewTeamLead] = useState('');
   const [newTeamDesc, setNewTeamDesc] = useState('');
+
+  // Leaves Tab Local States
+  const [showAddLeaveModal, setShowAddLeaveModal] = useState(false);
+  const [leaveEmployeeName, setLeaveEmployeeName] = useState('');
+  const [leaveType, setLeaveType] = useState('Sick');
+  const [leaveDates, setLeaveDates] = useState('');
+  const [leaveReason, setLeaveReason] = useState('');
 
   // Sync state changes with localStorage
   useEffect(() => { localStorage.setItem('hrise_employees', JSON.stringify(employees)); }, [employees]);
@@ -175,6 +182,32 @@ export default function App() {
     setTeams(teams.filter(t => t.id !== id));
   };
 
+  // Leave Handlers
+  const handleAddLeave = (e) => {
+    e.preventDefault();
+    const newLeave = {
+      id: Date.now(),
+      name: leaveEmployeeName || currentUser?.name || 'Staff Member',
+      type: leaveType,
+      dates: leaveDates,
+      reason: leaveReason || 'Personal time off',
+      status: 'Pending'
+    };
+    setLeaves([...leaves, newLeave]);
+    setLeaveEmployeeName('');
+    setLeaveDates('');
+    setLeaveReason('');
+    setShowAddLeaveModal(false);
+  };
+
+  const handleUpdateLeaveStatus = (id, newStatus) => {
+    setLeaves(leaves.map(l => l.id === id ? { ...l, status: newStatus } : l));
+  };
+
+  const handleDeleteLeave = (id) => {
+    setLeaves(leaves.filter(l => l.id !== id));
+  };
+
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
     return <Login onLogin={handleLoginSuccess} />;
@@ -205,11 +238,11 @@ export default function App() {
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Teams</span>
-                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{teams.length}</h3>
-                  <span className="text-[11px] text-violet-500 bg-violet-50 dark:bg-violet-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">Functional Units</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Pending Leaves</span>
+                  <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{leaves.filter(l => l.status === 'Pending').length}</h3>
+                  <span className="text-[11px] text-amber-500 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md font-medium inline-block mt-2">Awaiting Approval</span>
                 </div>
-                <div className="p-3 bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-xl"><Briefcase size={22} /></div>
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl"><Calendar size={22} /></div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
@@ -534,7 +567,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Add Team Modal */}
           {showAddTeamModal && (
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
@@ -564,7 +596,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Teams Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teams.map((team) => {
               const memberCount = employees.filter(emp => emp.dept === team.name).length;
@@ -598,6 +629,138 @@ export default function App() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'Leaves') {
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Leave Management</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Submit time-off requests, monitor balances, and review statuses</p>
+            </div>
+            <button onClick={() => setShowAddLeaveModal(true)} className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+              <Plus size={14} /> Request New Leave
+            </button>
+          </div>
+
+          {/* Add Leave Modal */}
+          {showAddLeaveModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">New Leave Application</h3>
+                  <button onClick={() => setShowAddLeaveModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleAddLeave} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Employee Name</label>
+                    <select value={leaveEmployeeName} onChange={(e) => setLeaveEmployeeName(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="">Select Employee...</option>
+                      {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Leave Type</label>
+                    <select value={leaveType} onChange={(e) => setLeaveType(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="Sick">Sick Leave</option>
+                      <option value="Casual">Casual Leave</option>
+                      <option value="Earned">Earned Leave</option>
+                      <option value="Maternity / Paternity">Maternity / Paternity</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Duration / Dates</label>
+                    <input type="text" required value={leaveDates} onChange={(e) => setLeaveDates(e.target.value)} placeholder="e.g. 15th Dec - 18th Dec 2026" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Reason</label>
+                    <textarea value={leaveReason} onChange={(e) => setLeaveReason(e.target.value)} placeholder="Reason for leave application..." rows="3" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100"></textarea>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddLeaveModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Submit Application</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Leaves Table */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800">
+              <h4 className="font-semibold text-sm">All Leave Applications</h4>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th className="p-4">Applicant Name</th>
+                    <th className="p-4">Leave Type</th>
+                    <th className="p-4">Dates</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                  {leaves.length > 0 ? leaves.map((leave) => (
+                    <tr key={leave.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
+                          {leave.name.slice(0, 2).toUpperCase()}
+                        </div>
+                        {leave.name}
+                      </td>
+                      <td className="p-4">
+                        <span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-300 font-medium">
+                          {leave.type}
+                        </span>
+                      </td>
+                      <td className="p-4 text-slate-500">{leave.dates}</td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          leave.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                          leave.status === 'Rejected' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' :
+                          'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
+                        }`}>
+                          {leave.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right space-x-1">
+                        <button 
+                          onClick={() => handleUpdateLeaveStatus(leave.id, 'Approved')} 
+                          className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors" 
+                          title="Approve"
+                        >
+                          <CheckCircle size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleUpdateLeaveStatus(leave.id, 'Rejected')} 
+                          className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" 
+                          title="Reject"
+                        >
+                          <XCircle size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteLeave(leave.id)} 
+                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors" 
+                          title="Delete Request"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="5" className="p-8 text-center text-slate-400">No leave requests found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       );
@@ -755,71 +918,6 @@ export default function App() {
                         <button onClick={() => handleDeleteTask(task.id)} className="p-1 text-rose-500 hover:bg-rose-50 rounded">
                           <Trash2 size={14} />
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (activeTab === 'Leaves') {
-      const [leaveName, setLeaveName] = useState('');
-      const [leaveType, setLeaveType] = useState('Sick');
-      const [leaveDates, setLeaveDates] = useState('');
-
-      const handleAddLeave = (e) => {
-        e.preventDefault();
-        setLeaves([...leaves, { id: Date.now(), name: leaveName, type: leaveType, dates: leaveDates, status: 'Pending' }]);
-        setLeaveName(''); setLeaveDates('');
-      };
-
-      const handleUpdateLeaveStatus = (id, status) => {
-        setLeaves(leaves.map(l => l.id === id ? { ...l, status } : l));
-      };
-
-      return (
-        <div className="xl:col-span-4 space-y-6">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
-            <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">Request Leave</h3>
-            <form onSubmit={handleAddLeave} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <input type="text" required value={leaveName} onChange={(e) => setLeaveName(e.target.value)} placeholder="Employee Name" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100" />
-              <select value={leaveType} onChange={(e) => setLeaveType(e.target.value)} className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100">
-                <option value="Sick">Sick Leave</option>
-                <option value="Casual">Casual Leave</option>
-                <option value="Earned">Earned Leave</option>
-              </select>
-              <input type="text" required value={leaveDates} onChange={(e) => setLeaveDates(e.target.value)} placeholder="e.g. 15th-18th Dec" className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl text-xs outline-none text-slate-800 dark:text-slate-100" />
-              <button type="submit" className="bg-indigo-600 text-white rounded-xl text-xs font-semibold py-2">Submit Request</button>
-            </form>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-5 border-b"><h3 className="font-bold text-base">Leave Applications</h3></div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b">
-                    <th className="p-4">Name</th>
-                    <th className="p-4">Type</th>
-                    <th className="p-4">Dates</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-right">Approve / Reject</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y font-medium">
-                  {leaves.map(l => (
-                    <tr key={l.id} className="hover:bg-slate-50/50">
-                      <td className="p-4 font-semibold">{l.name}</td>
-                      <td className="p-4">{l.type}</td>
-                      <td className="p-4 text-slate-500">{l.dates}</td>
-                      <td className="p-4"><span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600">{l.status}</span></td>
-                      <td className="p-4 text-right space-x-2">
-                        <button onClick={() => handleUpdateLeaveStatus(l.id, 'Approved')} className="p-1 text-emerald-600 hover:bg-emerald-50 rounded" title="Approve"><CheckCircle size={16} /></button>
-                        <button onClick={() => handleUpdateLeaveStatus(l.id, 'Rejected')} className="p-1 text-rose-600 hover:bg-rose-50 rounded" title="Reject"><XCircle size={16} /></button>
                       </td>
                     </tr>
                   ))}
