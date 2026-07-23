@@ -21,14 +21,38 @@ const createLeave = async (req, res) => {
 // Get All Leaves
 const getAllLeaves = async (req, res) => {
   try {
-    const leaves = await Leave.find().populate(
-      "employee",
-      "employeeId firstName lastName designation"
-    );
+    const {
+      status,
+      leaveType,
+      page = 1,
+      limit = 10,
+      sortBy = "createdAt",
+      order = "desc",
+    } = req.query;
+
+    const filter = {};
+
+    if (status) filter.status = status;
+    if (leaveType) filter.leaveType = leaveType;
+
+    const skip = (page - 1) * limit;
+
+    const leaves = await Leave.find(filter)
+      .populate(
+        "employee",
+        "employeeId firstName lastName designation"
+      )
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await Leave.countDocuments(filter);
 
     return res.status(200).json({
       success: true,
-      count: leaves.length,
+      totalRecords: total,
+      currentPage: Number(page),
+      totalPages: Math.ceil(total / limit),
       data: leaves,
     });
   } catch (error) {
@@ -225,6 +249,43 @@ const getEmployeeLeaveHistory = async (req, res) => {
   }
 };
 
+const getLeaveSummary = async (req, res) => {
+  try {
+    const summary = await Leave.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          totalRequests: { $sum: 1 },
+          totalLeaveDays: { $sum: "$totalDays" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: "$_id",
+          totalRequests: 1,
+          totalLeaveDays: 1,
+        },
+      },
+      {
+        $sort: {
+          status: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createLeave,
   getAllLeaves,
@@ -235,4 +296,5 @@ module.exports = {
   approveLeave,
   rejectLeave,
   getEmployeeLeaveHistory,
+  getLeaveSummary,
 };

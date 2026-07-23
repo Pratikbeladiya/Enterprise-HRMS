@@ -12,6 +12,7 @@ const {
   approveLeave,
   rejectLeave,
  getEmployeeLeaveHistory,
+ getLeaveSummary,
 } = require("../controllers/leave.controller");
 
 router.post("/", createLeave);
@@ -21,6 +22,10 @@ router.post("/apply", applyLeave);
 router.put("/:id/approve", approveLeave);
 
 router.put("/:id/reject", rejectLeave);
+
+router.get("/employee/:employeeId", getEmployeeLeaveHistory);
+
+router.get("/summary", getLeaveSummary);
 
 router.get("/employee/:employeeId", getEmployeeLeaveHistory);
 
