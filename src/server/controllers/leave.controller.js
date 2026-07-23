@@ -119,10 +119,120 @@ const deleteLeave = async (req, res) => {
   }
 };
 
+// Apply Leave
+const applyLeave = async (req, res) => {
+  try {
+    const leave = await Leave.create(req.body);
+
+    return res.status(201).json({
+      success: true,
+      message: "Leave applied successfully",
+      data: leave,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const approveLeave = async (req, res) => {
+  try {
+    const leave = await Leave.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: "Approved",
+        approvedBy: req.body.approvedBy,
+        remarks: req.body.remarks,
+      },
+      { new: true }
+    );
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: "Leave request not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Leave approved successfully",
+      data: leave,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const rejectLeave = async (req, res) => {
+  try {
+    const leave = await Leave.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: "Rejected",
+        approvedBy: req.body.approvedBy,
+        remarks: req.body.remarks,
+      },
+      { new: true }
+    );
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: "Leave request not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Leave rejected successfully",
+      data: leave,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getEmployeeLeaveHistory = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      employee: req.params.employeeId,
+    })
+      .populate(
+        "employee",
+        "employeeId firstName lastName designation department"
+      )
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: leaves.length,
+      data: leaves,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createLeave,
   getAllLeaves,
   getLeaveById,
   updateLeave,
   deleteLeave,
+  applyLeave,
+  approveLeave,
+  rejectLeave,
+  getEmployeeLeaveHistory,
 };

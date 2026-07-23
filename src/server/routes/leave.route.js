@@ -8,10 +8,22 @@ const {
   getLeaveById,
   updateLeave,
   deleteLeave,
+  applyLeave,
+  approveLeave,
+  rejectLeave,
+ getEmployeeLeaveHistory,
 } = require("../controllers/leave.controller");
 
 router.post("/", createLeave);
 router.get("/", getAllLeaves);
+router.post("/apply", applyLeave);
+
+router.put("/:id/approve", approveLeave);
+
+router.put("/:id/reject", rejectLeave);
+
+router.get("/employee/:employeeId", getEmployeeLeaveHistory);
+
 router.get("/:id", getLeaveById);
 router.put("/:id", updateLeave);
 router.delete("/:id", deleteLeave);
