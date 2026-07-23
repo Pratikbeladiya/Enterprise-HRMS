@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import "./Dashboard.css";
 
 import {
@@ -36,7 +36,12 @@ function Dashboard() {
               <ul className="menu">
               <li className="active">🏠 Dashboard</li>
                 <li>👨 Employees</li>
-                <li>📝 Attendance</li>
+                <li
+  onClick={() => navigate("/attendance")}
+  style={{ cursor: "pointer" }}
+>
+  📝 Attendance
+</li>
                 <li>💰 Payroll</li>
                 <li>📅 Leave</li>
                 <li>📊 Reports</li>

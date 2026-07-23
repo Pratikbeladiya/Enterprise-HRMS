@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate} from "react-router-dom";
 import "./Attendance.css";
 
 import {
@@ -13,6 +14,8 @@ import {
 } from "react-icons/fa";
 
 function Attendance() {
+const navigate = useNavigate();
+
   return (
     <div className="home">
 
@@ -28,7 +31,7 @@ function Attendance() {
         <ul className="menu">
          <li
           
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/Dashboard")}
             style={{ cursor: "pointer" }}
           >
             🏠 Dashboard
