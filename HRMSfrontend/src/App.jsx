@@ -15,6 +15,9 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const [isColl
+
+  
   const [isCollapsed, setIsCollapsed] = useState(false); 
 
   // Handle Dark Mode globally
