@@ -142,6 +142,48 @@ function Leave() {
 
         </div>
 
+<div className="leave-form">
+
+  <h2>Apply Leave</h2>
+
+  <div className="form-row">
+
+    <div className="form-group">
+      <label>Leave Type</label>
+      <select>
+        <option>Select Leave Type</option>
+        <option>Casual Leave</option>
+        <option>Sick Leave</option>
+        <option>Paid Leave</option>
+      </select>
+    </div>
+
+    <div className="form-group">
+      <label>From Date</label>
+      <input type="date" />
+    </div>
+
+    <div className="form-group">
+      <label>To Date</label>
+      <input type="date" />
+    </div>
+
+  </div>
+
+  <div className="form-group">
+    <label>Reason</label>
+    <textarea
+      rows="4"
+      placeholder="Enter reason for leave"
+    ></textarea>
+  </div>
+
+  <button className="apply-btn">
+    Apply Leave
+  </button>
+
+</div>
+
         {/* Leave Table */}
 
         <div className="employee-table">
@@ -149,7 +191,7 @@ function Leave() {
           <div className="table-header">
             <h2>Leave Requests</h2>
 
-            <button>Apply Leave</button>
+            
           </div>
 
           <table>

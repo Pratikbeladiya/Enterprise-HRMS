@@ -44,7 +44,12 @@ const navigate = useNavigate();
 >
   💰 Payroll
 </li>
-          <li>📅 Leave</li>
+        <li
+  onClick={() => navigate("/leave")}
+  style={{ cursor: "pointer" }}
+>
+  📅 Leave
+</li>
           <li>📊 Reports</li>
 
           <li>
