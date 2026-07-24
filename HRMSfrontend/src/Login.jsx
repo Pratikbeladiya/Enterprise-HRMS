@@ -146,7 +146,7 @@ function VisualPanel() {
 
       <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
         <div className="flex items-center justify-between">
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -154,7 +154,7 @@ function VisualPanel() {
           >
             <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
             WCAG-ready access
-          </motion.div>
+          </motion.div> */}
         </div>
 
         {/* Center blank space plain white text with controlled horizontal constraints to avoid overlapping floating tiles */}
@@ -165,8 +165,8 @@ function VisualPanel() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-3 max-w-md"
           >
-            <h1 className="text-xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug">
-              Hrise A Enterprise HRMS
+            <h1 className="text-3xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug">
+              <span className="text-blue-400">Hrise</span> a Enterprise HRMS
             </h1>
             <p className="text-sm text-white/80 leading-relaxed">
               Empower your teams and streamline human resources with next-gen management controls.
