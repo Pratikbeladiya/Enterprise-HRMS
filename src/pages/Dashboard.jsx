@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState} from "react";
 import {  useNavigate} from "react-router-dom";
 import "./Dashboard.css";
 
@@ -19,10 +19,53 @@ import {
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   
 const handleLogout = () => {
   localStorage.clear();
   navigate("/login");
+};
+
+const handleSearch = (e) => {
+  if (e.key === "Enter") {
+    const value = searchTerm.toLowerCase().trim();
+
+    switch (value) {
+      case "dashboard":
+        navigate("/dashboard");
+        break;
+
+      case "employees":
+      case "employee":
+        navigate("/employees");
+        break;
+
+      case "attendance":
+        navigate("/attendance");
+        break;
+
+      case "payroll":
+      case "salary":
+        navigate("/payroll");
+        break;
+
+      case "leave":
+        navigate("/leave");
+        break;
+
+      case "reports":
+      case "report":
+        navigate("/reports");
+        break;
+
+      case "settings":
+        navigate("/settings");
+        break;
+
+      default:
+        alert("No page found");
+    }
+  }
 };
 
   return (
@@ -110,9 +153,12 @@ const handleLogout = () => {
                   <div className="search-box">
                     <FaSearch />
                     <input
-                      type="text"
-                      placeholder="Search Employee..."
-                    />
+  type="text"
+  placeholder="Search Page..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  onKeyDown={handleSearch}
+/>
                   </div>
       
                   <FaBell className="bell" />

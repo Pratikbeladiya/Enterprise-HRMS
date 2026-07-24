@@ -30,7 +30,7 @@ const handleLogout = () => {
 
         <div className="logo">
           <h2>HRMS</h2>
-          <p>Dashboard</p>
+          <p>Attendance page</p>
         </div>
 
         <ul className="menu">
