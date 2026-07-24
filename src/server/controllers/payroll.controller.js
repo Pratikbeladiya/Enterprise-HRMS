@@ -8,15 +8,15 @@ const {
 const createPayroll = async (req, res) => {
   try {
     const {
-       employee,
-  month,
-  year,
-  basicSalary,
-  allowances,
-  deductions,
-  bonus,
-  paymentStatus,
-  paymentDate,
+      employee,
+      month,
+      year,
+      basicSalary,
+      allowances,
+      deductions,
+      bonus,
+      paymentStatus,
+      paymentDate,
     } = req.body;
 
     if (!employee || !month || !year || basicSalary === undefined) {

@@ -13,6 +13,8 @@ const attendanceRoute = require("./routes/attendance.route");
 const payrollRoute = require("./routes/payroll.route");
 const leaveRoute = require("./routes/leave.route");
 
+const errorHandler = require("./middlewares/error.middleware");
+
 // Body Parsing Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +51,8 @@ app.use("/api/dashboard", dashboardRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/payroll", payrollRoute);
 app.use("/api/leave", leaveRoute);
+
+app.use(errorHandler);
 
 
 module.exports = app;

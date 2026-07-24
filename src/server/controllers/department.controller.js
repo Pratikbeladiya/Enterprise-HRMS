@@ -16,11 +16,11 @@ const createDepartment = async (req, res) => {
 
     // Validation
     if (!departmentName || !description || !location) {
-     return errorResponse(
-  res,
-  400,
-  "Department name, description and location are required."
-);
+      return errorResponse(
+        res,
+        400,
+        "Department name, description and location are required."
+      );
     }
 
     // Duplicate check
@@ -29,11 +29,11 @@ const createDepartment = async (req, res) => {
     });
 
     if (existingDepartment) {
-     return errorResponse(
-  res,
-  409,
-  "Department already exists."
-);
+      return errorResponse(
+        res,
+        409,
+        "Department already exists."
+      );
     }
 
     // Create Department
@@ -46,13 +46,13 @@ const createDepartment = async (req, res) => {
     });
 
     return successResponse(
-  res,
-  201,
-  "Department created successfully.",
-  department
-);
+      res,
+      201,
+      "Department created successfully.",
+      department
+    );
   } catch (error) {
-   return errorResponse(res, 500, error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -61,15 +61,15 @@ const getAllDepartments = async (req, res) => {
     const departments = await Department.find()
       .populate("manager", "firstName lastName email");
 
-   return successResponse(
-  res,
-  200,
-  "Departments fetched successfully",
-  {
-    totalDepartments: departments.length,
-    departments,
-  }
-);
+    return successResponse(
+      res,
+      200,
+      "Departments fetched successfully",
+      {
+        totalDepartments: departments.length,
+        departments,
+      }
+    );
   } catch (error) {
     return errorResponse(res, 500, error.message);
   }
@@ -85,18 +85,18 @@ const getDepartmentById = async (req, res) => {
 
     if (!department) {
       return errorResponse(
-  res,
-  404,
-  "Department not found."
-);
+        res,
+        404,
+        "Department not found."
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Department fetched successfully",
-  department
-);
+      res,
+      200,
+      "Department fetched successfully",
+      department
+    );
 
   } catch (error) {
     return errorResponse(res, 500, error.message);
@@ -118,23 +118,23 @@ const updateDepartment = async (req, res) => {
     );
 
     if (!updatedDepartment) {
-     return errorResponse(
-  res,
-  404,
-  "Department not found."
-);
+      return errorResponse(
+        res,
+        404,
+        "Department not found."
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Department updated successfully.",
-  updatedDepartment
-);
+      res,
+      200,
+      "Department updated successfully.",
+      updatedDepartment
+    );
   } catch (error) {
     return errorResponse(res, 500, error.message);
   }
-  
+
 };
 
 const deleteDepartment = async (req, res) => {
@@ -144,20 +144,20 @@ const deleteDepartment = async (req, res) => {
     const deletedDepartment = await Department.findByIdAndDelete(id);
 
     if (!deletedDepartment) {
-     return errorResponse(
-  res,
-  404,
-  "Department not found."
-);
+      return errorResponse(
+        res,
+        404,
+        "Department not found."
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Department deleted successfully."
-);
+      res,
+      200,
+      "Department deleted successfully."
+    );
   } catch (error) {
-   return errorResponse(res, 500, error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 module.exports = {

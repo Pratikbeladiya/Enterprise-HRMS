@@ -10,13 +10,13 @@ const createLeave = async (req, res) => {
     const leave = await Leave.create(req.body);
 
     return successResponse(
-  res,
-  201,
-  "Leave request created successfully",
-  leave
-);
+      res,
+      201,
+      "Leave request created successfully",
+      leave
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -50,19 +50,19 @@ const getAllLeaves = async (req, res) => {
 
     const total = await Leave.countDocuments(filter);
 
-   return successResponse(
-  res,
-  200,
-  "Leaves fetched successfully",
-  {
-    totalRecords: total,
-    currentPage: Number(page),
-    totalPages: Math.ceil(total / limit),
-    leaves,
-  }
-);
+    return successResponse(
+      res,
+      200,
+      "Leaves fetched successfully",
+      {
+        totalRecords: total,
+        currentPage: Number(page),
+        totalPages: Math.ceil(total / limit),
+        leaves,
+      }
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -75,21 +75,21 @@ const getLeaveById = async (req, res) => {
     );
 
     if (!leave) {
-     return errorResponse(
-  res,
-  404,
-  "Leave record not found"
-);
+      return errorResponse(
+        res,
+        404,
+        "Leave record not found"
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Leave fetched successfully",
-  leave
-);
+      res,
+      200,
+      "Leave fetched successfully",
+      leave
+    );
   } catch (error) {
-   return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -101,11 +101,11 @@ const updateLeave = async (req, res) => {
       req.body.totalDays !== undefined &&
       req.body.totalDays <= 0
     ) {
-     return errorResponse(
-  res,
-  400,
-  "Total leave days must be greater than zero"
-);
+      return errorResponse(
+        res,
+        400,
+        "Total leave days must be greater than zero"
+      );
     }
 
     // Validate dates
@@ -115,10 +115,10 @@ const updateLeave = async (req, res) => {
       new Date(req.body.startDate) > new Date(req.body.endDate)
     ) {
       return errorResponse(
-  res,
-  400,
-  "Start date cannot be after end date"
-);
+        res,
+        400,
+        "Start date cannot be after end date"
+      );
     }
 
     const leave = await Leave.findByIdAndUpdate(
@@ -132,20 +132,20 @@ const updateLeave = async (req, res) => {
 
     if (!leave) {
       return errorResponse(
-  res,
-  404,
-  "Leave record not found"
-);
+        res,
+        404,
+        "Leave record not found"
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Leave updated successfully",
-  leave
-);
+      res,
+      200,
+      "Leave updated successfully",
+      leave
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -156,19 +156,19 @@ const deleteLeave = async (req, res) => {
 
     if (!leave) {
       return errorResponse(
-  res,
-  404,
-  "Leave record not found"
-);
+        res,
+        404,
+        "Leave record not found"
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Leave deleted successfully"
-);
+      res,
+      200,
+      "Leave deleted successfully"
+    );
   } catch (error) {
-   return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -195,29 +195,29 @@ const applyLeave = async (req, res) => {
       !totalDays ||
       !reason
     ) {
-     return errorResponse(
-  res,
-  400,
-  "All fields are required"
-);
+      return errorResponse(
+        res,
+        400,
+        "All fields are required"
+      );
     }
 
     // 👇 STEP 3 (Total Days Validation)
     if (totalDays <= 0) {
       return errorResponse(
-  res,
-  400,
-  "Total leave days must be greater than zero"
-);
+        res,
+        400,
+        "Total leave days must be greater than zero"
+      );
     }
 
     // 👇 STEP 4 (Date Validation)
     if (new Date(startDate) > new Date(endDate)) {
-     return errorResponse(
-  res,
-  400,
-  "Start date cannot be after end date"
-);
+      return errorResponse(
+        res,
+        400,
+        "Start date cannot be after end date"
+      );
     }
 
     // 👇 STEP 5 (Overlap Validation)
@@ -234,24 +234,24 @@ const applyLeave = async (req, res) => {
 
     if (existingLeave) {
       return errorResponse(
-  res,
-  409,
-  "Leave request overlaps with an existing leave"
-);
+        res,
+        409,
+        "Leave request overlaps with an existing leave"
+      );
     }
 
     // 👇 Create Leave
     const leave = await Leave.create(req.body);
 
-   return successResponse(
-  res,
-  201,
-  "Leave applied successfully",
-  leave
-);
+    return successResponse(
+      res,
+      201,
+      "Leave applied successfully",
+      leave
+    );
 
   } catch (error) {
-   return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -269,21 +269,21 @@ const approveLeave = async (req, res) => {
     );
 
     if (!leave) {
-     return errorResponse(
-  res,
-  404,
-  "Leave request not found"
-);
+      return errorResponse(
+        res,
+        404,
+        "Leave request not found"
+      );
     }
 
     return successResponse(
-  res,
-  200,
-  "Leave approved successfully",
-  leave
-);
+      res,
+      200,
+      "Leave approved successfully",
+      leave
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -301,20 +301,20 @@ const rejectLeave = async (req, res) => {
 
     if (!leave) {
       return errorResponse(
-  res,
-  404,
-  "Leave request not found"
-);
+        res,
+        404,
+        "Leave request not found"
+      );
     }
 
-   return successResponse(
-  res,
-  200,
-  "Leave rejected successfully",
-  leave
-);
+    return successResponse(
+      res,
+      200,
+      "Leave rejected successfully",
+      leave
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -330,16 +330,16 @@ const getEmployeeLeaveHistory = async (req, res) => {
       .sort({ createdAt: -1 });
 
     return successResponse(
-  res,
-  200,
-  "Leave history fetched successfully",
-  {
-    count: leaves.length,
-    leaves,
-  }
-);
+      res,
+      200,
+      "Leave history fetched successfully",
+      {
+        count: leaves.length,
+        leaves,
+      }
+    );
   } catch (error) {
-    return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -368,14 +368,14 @@ const getLeaveSummary = async (req, res) => {
       },
     ]);
 
-   return successResponse(
-  res,
-  200,
-  "Leave summary fetched successfully",
-  summary
-);
+    return successResponse(
+      res,
+      200,
+      "Leave summary fetched successfully",
+      summary
+    );
   } catch (error) {
-   return errorResponse(res,500,error.message);
+    return errorResponse(res, 500, error.message);
   }
 };
 
