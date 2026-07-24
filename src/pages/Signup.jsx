@@ -20,6 +20,7 @@ function Signup() {
 
   const navigate = useNavigate();
 
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -98,11 +99,35 @@ function Signup() {
 
         </div>
 
-        <h2>Create Your Account</h2>
+        <h2>
+  {role === "user"
+    ? "Create User Account"
+    : "Create Admin Account"}
+</h2>
 
         <p className="subtitle">
           Join our organization and simplify HR operations
         </p>
+
+        <div className="role-selector">
+
+  <button
+    className={role === "user" ? "role-btn active" : "role-btn"}
+    onClick={() => setRole("user")}
+    type="button"
+  >
+    👤 User
+  </button>
+
+  <button
+    className={role === "admin" ? "role-btn active" : "role-btn"}
+    onClick={() => setRole("admin")}
+    type="button"
+  >
+    🛡️ Admin
+  </button>
+
+</div>
 
 {/* Full Name */}
 
