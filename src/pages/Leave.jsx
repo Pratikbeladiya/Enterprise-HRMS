@@ -42,7 +42,12 @@ function Leave() {
             🏠 Dashboard
           </li>
 
-          <li>👨 Employees</li>
+          <li
+  onClick={() => navigate("/employees")}
+  style={{ cursor: "pointer" }}
+>
+  👨 Employees
+</li>
 
           <li
             onClick={() => navigate("/attendance")}

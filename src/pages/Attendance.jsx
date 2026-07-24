@@ -41,7 +41,16 @@ const handleLogout = () => {
           >
             🏠 Dashboard
           </li>
-          <li>👨 Employees</li>
+
+
+         <li
+  onClick={() => navigate("/employees")}
+  style={{ cursor: "pointer" }}
+>
+  👨 Employees
+</li>
+
+
           <li className="active">📝 Attendance</li>
          <li
   onClick={() => navigate("/payroll")}

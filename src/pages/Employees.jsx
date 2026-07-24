@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Employee.css";
+import "./Employees.css";
 
 import {
   FaBell,
@@ -15,7 +15,7 @@ import {
   FaDownload
 } from "react-icons/fa";
 
-function Employee() {
+function Employees() {
 
   const navigate = useNavigate();
 
@@ -268,4 +268,4 @@ function Employee() {
   );
 }
 
-export default Employee;
+export default Employees;

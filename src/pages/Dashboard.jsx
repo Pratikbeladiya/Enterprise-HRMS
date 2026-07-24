@@ -41,7 +41,15 @@ const handleLogout = () => {
       
               <ul className="menu">
               <li className="active">🏠 Dashboard</li>
-                <li>👨 Employees</li>
+
+
+                <li
+  onClick={() => navigate("/employees")}
+  style={{ cursor: "pointer" }}
+>
+  👨 Employees
+</li>
+
                 <li
   onClick={() => navigate("/attendance")}
   style={{ cursor: "pointer" }}
