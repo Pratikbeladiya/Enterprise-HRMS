@@ -102,8 +102,8 @@ function GlassMessageCard({ item, index }) {
         scale: { duration: 0.8, delay: item.delay, ease: [0.16, 1, 0.3, 1] },
         y: { duration: 7 + index * 0.8, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
       }}
-      whileHover={{ scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className={`absolute ${item.position} w-[min(65%,18rem)] rounded-[20px] border border-white/20 bg-white/15 p-3 text-white shadow-xl shadow-slate-950/20 backdrop-blur-2xl cursor-default`}
+      whileHover={{ scale: 1.03, transition: { duration: 0.2, ease: 'easeOut' } }}
+      className={`absolute ${item.position} w-[min(65%,18rem)] rounded-[20px] border border-white/20 bg-white/15 p-3 text-white shadow-xl shadow-slate-950/20 backdrop-blur-2xl cursor-pointer`}
     >
       <div className="flex items-start gap-2.5">
         <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-white/20 bg-white/20 shadow-inner">
@@ -145,17 +145,16 @@ function VisualPanel() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(167,139,250,0.20),transparent_30%),linear-gradient(135deg,rgba(79,70,229,0.40),transparent_42%,rgba(20,184,166,0.22))]" />
 
       <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
-        {/* <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur-xl"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur-xl cursor-pointer"
           >
             <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
             WCAG-ready access
           </motion.div>
-        </div> */}
+        </div>
 
         {/* Center blank space plain white text with controlled horizontal constraints to avoid overlapping floating tiles */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
@@ -163,14 +162,21 @@ function VisualPanel() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-3 max-w-md"
+            className="space-y-3 max-w-md pointer-events-auto"
           >
-            <h1 className="text-3xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug">
+            <motion.h1 
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+              className="text-3xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug cursor-pointer"
+            >
               <span className="text-blue-400">Hrise</span> A Enterprise HRMS
-            </h1>
-            <p className="text-sm text-white/80 leading-relaxed">
+            </motion.h1>
+            <motion.p 
+              whileHover={{ opacity: 1 }}
+              className="text-sm text-white/80 leading-relaxed cursor-pointer"
+            >
               Empower your teams and streamline human resources with next-gen management controls.
-            </p>
+            </motion.p>
           </motion.div>
         </div>
       </div>
@@ -206,13 +212,14 @@ function PasswordStrength({ password }) {
         {passwordChecks.map((check) => {
           const isPassed = check.test(password);
           return (
-            <span
+            <motion.span
               key={check.label}
-              className={`flex items-center gap-1.5 transition-colors duration-300 ${isPassed ? 'text-teal-600 dark:text-teal-300 font-medium' : ''}`}
+              whileHover={{ scale: 1.05 }}
+              className={`flex items-center gap-1.5 transition-colors duration-300 cursor-pointer ${isPassed ? 'text-teal-600 dark:text-teal-300 font-medium' : ''}`}
             >
               <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
               {check.label}
-            </span>
+            </motion.span>
           );
         })}
       </div>
@@ -291,18 +298,38 @@ export default function Login({ onLogin }) {
 
   const handleMicrosoftLogin = () => {
     setIsLoading(true);
-    const user = {
-      name: 'Microsoft Workspace User',
-      email: 'microsoft.user@arkaenterprise.com',
-      authProvider: 'microsoft',
-      role: 'People Operations',
-    };
+    try {
+      const mockMicrosoftPopup = window.open('', 'MicrosoftLogin', 'width=500,height=600');
+      
+      window.setTimeout(() => {
+        if (mockMicrosoftPopup) {
+          mockMicrosoftPopup.close();
+        }
+        
+        const microsoftData = {
+          name: 'Microsoft Workspace User',
+          email: 'microsoft.user@arkaenterprise.com',
+          role: 'People Operations Lead',
+          authProvider: 'microsoft'
+        };
 
-    window.setTimeout(() => {
-      notify('Login successful! Microsoft workspace connected.', 'success');
-      completeLogin(user);
+        const users = JSON.parse(localStorage.getItem('hrise_users')) || [];
+        let user = users.find((item) => item.email === microsoftData.email);
+
+        if (!user) {
+          user = microsoftData;
+          users.push(user);
+          localStorage.setItem('hrise_users', JSON.stringify(users));
+        }
+
+        notify(`Login successful! Welcome back, ${user.name}.`, 'success');
+        window.setTimeout(() => completeLogin(user), 650);
+        setIsLoading(false);
+      }, 1000);
+    } catch {
+      notify('Microsoft sign-in could not be completed.', 'error');
       setIsLoading(false);
-    }, 800);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -430,18 +457,25 @@ export default function Login({ onLogin }) {
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="w-full max-w-md space-y-6">
             
             <motion.div variants={itemVariants} className="text-center lg:text-left space-y-2">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <motion.h2 
+                whileHover={{ scale: 1.01, color: '#4F46E5' }}
+                transition={{ duration: 0.2 }}
+                className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight cursor-pointer inline-block"
+              >
                 {mode === 'register' && "Create an Account"}
                 {mode === 'forgot' && "Reset Password"}
                 {mode === 'otp' && "Verify OTP Code"}
                 {mode === 'login' && "Welcome back !"}
-              </h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
+              </motion.h2>
+              <motion.p 
+                whileHover={{ scale: 1.01 }}
+                className="text-sm text-slate-500 dark:text-slate-400 cursor-pointer"
+              >
                 {mode === 'register' && "Enter your information to set up your profile."}
                 {mode === 'forgot' && "Enter your verified work email to recover your enterprise credentials."}
                 {mode === 'otp' && "Enter the quick passcode delivered to your email address to log in instantly."}
                 {mode === 'login' && "Please enter your details to access your dashboard."}
-              </p>
+              </motion.p>
             </motion.div>
 
             {/* Feedback Message Banner */}
@@ -451,7 +485,8 @@ export default function Login({ onLogin }) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className={`flex items-center gap-2.5 p-3.5 rounded-xl text-sm font-medium border ${
+                  whileHover={{ scale: 1.02 }}
+                  className={`flex items-center gap-2.5 p-3.5 rounded-xl text-sm font-medium border cursor-pointer ${
                     message.type === 'success' 
                       ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
                       : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
@@ -468,31 +503,31 @@ export default function Login({ onLogin }) {
                 {/* MICROSOFT & GOOGLE LOGIN BUTTONS SIDE BY SIDE */}
                 <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3">
                   <motion.button 
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={handleMicrosoftLogin}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline"
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline cursor-pointer"
                   >
                     <MicrosoftIcon />
                     Microsoft
                   </motion.button>
 
                   <motion.button 
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={() => loginWithGoogle()}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline"
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline cursor-pointer"
                   >
                     <GoogleIcon />
                     Google
                   </motion.button>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="relative flex items-center py-1">
+                <motion.div variants={itemVariants} whileHover={{ scale: 1.01 }} className="relative flex items-center py-1 cursor-pointer">
                   <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
                   <span className="flex-shrink-0 mx-4 text-xs text-slate-400 font-medium uppercase tracking-wider">Or sign in with email</span>
                   <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
@@ -502,8 +537,8 @@ export default function Login({ onLogin }) {
 
             <motion.form variants={itemVariants} onSubmit={handleSubmit} className="space-y-4" noValidate>
               {mode === 'register' && (
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label>
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Full Name</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><User size={18} /></div>
                     <input 
@@ -511,14 +546,14 @@ export default function Login({ onLogin }) {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="John Doe" 
-                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
                     />
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Work Email</label>
+              <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Work Email</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><Mail size={18} /></div>
                   <input 
@@ -526,14 +561,14 @@ export default function Login({ onLogin }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com" 
-                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
+                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
                   />
                 </div>
-              </div>
+              </motion.div>
 
               {mode === 'otp' && (
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Verification Code (OTP)</label>
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Verification Code (OTP)</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><KeyRound size={18} /></div>
                     <input 
@@ -542,15 +577,15 @@ export default function Login({ onLogin }) {
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter 6-digit code" 
-                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
                     />
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {(mode === 'login' || mode === 'register') && (
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Password</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><Lock size={18} /></div>
                     <input 
@@ -558,44 +593,45 @@ export default function Login({ onLogin }) {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••" 
-                      className="w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
+                      className="w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
                     />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 no-underline">
+                    <motion.button whileHover={{ scale: 1.1 }} type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 no-underline cursor-pointer">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {mode === 'register' && <PasswordStrength password={password} />}
 
               {mode === 'login' && (
-                <div className="flex items-center justify-between text-sm py-1">
-                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 font-medium no-underline">
+                <motion.div whileHover={{ scale: 1.01 }} className="flex items-center justify-between text-sm py-1 cursor-pointer">
+                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 font-medium no-underline hover:text-indigo-600 transition-colors">
                     <input 
                       type="checkbox"
                       checked={rememberSession}
                       onChange={(e) => setRememberSession(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                     />
                     Remember me
                   </label>
-                  <button 
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
                     type="button" 
                     onClick={() => setMode('forgot')}
-                    className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline"
+                    className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer"
                   >
                     Forgot password?
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
               )}
 
               <motion.button 
-                whileHover={{ scale: 1.01 }}
+                whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
               >
                 {isLoading ? (
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
@@ -612,37 +648,37 @@ export default function Login({ onLogin }) {
             </motion.form>
 
             {/* Toggle between Login, Register, and OTP views */}
-            <div className="text-center pt-2 space-y-2">
+            <motion.div whileHover={{ scale: 1.01 }} className="text-center pt-2 space-y-2 cursor-pointer">
               {mode === 'login' && (
                 <>
                   <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
                     Sign in with code instead?{" "}
-                    <button type="button" onClick={() => setMode('otp')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline">
+                    <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('otp')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer">
                       Use OTP Auth
-                    </button>
+                    </motion.button>
                   </p>
                   <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
                     Don't have an account?{" "}
-                    <button type="button" onClick={() => setMode('register')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline">
+                    <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('register')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer">
                       Register
-                    </button>
+                    </motion.button>
                   </p>
                 </>
               )}
 
               {(mode === 'register' || mode === 'forgot' || mode === 'otp') && (
                 <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
-                  <button type="button" onClick={() => setMode('login')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline">
+                  <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('login')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer">
                     Back to standard sign in
-                  </button>
+                  </motion.button>
                 </p>
               )}
-            </div>
+            </motion.div>
 
           </motion.div>
           
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="absolute bottom-4 text-[11px] text-slate-400 text-center w-full max-w-md no-underline">
-            By signing in, you agree to our <a href="#" className="no-underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="no-underline hover:text-slate-600">Privacy Policy</a>.
+          <motion.p whileHover={{ scale: 1.02 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="absolute bottom-4 text-[11px] text-slate-400 text-center w-full max-w-md no-underline cursor-pointer">
+            By signing in, you agree to our <a href="#" className="no-underline hover:text-indigo-600 cursor-pointer">Terms of Service</a> and <a href="#" className="no-underline hover:text-indigo-600 cursor-pointer">Privacy Policy</a>.
           </motion.p>
         </motion.div>
       </div>
