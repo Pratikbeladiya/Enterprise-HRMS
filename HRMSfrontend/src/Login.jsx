@@ -145,8 +145,8 @@ function VisualPanel() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(167,139,250,0.20),transparent_30%),linear-gradient(135deg,rgba(79,70,229,0.40),transparent_42%,rgba(20,184,166,0.22))]" />
 
       <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
-        <div className="flex items-center justify-between">
-          {/* <motion.div
+        {/* <div className="flex items-center justify-between">
+          <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -154,8 +154,8 @@ function VisualPanel() {
           >
             <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
             WCAG-ready access
-          </motion.div> */}
-        </div>
+          </motion.div>
+        </div> */}
 
         {/* Center blank space plain white text with controlled horizontal constraints to avoid overlapping floating tiles */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
@@ -166,7 +166,7 @@ function VisualPanel() {
             className="space-y-3 max-w-md"
           >
             <h1 className="text-3xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug">
-              <span className="text-blue-400">Hrise</span> a Enterprise HRMS
+              <span className="text-blue-400">Hrise</span> A Enterprise HRMS
             </h1>
             <p className="text-sm text-white/80 leading-relaxed">
               Empower your teams and streamline human resources with next-gen management controls.
@@ -473,7 +473,7 @@ export default function Login({ onLogin }) {
                     type="button"
                     onClick={handleMicrosoftLogin}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm"
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline"
                   >
                     <MicrosoftIcon />
                     Microsoft
@@ -485,7 +485,7 @@ export default function Login({ onLogin }) {
                     type="button"
                     onClick={() => loginWithGoogle()}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm"
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline"
                   >
                     <GoogleIcon />
                     Google
@@ -511,7 +511,7 @@ export default function Login({ onLogin }) {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="John Doe" 
-                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
                     />
                   </div>
                 </div>
@@ -526,7 +526,7 @@ export default function Login({ onLogin }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com" 
-                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100" 
+                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
                   />
                 </div>
               </div>
@@ -542,7 +542,7 @@ export default function Login({ onLogin }) {
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter 6-digit code" 
-                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
                     />
                   </div>
                 </div>
@@ -558,9 +558,9 @@ export default function Login({ onLogin }) {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••" 
-                      className="w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100" 
+                      className="w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline" 
                     />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 no-underline">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
@@ -571,7 +571,7 @@ export default function Login({ onLogin }) {
 
               {mode === 'login' && (
                 <div className="flex items-center justify-between text-sm py-1">
-                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 font-medium">
+                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 font-medium no-underline">
                     <input 
                       type="checkbox"
                       checked={rememberSession}
@@ -583,7 +583,7 @@ export default function Login({ onLogin }) {
                   <button 
                     type="button" 
                     onClick={() => setMode('forgot')}
-                    className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                    className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline"
                   >
                     Forgot password?
                   </button>
@@ -595,7 +595,7 @@ export default function Login({ onLogin }) {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline"
               >
                 {isLoading ? (
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
@@ -615,15 +615,15 @@ export default function Login({ onLogin }) {
             <div className="text-center pt-2 space-y-2">
               {mode === 'login' && (
                 <>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
                     Sign in with code instead?{" "}
-                    <button type="button" onClick={() => setMode('otp')} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400 ml-1">
+                    <button type="button" onClick={() => setMode('otp')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline">
                       Use OTP Auth
                     </button>
                   </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
                     Don't have an account?{" "}
-                    <button type="button" onClick={() => setMode('register')} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400 ml-1">
+                    <button type="button" onClick={() => setMode('register')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline">
                       Register
                     </button>
                   </p>
@@ -631,8 +631,8 @@ export default function Login({ onLogin }) {
               )}
 
               {(mode === 'register' || mode === 'forgot' || mode === 'otp') && (
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  <button type="button" onClick={() => setMode('login')} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400">
+                <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
+                  <button type="button" onClick={() => setMode('login')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline">
                     Back to standard sign in
                   </button>
                 </p>
@@ -641,8 +641,8 @@ export default function Login({ onLogin }) {
 
           </motion.div>
           
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="absolute bottom-4 text-[11px] text-slate-400 text-center w-full max-w-md">
-            By signing in, you agree to our <a href="#" className="underline">Terms of Service</a> and <a href="#" className="underline">Privacy Policy</a>.
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="absolute bottom-4 text-[11px] text-slate-400 text-center w-full max-w-md no-underline">
+            By signing in, you agree to our <a href="#" className="no-underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="no-underline hover:text-slate-600">Privacy Policy</a>.
           </motion.p>
         </motion.div>
       </div>
