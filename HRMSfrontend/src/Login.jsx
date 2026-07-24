@@ -11,7 +11,6 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
   Target,
   User,
   UserRoundCheck,
@@ -25,28 +24,28 @@ const messages = [
     title: 'Complete Management. Ultimate Success.',
     detail: 'Unify people data, attendance, leaves, teams, and performance.',
     Icon: Building2,
-    position: 'left-[6%] top-[14%]',
+    position: 'left-[6%] top-[12%]',
     delay: 0.1,
   },
   {
     title: 'Inspire Teams. Lead Managers.',
     detail: 'Give every manager a clear operating view of their people.',
     Icon: UsersRound,
-    position: 'right-[6%] top-[30%]',
+    position: 'right-[6%] top-[22%]',
     delay: 0.25,
   },
   {
     title: 'Boost Performance. Empower Employees.',
     detail: 'Turn daily HR workflows into measurable business momentum.',
     Icon: Target,
-    position: 'left-[10%] bottom-[24%]',
+    position: 'left-[6%] bottom-[24%]',
     delay: 0.4,
   },
   {
     title: 'Streamline Human Resource Management.',
     detail: 'Automate critical HR moments with enterprise-grade control.',
     Icon: UserRoundCheck,
-    position: 'right-[10%] bottom-[8%]',
+    position: 'right-[6%] bottom-[14%]',
     delay: 0.55,
   },
 ];
@@ -91,21 +90,6 @@ const MicrosoftIcon = () => (
   </span>
 );
 
-function LogoMark() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#4F46E5] via-[#A78BFA] to-[#14B8A6] text-white shadow-lg shadow-indigo-500/25">
-        <BriefcaseBusiness className="h-5 w-5" />
-        <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-teal-400 dark:border-slate-950" />
-      </div>
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-300">Arka</p>
-        <p className="text-base font-bold text-slate-950 dark:text-white">Enterprise HRMS</p>
-      </div>
-    </div>
-  );
-}
-
 function GlassMessageCard({ item, index }) {
   const { Icon } = item;
 
@@ -119,15 +103,15 @@ function GlassMessageCard({ item, index }) {
         y: { duration: 7 + index * 0.8, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
       }}
       whileHover={{ scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className={`absolute ${item.position} w-[min(70%,20rem)] rounded-[20px] border border-white/20 bg-white/15 p-3.5 text-white shadow-xl shadow-slate-950/20 backdrop-blur-2xl cursor-default`}
+      className={`absolute ${item.position} w-[min(65%,18rem)] rounded-[20px] border border-white/20 bg-white/15 p-3 text-white shadow-xl shadow-slate-950/20 backdrop-blur-2xl cursor-default`}
     >
-      <div className="flex items-start gap-3">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/20 bg-white/20 shadow-inner">
-          <Icon className="h-5 w-5" />
+      <div className="flex items-start gap-2.5">
+        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-white/20 bg-white/20 shadow-inner">
+          <Icon className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <h3 className="text-xs font-semibold leading-5">{item.title}</h3>
-          <p className="mt-0.5 text-[11px] leading-4 text-white/78">{item.detail}</p>
+          <h3 className="text-xs font-semibold leading-4">{item.title}</h3>
+          <p className="mt-0.5 text-[10px] leading-3 text-white/78">{item.detail}</p>
         </div>
       </div>
     </motion.div>
@@ -166,14 +150,6 @@ function VisualPanel() {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-[20px] border border-white/18 bg-white/12 p-2.5 pr-4 text-white shadow-xl backdrop-blur-xl"
-          >
-            <LogoMark />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur-xl"
           >
             <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
@@ -181,16 +157,21 @@ function VisualPanel() {
           </motion.div>
         </div>
 
-        <div className="max-w-xl pb-6 text-white">
-          <motion.p
+        {/* Center blank space plain white text with controlled horizontal constraints to avoid overlapping floating tiles */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-3.5 py-1.5 text-xs font-semibold backdrop-blur-xl"
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-3 max-w-md"
           >
-            <Sparkles className="h-3.5 w-3.5 text-violet-200" />
-            Intelligent workforce operations
-          </motion.p>
+            <h1 className="text-xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug">
+              Hrise A Enterprise HRMS
+            </h1>
+            <p className="text-sm text-white/80 leading-relaxed">
+              Empower your teams and streamline human resources with next-gen management controls.
+            </p>
+          </motion.div>
         </div>
       </div>
 
@@ -448,10 +429,6 @@ export default function Login({ onLogin }) {
         >
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="w-full max-w-md space-y-6">
             
-            <motion.div variants={itemVariants} className="flex lg:hidden items-center gap-3 justify-center mb-6">
-              <LogoMark />
-            </motion.div>
-
             <motion.div variants={itemVariants} className="text-center lg:text-left space-y-2">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 {mode === 'register' && "Create an Account"}
