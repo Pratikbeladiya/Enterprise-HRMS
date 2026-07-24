@@ -10,6 +10,10 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+//Admin
+
+import AdminSignup from "./pages/AdminSignup";
+
 
 function App() {
   return (
@@ -25,6 +29,11 @@ function App() {
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
+
+        //Admin
+
+        <Route path="/admin-signup" element={<AdminSignup />} />
+
 
       </Routes>
     </BrowserRouter>
