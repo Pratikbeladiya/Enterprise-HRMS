@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./Login.css";
 
 import {
   FaEnvelope,
-  FaPhone,
   FaLock,
   FaGoogle,
 } from "react-icons/fa";
@@ -18,17 +17,51 @@ import {
 function Login() {
 
   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+
+  // Form States
+
+  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Login Validation
 
   const handleLogin = () => {
 
-  // Future માં અહીં API call આવશે
+    if (!emailOrPhone || !password) {
+      alert("Please fill all fields.");
+      return;
+    }
 
-  navigate("/Dashboard");
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-};
+    const phonePattern =
+      /^[0-9]{10}$/;
+
+    if (
+      !emailPattern.test(emailOrPhone) &&
+      !phonePattern.test(emailOrPhone)
+    ) {
+      alert("Enter a valid Email or 10-digit Mobile Number.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    alert("Login Successful!");
+
+    navigate("/Dashboard");
+
+  };
 
   return (
+
     <div className="signup-container">
 
       {/* Left Section */}
@@ -36,8 +69,11 @@ function Login() {
       <div className="signup-left">
 
         <div className="logo">
+
           <h1>HRMS</h1>
+
           <p>Human Resource Management System</p>
+
         </div>
 
         <h2>Welcome Back</h2>
@@ -49,22 +85,33 @@ function Login() {
         {/* Email / Mobile */}
 
         <div className="input-box">
+
           <FaEnvelope className="icon" />
 
           <input
             type="text"
             placeholder="Email or Mobile Number"
+            value={emailOrPhone}
+            onChange={(e) =>
+              setEmailOrPhone(e.target.value)
+            }
           />
+
         </div>
 
         {/* Password */}
 
         <div className="input-box">
+
           <FaLock className="icon" />
 
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Enter Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
           />
 
           <span
@@ -78,42 +125,61 @@ function Login() {
               <IoEyeOutline />
             )}
           </span>
+
         </div>
 
-        {/* Remember & Forgot */}
+        {/* Remember Me & Forgot Password */}
 
         <div className="login-options">
 
           <label>
 
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) =>
+                setRememberMe(e.target.checked)
+              }
+            />
 
             Remember Me
 
           </label>
 
-          <a href="/forgot-password">
+          <Link to="/forgot-password">
             Forgot Password?
-          </a>
+          </Link>
 
         </div>
 
-       <button
-  className="signup-btn"
-  onClick={handleLogin}
->
-  Login
-</button>
+        {/* Login Button */}
 
-        <button className="google-btn">
-          <FaGoogle />
-          Continue with Google
+        <button
+          className="signup-btn"
+          onClick={handleLogin}
+        >
+          Login
         </button>
 
-       <p className="login-text">
-  Don't have an account?
-  <Link to="/signup"> Sign Up</Link>
-</p>
+        {/* Google Button */}
+
+        <button className="google-btn">
+
+          <FaGoogle />
+
+          Continue with Google
+
+        </button>
+
+        {/* Signup Link */}
+
+        <p className="login-text">
+
+          Don't have an account?
+
+          <Link to="/signup"> Sign Up</Link>
+
+        </p>
 
       </div>
 
@@ -130,14 +196,15 @@ function Login() {
         </p>
 
         <img
-  src="/hrms-banner.png"
-  alt="HRMS"
-  className="hrms-image"
-/>
+          src="/hrms-banner.png"
+          alt="HRMS"
+          className="hrms-image"
+        />
 
       </div>
 
     </div>
+
   );
 }
 
