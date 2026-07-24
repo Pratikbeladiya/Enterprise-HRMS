@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./Signup.css";
+import { Link, useNavigate } from "react-router-dom";
 
-import banner from "../assets/hrms-banner.png";
+import "./Signup.css";
 
 import {
   FaUser,
@@ -10,7 +9,6 @@ import {
   FaPhone,
   FaLock,
   FaGoogle,
-  FaUserPlus,
 } from "react-icons/fa";
 
 import {
@@ -19,19 +17,34 @@ import {
 } from "react-icons/io5";
 
 function Signup() {
+
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleSignup = () => {
+
+    // Future API Call
+
+    navigate("/login");
+
+  };
 
   return (
-    <div className="signup-page">
 
-      {/* Left Side */}
+    <div className="signup-container">
 
-      <div className="signup-form">
+      {/* Left Section */}
 
-        <div className="logo-box">
+      <div className="signup-left">
+
+        <div className="logo">
+
           <h1>HRMS</h1>
+
           <p>Human Resource Management System</p>
+
         </div>
 
         <h2>Create Your Account</h2>
@@ -40,188 +53,162 @@ function Signup() {
           Join our organization and simplify HR operations
         </p>
 
-        <div className="row">
+        {/* Full Name */}
 
-          <div className="input-box">
-            <label>Full Name</label>
+        <div className="input-box">
 
-            <div className="input">
-              <FaUser />
-              <input
-                type="text"
-                placeholder="Enter your full name"
-              />
-            </div>
-          </div>
+          <FaUser className="icon" />
 
-          <div className="input-box">
-            <label>Email Address</label>
-
-            <div className="input">
-              <FaEnvelope />
-              <input
-                type="email"
-                placeholder="Enter your email"
-              />
-            </div>
-          </div>
+          <input
+            type="text"
+            placeholder="Enter Full Name"
+          />
 
         </div>
 
-        <div className="input-box full">
-          <label>Mobile Number</label>
+        {/* Email */}
 
-          <div className="input">
-            <FaPhone />
-            <input
-              type="text"
-              placeholder="Enter your mobile number"
-            />
-          </div>
-        </div>
+        <div className="input-box">
 
-        <div className="row">
+          <FaEnvelope className="icon" />
 
-          <div className="input-box">
-            <label>Password</label>
-
-            <div className="input">
-              <FaLock />
-
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Create password"
-              />
-
-              <span
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
-              >
-                {showPassword ? (
-                  <IoEyeOffOutline />
-                ) : (
-                  <IoEyeOutline />
-                )}
-              </span>
-            </div>
-          </div>
-
-          <div className="input-box">
-            <label>Confirm Password</label>
-
-            <div className="input">
-              <FaLock />
-
-              <input
-                type={
-                  showConfirm ? "text" : "password"
-                }
-                placeholder="Confirm password"
-              />
-
-              <span
-                onClick={() =>
-                  setShowConfirm(!showConfirm)
-                }
-              >
-                {showConfirm ? (
-                  <IoEyeOffOutline />
-                ) : (
-                  <IoEyeOutline />
-                )}
-              </span>
-            </div>
-          </div>
+          <input
+            type="email"
+            placeholder="Enter Email Address"
+          />
 
         </div>
 
-        <p className="password-note">
-          Password must be at least 8 characters
-        </p>
+        {/* Mobile Number */}
 
-        <div className="checkbox">
-          <input type="checkbox" />
+        <div className="input-box">
 
-          <span>
-            I agree to the Terms & Conditions and Privacy
-            Policy
+          <FaPhone className="icon" />
+
+          <input
+            type="text"
+            placeholder="Enter Mobile Number"
+          />
+
+        </div>
+
+        {/* Password */}
+
+        <div className="input-box">
+
+          <FaLock className="icon" />
+
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter Password"
+          />
+
+          <span
+            onClick={() =>
+              setShowPassword(!showPassword)
+            }
+          >
+            {showPassword ? (
+              <IoEyeOffOutline />
+            ) : (
+              <IoEyeOutline />
+            )}
           </span>
+
         </div>
 
-        <button className="create-btn">
-          <FaUserPlus />
+        {/* Confirm Password */}
+
+        <div className="input-box">
+
+          <FaLock className="icon" />
+
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+          />
+
+          <span
+            onClick={() =>
+              setShowConfirmPassword(!showConfirmPassword)
+            }
+          >
+            {showConfirmPassword ? (
+              <IoEyeOffOutline />
+            ) : (
+              <IoEyeOutline />
+            )}
+          </span>
+
+        </div>
+
+        {/* Terms & Conditions */}
+
+        <div className="login-options">
+
+          <label>
+
+            <input type="checkbox" />
+
+            I agree to the Terms & Conditions
+
+          </label>
+
+        </div>
+
+        {/* Signup Button */}
+
+        <button
+          className="signup-btn"
+          onClick={handleSignup}
+        >
           Create Account
         </button>
 
-        <div className="divider">
-          <span>or continue with</span>
-        </div>
+        {/* Google Button */}
 
         <button className="google-btn">
+
           <FaGoogle />
+
           Continue with Google
+
         </button>
 
-        <p className="login-link">
+        {/* Login Link */}
+
+        <p className="login-text">
+
           Already have an account?
 
-          <Link to="/login">
-            {" "}
-            Sign in
-          </Link>
+          <Link to="/login"> Login</Link>
+
         </p>
 
       </div>
 
-      {/* Right Side */}
+      {/* Right Section */}
 
-      <div className="signup-banner">
+      <div className="signup-right">
 
-        <h1>
-          Smart HR Management
-          <br />
-          for a Better Workplace
-        </h1>
+        <h1>Smart HR Management</h1>
 
         <p>
-          Manage your employees, attendance,
-          payroll and more – all in one secure
-          platform.
+          Manage employees, attendance,
+          payroll and leave with one
+          powerful HRMS platform.
         </p>
 
         <img
-          src={banner}
+          src="/hrms-banner.png"
           alt="HRMS"
+          className="hrms-image"
         />
-
-        <div className="feature-box">
-
-          <div>
-            <h3>Secure</h3>
-            <p>Your data is safe</p>
-          </div>
-
-          <div>
-            <h3>Efficient</h3>
-            <p>Automate HR</p>
-          </div>
-
-          <div>
-            <h3>Transparent</h3>
-            <p>Real-time insights</p>
-          </div>
-
-          <div>
-            <h3>Reliable</h3>
-            <p>24/7 Access</p>
-          </div>
-
-        </div>
 
       </div>
 
     </div>
+
   );
 }
 

@@ -8,12 +8,15 @@ import Payroll from "./pages/Payroll";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
+        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/employees" element={<Employees />} />
