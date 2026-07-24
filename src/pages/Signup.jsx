@@ -23,12 +23,63 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Form States
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agree, setAgree] = useState(false);
+
+  // Signup Validation
+
   const handleSignup = () => {
 
-    // Future API Call
+    if (
+      !fullName ||
+      !email ||
+      !phone ||
+      !password ||
+      !confirmPassword
+    ) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    const phonePattern = /^[0-9]{10}$/;
+
+    if (!phonePattern.test(phone)) {
+      alert("Mobile number must be exactly 10 digits.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Password and Confirm Password do not match.");
+      return;
+    }
+
+    if (!agree) {
+      alert("Please accept the Terms & Conditions.");
+      return;
+    }
+
+    alert("Account Created Successfully!");
 
     navigate("/login");
-
   };
 
   return (
@@ -53,7 +104,7 @@ function Signup() {
           Join our organization and simplify HR operations
         </p>
 
-        {/* Full Name */}
+{/* Full Name */}
 
         <div className="input-box">
 
@@ -62,6 +113,8 @@ function Signup() {
           <input
             type="text"
             placeholder="Enter Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
 
         </div>
@@ -75,6 +128,8 @@ function Signup() {
           <input
             type="email"
             placeholder="Enter Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
         </div>
@@ -88,6 +143,10 @@ function Signup() {
           <input
             type="text"
             placeholder="Enter Mobile Number"
+            value={phone}
+            onChange={(e) =>
+              setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+            }
           />
 
         </div>
@@ -101,6 +160,8 @@ function Signup() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <span
@@ -126,6 +187,10 @@ function Signup() {
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) =>
+              setConfirmPassword(e.target.value)
+            }
           />
 
           <span
@@ -148,7 +213,11 @@ function Signup() {
 
           <label>
 
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={agree}
+              onChange={(e) => setAgree(e.target.checked)}
+            />
 
             I agree to the Terms & Conditions
 
