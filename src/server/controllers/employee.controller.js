@@ -1,21 +1,63 @@
-const Employee= require("../model/employee.model");
+const Employee = require("../model/employee.model");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/apiResponse");
 
 const getAllEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find()
-      .populate("department", "departmentName location")
-      .populate("manager", "firstName lastName email");
+    const { search, department, designation, isActive } = req.query;
 
-    return res.status(200).json({
-      success: true,
-      totalEmployees: employees.length,
+    let filter = {};
+
+    if (search) {
+      filter = {
+        $or: [
+          { firstName: { $regex: search, $options: "i" } },
+          { lastName: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } }
+        ]
+      };
+    }
+    if (department) {
+      filter.department = department;
+    }
+    if (designation) {
+      filter.designation = {
+        $regex: designation,
+        $options: "i",
+      };
+    }
+
+    if (isActive !== undefined) {
+      filter.isActive = isActive === "true";
+    }
+
+    //pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Sorting
+    const sortBy = req.query.sortBy || "createdAt";
+    const order = req.query.order === "asc" ? 1 : -1;
+
+    const employees = await Employee.find(filter)
+      .populate("department", "departmentName location")
+      .populate("manager", "firstName lastName email")
+      .sort({ [sortBy]: order })
+      .skip(skip)
+      .limit(limit);
+
+    const totalEmployees = await Employee.countDocuments(filter);
+    return successResponse(res, 200, "Employees fetched successfully", {
+      totalEmployees,
+      currentPage: page,
+      totalPages: Math.ceil(totalEmployees / limit),
       employees,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -28,22 +70,19 @@ const getEmployeeById = async (req, res) => {
       .populate("manager", "firstName lastName email");
 
     if (!employee) {
-      return res.status(404).json({
-        success: false,
-        message: "Employee not found.",
-      });
+      return errorResponse(res, 404, "Employee not found.");
     }
 
-    return res.status(200).json({
-      success: true,
-      employee,
-    });
+    return successResponse(
+      res,
+      200,
+      "Employee fetched successfully",
+      employee
+    );
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+    return errorResponse(res, 500, error.message);
+  };
 };
 
 const updateEmployee = async (req, res) => {
@@ -60,22 +99,17 @@ const updateEmployee = async (req, res) => {
     );
 
     if (!updatedEmployee) {
-      return res.status(404).json({
-        success: false,
-        message: "Employee not found.",
-      });
+      return errorResponse(res, 404, "Employee not found.");
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Employee updated successfully.",
-      employee: updatedEmployee,
-    });
+    return successResponse(
+      res,
+      200,
+      "Employee updated successfully.",
+      updatedEmployee
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -86,21 +120,16 @@ const deleteEmployee = async (req, res) => {
     const employee = await Employee.findByIdAndDelete(id);
 
     if (!employee) {
-      return res.status(404).json({
-        success: false,
-        message: "Employee not found.",
-      });
+      return errorResponse(res, 404, "Employee not found.");
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Employee deleted successfully.",
-    });
+    return successResponse(
+      res,
+      200,
+      "Employee deleted successfully."
+    );
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -134,10 +163,11 @@ const createEmployee = async (req, res) => {
       !designation ||
       !salary
     ) {
-      return res.status(400).json({
-        success: false,
-        message: "All required fields are required.",
-      });
+      return errorResponse(
+        res,
+        400,
+        "All required fields are required."
+      );
     }
 
     // Check duplicate employee
@@ -149,10 +179,11 @@ const createEmployee = async (req, res) => {
     });
 
     if (existingEmployee) {
-      return res.status(409).json({
-        success: false,
-        message: "Employee already exists.",
-      });
+      return errorResponse(
+        res,
+        409,
+        "Employee already exists."
+      );
     }
 
     // Create employee
@@ -171,22 +202,20 @@ const createEmployee = async (req, res) => {
       manager,
     });
 
-    return res.status(201).json({
-      success: true,
-      message: "Employee created successfully.",
-      employee,
-    });
+    return successResponse(
+      res,
+      201,
+      "Employee created successfully.",
+      employee
+    );
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return errorResponse(res, 500, error.message);
   }
 };
 
 module.exports = {
-    getAllEmployees,
+  getAllEmployees,
   createEmployee,
   getEmployeeById,
   updateEmployee,
