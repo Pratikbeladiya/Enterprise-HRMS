@@ -1,0 +1,358 @@
+/* ===========================
+   EMPLOYEE PAGE
+=========================== */
+
+.employee-table{
+    margin-top:30px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:25px 30px;
+    border-bottom:1px solid #edf2f7;
+}
+
+.table-header h2{
+    font-size:24px;
+    color:#1e3a8a;
+    margin-bottom:5px;
+}
+
+.table-header p{
+    color:#64748b;
+    font-size:14px;
+}
+
+.table-actions{
+    display:flex;
+    gap:15px;
+}
+
+.filter-btn,
+.download-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:.3s;
+}
+
+.filter-btn{
+    background:#eef4ff;
+    color:#2563eb;
+}
+
+.filter-btn:hover{
+    background:#dbeafe;
+}
+
+.download-btn{
+    background:#2563eb;
+    color:#fff;
+}
+
+.download-btn:hover{
+    background:#1d4ed8;
+}
+
+/* ===========================
+   TABLE
+=========================== */
+
+.employee-table table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.employee-table thead{
+    background:#f8fafc;
+}
+
+.employee-table th{
+    padding:18px;
+    font-size:15px;
+    font-weight:700;
+    color:#334155;
+    text-align:left;
+}
+
+.employee-table td{
+    padding:22px;
+    border-top:1px solid #eef2f7;
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+
+.empty-data{
+    text-align:center;
+    padding:70px 20px;
+}
+
+.empty-state{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.empty-state img{
+    width:180px;
+    margin-bottom:20px;
+    opacity:.9;
+}
+
+.empty-state h3{
+    font-size:28px;
+    color:#1e3a8a;
+    margin-bottom:10px;
+    font-weight:700;
+}
+
+.empty-state p{
+    color:#64748b;
+    font-size:16px;
+    max-width:420px;
+    line-height:1.7;
+}
+
+/* ===========================
+   PAGINATION
+=========================== */
+
+.pagination{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:12px;
+    padding:20px 30px;
+    border-top:1px solid #edf2f7;
+}
+
+.pagination button{
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    background:#eef2ff;
+    color:#2563eb;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.pagination button:hover:not(:disabled){
+    background:#2563eb;
+    color:#fff;
+}
+
+.pagination button:disabled{
+    cursor:not-allowed;
+    opacity:.5;
+}
+
+.active-page{
+    background:#2563eb !important;
+    color:#fff !important;
+}
+
+/* ===========================
+   TABLE HOVER
+=========================== */
+
+.employee-table tbody tr{
+    transition:.3s;
+}
+
+.employee-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+/* ===========================
+   SCROLL
+=========================== */
+
+.employee-table{
+    overflow-x:auto;
+}
+
+.employee-table::-webkit-scrollbar{
+    height:8px;
+}
+
+.employee-table::-webkit-scrollbar-thumb{
+    background:#2563eb;
+    border-radius:20px;
+}
+
+.employee-table::-webkit-scrollbar-track{
+    background:#edf2f7;
+}
+
+/* ===========================
+   CARD ICON COLORS
+=========================== */
+
+.card-icon.blue{
+    color:#2563eb;
+}
+
+.card-icon.green{
+    color:#16a34a;
+}
+
+.card-icon.orange{
+    color:#f59e0b;
+}
+
+.card-icon.purple{
+    color:#7c3aed;
+}
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+.filter-btn,
+.download-btn{
+    transition:all .3s ease;
+}
+
+.filter-btn:hover,
+.download-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(37,99,235,.15);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+.table-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:20px;
+}
+
+.table-actions{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.filter-btn,
+.download-btn{
+    flex:1;
+    justify-content:center;
+}
+
+.employee-table table{
+    min-width:900px;
+}
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+.employee-table{
+    border-radius:12px;
+}
+
+.table-header{
+    padding:20px;
+}
+
+.table-header h2{
+    font-size:20px;
+}
+
+.table-header p{
+    font-size:13px;
+}
+
+.table-actions{
+    flex-direction:column;
+    width:100%;
+}
+
+.filter-btn,
+.download-btn{
+    width:100%;
+}
+
+.employee-table th,
+.employee-table td{
+    padding:14px;
+    font-size:14px;
+}
+
+.empty-state img{
+    width:120px;
+}
+
+.empty-state h3{
+    font-size:22px;
+}
+
+.empty-state p{
+    font-size:14px;
+}
+
+.pagination{
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+}
+
+/* ===========================
+   SMALL MOBILE
+=========================== */
+
+@media(max-width:480px){
+
+.table-header{
+    padding:15px;
+}
+
+.employee-table th,
+.employee-table td{
+    font-size:13px;
+    padding:12px;
+}
+
+.empty-state img{
+    width:90px;
+}
+
+.empty-state h3{
+    font-size:18px;
+}
+
+.empty-state p{
+    font-size:13px;
+}
+
+.pagination button{
+    padding:8px 14px;
+    font-size:13px;
+}
+
+}
