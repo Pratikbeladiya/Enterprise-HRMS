@@ -145,7 +145,7 @@ function VisualPanel() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(167,139,250,0.20),transparent_30%),linear-gradient(135deg,rgba(79,70,229,0.40),transparent_42%,rgba(20,184,166,0.22))]" />
 
       <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
@@ -154,9 +154,8 @@ function VisualPanel() {
             <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
             WCAG-ready access
           </motion.div>
-        </div>
+        </div> */}
 
-        {/* Center blank space plain white text with controlled horizontal constraints to avoid overlapping floating tiles */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -233,6 +232,7 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [otp, setOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberSession, setRememberSession] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -332,6 +332,22 @@ export default function Login({ onLogin }) {
     }
   };
 
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      notify('Please enter a valid work email address first.', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+    window.setTimeout(() => {
+      const mockCode = Math.floor(100000 + Math.random() * 900000).toString();
+      setGeneratedOtp(mockCode);
+      setIsLoading(false);
+      notify(`Verification code sent! (Demo Code: ${mockCode})`, 'success');
+    }, 700);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -350,9 +366,15 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    if (mode === 'otp' && !otp.trim()) {
-      notify('Please enter the 6-digit verification code.', 'error');
-      return;
+    if (mode === 'otp') {
+      if (!otp.trim()) {
+        notify('Please enter the verification code.', 'error');
+        return;
+      }
+      if (otp !== generatedOtp && otp !== '123456') {
+        notify('Invalid OTP code. Please try again or resend code.', 'error');
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -473,7 +495,7 @@ export default function Login({ onLogin }) {
               >
                 {mode === 'register' && "Enter your information to set up your profile."}
                 {mode === 'forgot' && "Enter your verified work email to recover your enterprise credentials."}
-                {mode === 'otp' && "Enter the quick passcode delivered to your email address to log in instantly."}
+                {mode === 'otp' && "Enter your work email to receive a secure sign-in verification code."}
                 {mode === 'login' && "Please enter your details to access your dashboard."}
               </motion.p>
             </motion.div>
@@ -567,8 +589,17 @@ export default function Login({ onLogin }) {
               </motion.div>
 
               {mode === 'otp' && (
-                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Verification Code (OTP)</label>
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-3 cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Verification Code (OTP)</label>
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 cursor-pointer"
+                    >
+                      Resend Code
+                    </button>
+                  </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><KeyRound size={18} /></div>
                     <input 
@@ -577,9 +608,14 @@ export default function Login({ onLogin }) {
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter 6-digit code" 
-                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400 tracking-widest font-mono" 
                     />
                   </div>
+                  {generatedOtp && (
+                    <p className="text-xs text-slate-400">
+                      Demo OTP Code: <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{generatedOtp}</span> (or use 123456)
+                    </p>
+                  )}
                 </motion.div>
               )}
 
@@ -626,25 +662,45 @@ export default function Login({ onLogin }) {
                 </motion.div>
               )}
 
-              <motion.button 
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
-              >
-                {isLoading ? (
-                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                ) : (
-                  <>
-                    {mode === 'login' && "Sign In"}
-                    {mode === 'register' && "Register Account"}
-                    {mode === 'forgot' && "Send Recovery Link"}
-                    {mode === 'otp' && "Verify & Sign In"}
-                    <ArrowRight size={18} />
-                  </>
-                )}
-              </motion.button>
+              {mode === 'otp' && !generatedOtp ? (
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
+                >
+                  {isLoading ? (
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  ) : (
+                    <>
+                      Send Verification Code
+                      <ArrowRight size={18} />
+                    </>
+                  )}
+                </motion.button>
+              ) : (
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
+                >
+                  {isLoading ? (
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  ) : (
+                    <>
+                      {mode === 'login' && "Sign In"}
+                      {mode === 'register' && "Register Account"}
+                      {mode === 'forgot' && "Send Recovery Link"}
+                      {mode === 'otp' && "Verify & Sign In"}
+                      <ArrowRight size={18} />
+                    </>
+                  )}
+                </motion.button>
+              )}
             </motion.form>
 
             {/* Toggle between Login, Register, and OTP views */}
@@ -653,7 +709,18 @@ export default function Login({ onLogin }) {
                 <>
                   <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
                     Sign in with code instead?{" "}
-                    <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('otp')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }} 
+                      type="button" 
+                      onClick={() => {
+                        setMode('otp');
+                        if (email) {
+                          const mockCode = Math.floor(100000 + Math.random() * 900000).toString();
+                          setGeneratedOtp(mockCode);
+                        }
+                      }} 
+                      className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer"
+                    >
                       Use OTP Auth
                     </motion.button>
                   </p>
@@ -668,7 +735,16 @@ export default function Login({ onLogin }) {
 
               {(mode === 'register' || mode === 'forgot' || mode === 'otp') && (
                 <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
-                  <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('login')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }} 
+                    type="button" 
+                    onClick={() => {
+                      setMode('login');
+                      setGeneratedOtp('');
+                      setOtp('');
+                    }} 
+                    className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer"
+                  >
                     Back to standard sign in
                   </motion.button>
                 </p>
