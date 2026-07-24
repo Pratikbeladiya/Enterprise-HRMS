@@ -120,12 +120,12 @@ function Signup() {
   </button>
 
   <button
-    className={role === "admin" ? "role-btn active" : "role-btn"}
-    onClick={() => setRole("admin")}
-    type="button"
-  >
-    🛡️ Admin
-  </button>
+  className="role-btn"
+  onClick={() => navigate("/admin-signup")}
+  type="button"
+>
+  🛡️ Admin
+</button>
 
 </div>
 
