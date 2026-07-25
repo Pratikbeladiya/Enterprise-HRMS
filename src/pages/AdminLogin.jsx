@@ -28,7 +28,7 @@ function AdminLogin() {
 
   const handleLogin = () => {
 
-    if (!companyCode || !email || !password) {
+    if (!email || !password) {
       alert("Please fill all fields.");
       return;
     }
@@ -95,20 +95,7 @@ function AdminLogin() {
 
         {/* Company Code */}
 
-        <div className="admin-input-box">
-
-          <FaBuilding className="admin-icon" />
-
-          <input
-            type="text"
-            placeholder="Enter Company Code"
-            value={companyCode}
-            onChange={(e) =>
-              setCompanyCode(e.target.value)
-            }
-          />
-
-        </div>
+       
 
         {/* Email */}
 
