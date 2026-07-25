@@ -13,6 +13,7 @@ import Signup from "./pages/Signup";
 //Admin
 
 import AdminSignup from "./pages/AdminSignup";
+import AdminDashboard from "./pages/AdminDashboard";
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
         //Admin
 
         <Route path="/admin-signup" element={<AdminSignup />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
 
 
       </Routes>
