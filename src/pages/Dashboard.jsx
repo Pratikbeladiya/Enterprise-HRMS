@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import {  useNavigate} from "react-router-dom";
 import "./Dashboard.css";
 
@@ -19,6 +19,19 @@ import {
 
 function Dashboard() {
   const navigate = useNavigate();
+
+const [user, setUser] = useState({
+  fullName: "",
+});
+
+useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  if (userData) {
+    setUser(userData);
+  }
+}, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   
 const handleLogout = () => {
@@ -175,8 +188,8 @@ const handleSearch = (e) => {
 
       {/* Welcome */}
       <div className="welcome-card">
-        <h2>Welcome 👋</h2>
-        <p>Employee Dashboard</p>
+        <h2>Welcome, {user.fullName} 👋</h2>
+<p>Employee Dashboard</p>
       </div>
 
       {/* Cards */}
