@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AlertCircle,
   ArrowRight,
-  BriefcaseBusiness,
   Building2,
   CheckCircle2,
   Eye,
@@ -10,7 +9,6 @@ import {
   KeyRound,
   Lock,
   Mail,
-  ShieldCheck,
   Target,
   User,
   UserRoundCheck,
