@@ -78,6 +78,15 @@ function Signup() {
       return;
     }
 
+    localStorage.setItem(
+  "user",
+  JSON.stringify({
+    fullName: fullName,
+    email: email,
+    phone: phone,
+  })
+);
+
     alert("Account Created Successfully!");
 
     navigate("/login");
