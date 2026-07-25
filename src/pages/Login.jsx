@@ -18,6 +18,7 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
 
   // Form States
@@ -81,6 +82,26 @@ function Login() {
         <p className="subtitle">
           Login to access your HRMS dashboard
         </p>
+
+        <div className="role-selector">
+
+  <button
+    className={role === "user" ? "role-btn active" : "role-btn"}
+    onClick={() => setRole("user")}
+    type="button"
+  >
+    👤 User
+  </button>
+
+  <button
+  className="role-btn"
+  onClick={() => navigate("/admin-login")}
+  type="button"
+>
+  🛡️ Admin
+</button>
+
+</div>
 
         {/* Email / Mobile */}
 
