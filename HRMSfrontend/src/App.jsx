@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
-  LayoutDashboard, Users, UserCheck, Calendar, FileText, 
-  Settings, CheckSquare, Sun, Moon, Search, Filter, 
-  Plus, MoreVertical, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, Hammer, LogOut, Trash2, CheckCircle, XCircle, Shield, Download, Clock
+  LayoutDashboard, Users, UserCheck, Calendar, FileText, CheckSquare, Sun, Moon, Search, 
+  Plus, Briefcase, Award, TrendingUp, 
+  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock
 } from 'lucide-react';
 import Login from './Login';
 
