@@ -145,17 +145,6 @@ function VisualPanel() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(167,139,250,0.20),transparent_30%),linear-gradient(135deg,rgba(79,70,229,0.40),transparent_42%,rgba(20,184,166,0.22))]" />
 
       <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
-        {/* <div className="flex items-center justify-between">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur-xl cursor-pointer"
-          >
-            <ShieldCheck className="h-3.5 w-3.5 text-teal-200" />
-            WCAG-ready access
-          </motion.div>
-        </div> */}
-
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -476,7 +465,7 @@ export default function Login({ onLogin }) {
           transition={{ duration: 1 }}
           className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 relative z-10 bg-slate-50 dark:bg-slate-900"
         >
-          <motion.div variants={containerVariants} initial="hidden" animate="show" className="w-full max-w-md space-y-6">
+          <motion.div variants={containerVariants} initial="hidden" animate="show" className="w-full max-w-md space-y-4">
             
             <motion.div variants={itemVariants} className="text-center lg:text-left space-y-2">
               <motion.h2 
@@ -500,25 +489,28 @@ export default function Login({ onLogin }) {
               </motion.p>
             </motion.div>
 
-            {/* Feedback Message Banner */}
-            <AnimatePresence>
-              {message.text && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  whileHover={{ scale: 1.02 }}
-                  className={`flex items-center gap-2.5 p-3.5 rounded-xl text-sm font-medium border cursor-pointer ${
-                    message.type === 'success' 
-                      ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
-                      : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
-                  }`}
-                >
-                  {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-                  <span>{message.text}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* FIXED-HEIGHT CONTAINER FOR FEEDBACK BANNER TO PREVENT UI SHIFT */}
+            <motion.div variants={itemVariants} className="relative h-14 w-full">
+              <AnimatePresence>
+                {message.text && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.01 }}
+                    className={`absolute inset-x-0 top-0 flex items-center gap-2.5 p-3.5 rounded-xl text-sm font-medium border cursor-pointer shadow-sm ${
+                      message.type === 'success' 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
+                        : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                    }`}
+                  >
+                    {message.type === 'success' ? <CheckCircle2 size={18} className="shrink-0" /> : <AlertCircle size={18} className="shrink-0" />}
+                    <span className="truncate">{message.text}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
             {mode === 'login' && (
               <>
