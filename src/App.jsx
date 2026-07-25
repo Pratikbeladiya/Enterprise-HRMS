@@ -1,42 +1,51 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Authentication
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import AdminSignup from "./pages/AdminSignup";
+import AdminLogin from "./pages/AdminLogin";
+
+// User Pages
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Attendance from "./pages/Attendance";
-import Leave from "./pages/Leave";
 import Payroll from "./pages/Payroll";
+import Leave from "./pages/Leave";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 
-//Admin
-
-import AdminSignup from "./pages/AdminSignup";
+// Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
-
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
+        {/* Default Route */}
+        <Route path="/" element={<Signup />} />
+
+        {/* User Authentication */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+
+        {/* Admin Authentication */}
+        <Route path="/admin-signup" element={<AdminSignup />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+
+        {/* User Pages */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/attendance" element={<Attendance />} />
-        <Route path="/leave" element={<Leave />} />
         <Route path="/payroll" element={<Payroll />} />
+        <Route path="/leave" element={<Leave />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
 
-        //Admin
-
-        <Route path="/admin-signup" element={<AdminSignup />} />
+        {/* Admin Pages */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-
-
 
       </Routes>
     </BrowserRouter>
