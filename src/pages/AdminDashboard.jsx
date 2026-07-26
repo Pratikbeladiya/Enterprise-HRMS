@@ -51,7 +51,7 @@ function AdminDashboard() {
           break;
 
         case "attendance":
-          navigate("/attendance");
+          navigate("/admin-attendance");
           break;
 
         case "payroll":
@@ -102,7 +102,7 @@ function AdminDashboard() {
           </li>
 
           <li
-            onClick={() => navigate("/attendance")}
+            onClick={() => navigate("/admin-attendance")}
             style={{ cursor: "pointer" }}
           >
             📝 Attendance
