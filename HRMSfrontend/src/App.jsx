@@ -128,6 +128,10 @@ export default function App() {
   useEffect(() => { localStorage.setItem('hrise_leaves', JSON.stringify(leaves)); }, [leaves]);
   useEffect(() => { localStorage.setItem('hrise_teams', JSON.stringify(teams)); }, [teams]);
 
+  // Sync Payroll state changes with localStorage
+  useEffect(() => { localStorage.setItem('hrise_payrolls', JSON.stringify(payrolls)); }, [payrolls]);
+
+
   // Check persisted session on load
   useEffect(() => {
     const active = localStorage.getItem('hrise_current_user');
