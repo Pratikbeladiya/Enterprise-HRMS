@@ -1041,6 +1041,129 @@ export default function App() {
       );
     }
 
+    if (activeTab === 'Payroll') {
+    const totalPayrollAmount = payrolls.reduce((acc, curr) => acc + (curr.baseSalary + curr.bonus - curr.deductions), 0);
+
+    return (
+      <div className="xl:col-span-4 space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div>
+            <h3 className="font-bold text-base text-slate-900 dark:text-white">Payroll & Salary Disbursal</h3>
+            <p className="text-xs text-slate-400 mt-0.5">Manage salaries, bonuses, tax deductions, and payment statuses</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-2 rounded-xl">
+              Total Outflow: ₹{totalPayrollAmount.toLocaleString()}
+            </span>
+            <button onClick={() => setShowAddPayrollModal(true)} className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500 transition-colors shadow-sm">
+              <Plus size={14} /> Configure Salary Entry
+            </button>
+          </div>
+        </div>
+
+        {showAddPayrollModal && (
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Configure Employee Payroll</h3>
+                <button onClick={() => setShowAddPayrollModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+              </div>
+              <form onSubmit={handleAddPayroll} className="space-y-3">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Select Employee</label>
+                  <select value={payrollEmpId} onChange={(e) => setPayrollEmpId(e.target.value)} required className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                    <option value="">Choose Employee...</option>
+                    {employees.map(emp => <option key={emp.id} value={emp.id}>{emp.name} ({emp.id})</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Base Salary (INR)</label>
+                  <input type="number" required value={payrollBase} onChange={(e) => setPayrollBase(e.target.value)} placeholder="120000" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Bonus (INR)</label>
+                  <input type="number" value={payrollBonus} onChange={(e) => setPayrollBonus(e.target.value)} placeholder="15000" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Deductions (INR)</label>
+                  <input type="number" value={payrollDeductions} onChange={(e) => setPayrollDeductions(e.target.value)} placeholder="5000" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Billing Cycle Month</label>
+                  <input type="text" required value={payrollMonth} onChange={(e) => setPayrollMonth(e.target.value)} placeholder="July 2026" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button type="button" onClick={() => setShowAddPayrollModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                  <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-500">Save Record</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                  <th className="p-4">Employee ID</th>
+                  <th className="p-4">Name</th>
+                  <th className="p-4">Month</th>
+                  <th className="p-4">Base (₹)</th>
+                  <th className="p-4">Bonus (₹)</th>
+                  <th className="p-4">Deductions (₹)</th>
+                  <th className="p-4">Net Salary (₹)</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                {payrolls.length > 0 ? payrolls.map((item) => {
+                  const netSalary = item.baseSalary + item.bonus - item.deductions;
+                  return (
+                    <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-4 font-mono text-slate-500">{item.id}</td>
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white">{item.name}</td>
+                      <td className="p-4 text-slate-500">{item.month}</td>
+                      <td className="p-4">₹{item.baseSalary.toLocaleString()}</td>
+                      <td className="p-4 text-emerald-600">+₹{item.bonus.toLocaleString()}</td>
+                      <td className="p-4 text-rose-500">-₹{item.deductions.toLocaleString()}</td>
+                      <td className="p-4 font-bold text-slate-900 dark:text-white">₹{netSalary.toLocaleString()}</td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          item.status === 'Paid' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                          item.status === 'Processing' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400' :
+                          'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
+                        }`}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <select 
+                          value={item.status}
+                          onChange={(e) => handleUpdatePayrollStatus(item.id, e.target.value)}
+                          className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer text-slate-800 dark:text-slate-100"
+                        >
+                          <option value="Paid">Paid</option>
+                          <option value="Processing">Processing</option>
+                          <option value="Pending">Pending</option>
+                        </select>
+                      </td>
+                    </tr>
+                  );
+                }) : (
+                  <tr>
+                    <td colSpan="9" className="p-8 text-center text-slate-400">No payroll records found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
     if (activeTab === 'Attendance') {
       const handleStatusChange = (id, newStatus) => {
         setAttendance(attendance.map(item => item.id === id ? { ...item, status: newStatus } : item));
