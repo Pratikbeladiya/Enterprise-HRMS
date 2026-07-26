@@ -91,6 +91,15 @@ export default function App() {
   const [newEmpDept, setNewEmpDept] = useState('');
   const [newEmpManager, setNewEmpManager] = useState('');
 
+
+  // Payroll Tab Local States
+  const [showAddPayrollModal, setShowAddPayrollModal] = useState(false);
+  const [payrollEmpId, setPayrollEmpId] = useState('');
+  const [payrollBase, setPayrollBase] = useState('');
+  const [payrollBonus, setPayrollBonus] = useState('');
+  const [payrollDeductions, setPayrollDeductions] = useState('');
+  const [payrollMonth, setPayrollMonth] = useState('July 2026');
+
   // Team Tab Local States
   const [showAddTeamModal, setShowAddTeamModal] = useState(false);
   const [newTeamName, setNewTeamName] = useState('');
