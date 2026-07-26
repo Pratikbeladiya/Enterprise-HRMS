@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, UserCheck, Calendar, FileText, CheckSquare, Sun, Moon, Search, 
   Plus, Briefcase, Award, TrendingUp, 
-  ChevronRight, ChevronLeft, ArrowUpRight, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock
+  ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock
 } from 'lucide-react';
 import Login from './Login';
 
@@ -27,6 +27,18 @@ export default function App() {
       { id: 'EI-0125', name: 'Brooklyn Simmons', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-09-11' },
       { id: 'EI-0126', name: 'Albert Flores', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-08-10' },
       { id: 'EI-0173', name: 'Arlene McCoy', role: 'SDE - Level 2', dept: 'IT and Infrastructure', manager: 'Kailash Yadav', joiningDate: '2024-08-10' }
+    ];
+  });
+
+  // Payroll State
+  const [payrolls, setPayrolls] = useState(() => {
+    const saved = localStorage.getItem('hrise_payrolls');
+    return saved ? JSON.parse(saved) : [
+      { id: 'EI-0123', name: 'Cameron Williamson', baseSalary: 120000, bonus: 15000, deductions: 5000, status: 'Paid', month: 'July 2026' },
+      { id: 'EI-0124', name: 'Guy Hawkins', baseSalary: 115000, bonus: 10000, deductions: 4500, status: 'Paid', month: 'July 2026' },
+      { id: 'EI-0125', name: 'Brooklyn Simmons', baseSalary: 125000, bonus: 20000, deductions: 6000, status: 'Pending', month: 'July 2026' },
+      { id: 'EI-0126', name: 'Albert Flores', baseSalary: 110000, bonus: 8000, deductions: 4000, status: 'Processing', month: 'July 2026' },
+      { id: 'EI-0173', name: 'Arlene McCoy', baseSalary: 130000, bonus: 25000, deductions: 7000, status: 'Paid', month: 'July 2026' }
     ];
   });
 
