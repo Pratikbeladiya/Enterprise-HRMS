@@ -19,6 +19,7 @@ import Settings from "./pages/Settings";
 // Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminAttendance from "./pages/AdminAttendance";
+import AdminEmployees from "./pages/AdminEmployees";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         {/* Admin Pages */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-attendance" element={<AdminAttendance />}/>
+        <Route path="/admin-employees" element={<AdminEmployees />}/>
 
       </Routes>
     </BrowserRouter>
