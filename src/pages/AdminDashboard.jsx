@@ -77,20 +77,20 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="dashboard-page">
+    <div className="admin-dashboard-page">
 
       {/* Sidebar */}
 
-      <div className="sidebar">
+      <div className="admin-sidebar">
 
-        <div className="logo">
+        <div className="admin-logo">
           <h2>HRMS</h2>
           <p>Admin Panel</p>
         </div>
 
-        <ul className="menu">
+        <ul className="admin-menu">
 
-          <li className="active">
+          <li className="admin-active">
             🏠 Dashboard
           </li>
 
@@ -149,20 +149,20 @@ function AdminDashboard() {
 
       {/* Main */}
 
-      <div className="main">
+      <div className="admin-main">
 
         {/* Topbar */}
 
-        <div className="topbar">
+        <div className="admin-topbar">
 
           <div>
             <h1>Admin Dashboard</h1>
             <p>Human Resource Management System</p>
           </div>
 
-          <div className="top-right">
+          <div className="admin-top-right">
 
-            <div className="search-box">
+            <div className="admin-search-box">
 
               <FaSearch />
 
@@ -176,12 +176,12 @@ function AdminDashboard() {
 
             </div>
 
-            <FaBell className="bell" />
+            <FaBell className="admin-bell" />
 
             <img
               src="https://i.pravatar.cc/150?img=15"
               alt="profile"
-              className="profile"
+              className="admin-profile"
             />
 
           </div>
@@ -190,11 +190,9 @@ function AdminDashboard() {
 
         {/* Welcome */}
 
-        <div className="welcome-card">
+        <div className="admin-welcome-card">
 
-          <h2>
-            Welcome, {admin.fullName} 👋
-          </h2>
+          <h2>Welcome, {admin.fullName} 👋</h2>
 
           <p>Administrator Dashboard</p>
 
@@ -202,34 +200,34 @@ function AdminDashboard() {
 
         {/* Summary Cards */}
 
-        <div className="dashboard-cards">
+        <div className="admin-dashboard-cards">
 
-            <div className="dashboard-card">
-            <FaUsers className="icon blue" />
+          <div className="admin-dashboard-card">
+            <FaUsers className="admin-icon blue" />
             <h2>0</h2>
             <p>Total Employees</p>
           </div>
 
-          <div className="dashboard-card">
-            <FaUserCheck className="icon green" />
+          <div className="admin-dashboard-card">
+            <FaUserCheck className="admin-icon green" />
             <h2>0</h2>
             <p>Present Today</p>
           </div>
 
-          <div className="dashboard-card">
-            <FaUserTimes className="icon red" />
+          <div className="admin-dashboard-card">
+            <FaUserTimes className="admin-icon red" />
             <h2>0</h2>
             <p>Absent Today</p>
           </div>
 
-          <div className="dashboard-card">
-            <FaCalendarAlt className="icon orange" />
+          <div className="admin-dashboard-card">
+            <FaCalendarAlt className="admin-icon orange" />
             <h2>0</h2>
             <p>Pending Leaves</p>
           </div>
 
-          <div className="dashboard-card">
-            <FaMoneyBillWave className="icon purple" />
+          <div className="admin-dashboard-card">
+            <FaMoneyBillWave className="admin-icon purple" />
             <h2>₹0</h2>
             <p>Total Payroll</p>
           </div>
@@ -238,29 +236,36 @@ function AdminDashboard() {
 
         {/* Tables */}
 
-        <div className="dashboard-grid">
+        <div className="admin-dashboard-grid">
 
-          <div className="dashboard-box">
+          <div className="admin-dashboard-box">
 
             <h3>Recent Employees</h3>
 
             <table>
 
               <thead>
+
                 <tr>
                   <th>Name</th>
                   <th>Department</th>
                   <th>Designation</th>
                   <th>Status</th>
                 </tr>
+
               </thead>
 
               <tbody>
 
                 <tr>
-                  <td colSpan="4" className="no-data">
+
+                  <td
+                    colSpan="4"
+                    className="admin-no-data"
+                  >
                     No Employee Records Available
                   </td>
+
                 </tr>
 
               </tbody>
@@ -269,27 +274,34 @@ function AdminDashboard() {
 
           </div>
 
-          <div className="dashboard-box">
+          <div className="admin-dashboard-box">
 
             <h3>Pending Leave Requests</h3>
 
             <table>
 
               <thead>
+
                 <tr>
                   <th>Employee</th>
                   <th>Leave Type</th>
                   <th>From</th>
                   <th>Status</th>
                 </tr>
+
               </thead>
 
               <tbody>
 
                 <tr>
-                  <td colSpan="4" className="no-data">
+
+                  <td
+                    colSpan="4"
+                    className="admin-no-data"
+                  >
                     No Leave Requests Available
                   </td>
+
                 </tr>
 
               </tbody>
@@ -300,13 +312,13 @@ function AdminDashboard() {
 
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activities */}
 
-        <div className="profile-box">
+        <div className="admin-profile-box">
 
           <h3>Recent Activities</h3>
 
-          <div className="profile-grid">
+          <div className="admin-profile-grid">
 
             <div>✅ No recent employee activity</div>
 
@@ -332,4 +344,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-        
