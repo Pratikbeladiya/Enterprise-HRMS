@@ -180,7 +180,7 @@ export default function App() {
 
     // 👉 INSERT THIS LINE:
     setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 100000, bonus: 5000, deductions: 3000, status: 'Pending', month: 'July 2026' }]);
-    
+
     setNewEmpName('');
     setNewEmpRole('');
     setNewEmpDept('');
@@ -241,6 +241,34 @@ export default function App() {
 
   const handleDeleteLeave = (id) => {
     setLeaves(leaves.filter(l => l.id !== id));
+  };
+
+  // 👉 INSERT THESE FUNCTIONS:
+  const handleAddPayroll = (e) => {
+    e.preventDefault();
+    const targetEmp = employees.find(emp => emp.id === payrollEmpId);
+    if (!targetEmp) return;
+
+    const newPayrollRecord = {
+      id: targetEmp.id,
+      name: targetEmp.name,
+      baseSalary: parseFloat(payrollBase) || 100000,
+      bonus: parseFloat(payrollBonus) || 0,
+      deductions: parseFloat(payrollDeductions) || 0,
+      status: 'Pending',
+      month: payrollMonth
+    };
+
+    setPayrolls([...payrolls.filter(p => p.id !== targetEmp.id || p.month !== payrollMonth), newPayrollRecord]);
+    setPayrollEmpId('');
+    setPayrollBase('');
+    setPayrollBonus('');
+    setPayrollDeductions('');
+    setShowAddPayrollModal(false);
+  };
+
+  const handleUpdatePayrollStatus = (id, newStatus) => {
+    setPayrolls(payrolls.map(p => p.id === id ? { ...p, status: newStatus } : p));
   };
 
   // Task Handlers
