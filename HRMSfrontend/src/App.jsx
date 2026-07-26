@@ -178,6 +178,9 @@ export default function App() {
     setEmployees([...employees, newEmp]);
     setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
 
+    // 👉 INSERT THIS LINE:
+    setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 100000, bonus: 5000, deductions: 3000, status: 'Pending', month: 'July 2026' }]);
+    
     setNewEmpName('');
     setNewEmpRole('');
     setNewEmpDept('');
