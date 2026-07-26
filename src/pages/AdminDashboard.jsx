@@ -95,7 +95,7 @@ function AdminDashboard() {
           </li>
 
           <li
-            onClick={() => navigate("/employees")}
+            onClick={() => navigate("/admin-employees")}
             style={{ cursor: "pointer" }}
           >
             👨 Employees

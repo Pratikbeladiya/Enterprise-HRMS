@@ -36,7 +36,7 @@ function AdminAttendance() {
           break;
 
         case "employees":
-          navigate("/employees");
+          navigate("/admin-employees");
           break;
 
         case "attendance":
