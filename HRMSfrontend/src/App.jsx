@@ -1267,6 +1267,7 @@ export default function App() {
               { name: 'Employee', icon: Users },
               { name: 'Team', icon: Briefcase },
               { name: 'Leaves', icon: Calendar },
+              { name: 'Payroll', icon: DollarSign },
               { name: 'Reports', icon: FileText },
               { name: 'Tasks', icon: CheckSquare },
             ].map((item) => {
