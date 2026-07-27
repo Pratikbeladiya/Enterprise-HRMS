@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminAttendance from "./pages/AdminAttendance";
 import AdminEmployees from "./pages/AdminEmployees";
 import AdminPayroll from "./pages/AdminPayroll";
+import AdminLeave from "./pages/AdminLeave";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         <Route path="/admin-attendance" element={<AdminAttendance />}/>
         <Route path="/admin-employees" element={<AdminEmployees />}/>
         <Route path="/admin-payroll" element={<AdminPayroll />}/>
+        <Route path="/admin-leave"element={<AdminLeave />}/>
 
       </Routes>
     </BrowserRouter>
