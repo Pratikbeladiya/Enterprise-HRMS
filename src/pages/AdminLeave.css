@@ -1,0 +1,291 @@
+/* ===========================
+   Admin Leave Page
+=========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.admin-leave-page {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f7fc;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 30px;
+}
+
+/* ===========================
+   Summary Cards
+=========================== */
+
+.admin-leave-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 25px 0;
+}
+
+.admin-leave-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.admin-leave-card:hover {
+  transform: translateY(-5px);
+}
+
+.admin-leave-icon {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.admin-leave-icon.blue {
+  color: #2563eb;
+}
+
+.admin-leave-icon.green {
+  color: #16a34a;
+}
+
+.admin-leave-icon.orange {
+  color: #f97316;
+}
+
+.admin-leave-icon.red {
+  color: #ef4444;
+}
+
+.admin-leave-card h2 {
+  font-size: 30px;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.admin-leave-card p {
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* ===========================
+   Filter Section
+=========================== */
+
+.admin-leave-filter {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-leave-filter h2 {
+  color: #1e293b;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-leave-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+}
+
+.admin-leave-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-leave-group label {
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.admin-leave-group input,
+.admin-leave-group select {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+.admin-leave-group input:focus,
+.admin-leave-group select:focus {
+  border-color: #2563eb;
+}
+
+/* ===========================
+   Leave Request Table
+=========================== */
+
+.admin-leave-table {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-leave-table-header {
+  margin-bottom: 20px;
+}
+
+.admin-leave-table-header h2 {
+  color: #1e293b;
+}
+
+.admin-leave-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-leave-table thead {
+  background: #2563eb;
+  color: #fff;
+}
+
+.admin-leave-table th,
+.admin-leave-table td {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-leave-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.admin-no-data {
+  padding: 35px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* ===========================
+   Leave Details
+=========================== */
+
+.admin-leave-details {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-leave-details h2 {
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.admin-leave-info {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.admin-leave-info p {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  color: #475569;
+}
+
+.admin-leave-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.admin-approve-btn,
+.admin-reject-btn {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.admin-approve-btn {
+  background: #16a34a;
+}
+
+.admin-approve-btn:hover {
+  background: #15803d;
+}
+
+.admin-reject-btn {
+  background: #ef4444;
+}
+
+.admin-reject-btn:hover {
+  background: #dc2626;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 992px) {
+
+  .admin-leave-cards,
+  .admin-leave-filter-grid,
+  .admin-leave-info {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .admin-leave-table {
+    overflow-x: auto;
+  }
+
+  .admin-leave-table table {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .admin-main {
+    margin-left: 220px;
+    padding: 20px;
+  }
+
+  .admin-leave-cards,
+  .admin-leave-filter-grid,
+  .admin-leave-info {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-leave-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+
+  .admin-main {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .admin-approve-btn,
+  .admin-reject-btn {
+    width: 100%;
+  }
+}
