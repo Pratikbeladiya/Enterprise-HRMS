@@ -109,7 +109,7 @@ function AdminDashboard() {
           </li>
 
           <li
-            onClick={() => navigate("/payroll")}
+            onClick={() => navigate("/admin-payroll")}
             style={{ cursor: "pointer" }}
           >
             💰 Payroll

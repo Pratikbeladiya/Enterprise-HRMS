@@ -44,7 +44,7 @@ function AdminAttendance() {
           break;
 
         case "payroll":
-          navigate("/payroll");
+          navigate("/admin-payroll");
           break;
 
         case "leave":
