@@ -48,7 +48,7 @@ function AdminAttendance() {
           break;
 
         case "leave":
-          navigate("/leave");
+          navigate("/admin-leave");
           break;
 
         case "reports":
@@ -92,7 +92,7 @@ function AdminAttendance() {
           </li>
 
           <li
-            onClick={() => navigate("/employees")}
+            onClick={() => navigate("/admin-employees")}
             style={{ cursor: "pointer" }}
           >
             👨 Employees
@@ -103,14 +103,14 @@ function AdminAttendance() {
           </li>
 
           <li
-            onClick={() => navigate("/payroll")}
+            onClick={() => navigate("/admin-payroll")}
             style={{ cursor: "pointer" }}
           >
             💰 Payroll
           </li>
 
           <li
-            onClick={() => navigate("/leave")}
+            onClick={() => navigate("/admin-leave")}
             style={{ cursor: "pointer" }}
           >
             📅 Leave
