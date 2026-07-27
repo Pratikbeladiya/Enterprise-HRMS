@@ -1,0 +1,291 @@
+/* ===========================
+   Admin Payroll Page
+=========================== */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+.admin-payroll-page{
+  display:flex;
+  min-height:100vh;
+  background:#f4f7fc;
+}
+
+.admin-main{
+  flex:1;
+  margin-left:260px;
+  padding:30px;
+}
+
+/* ===========================
+   Summary Cards
+=========================== */
+
+.admin-payroll-cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  margin:25px 0;
+}
+
+.admin-payroll-card{
+  background:#fff;
+  border-radius:15px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.admin-payroll-card:hover{
+  transform:translateY(-5px);
+}
+
+.admin-payroll-icon{
+  font-size:34px;
+  margin-bottom:15px;
+}
+
+.admin-payroll-icon.blue{
+  color:#2563eb;
+}
+
+.admin-payroll-icon.green{
+  color:#16a34a;
+}
+
+.admin-payroll-icon.orange{
+  color:#f97316;
+}
+
+.admin-payroll-icon.purple{
+  color:#9333ea;
+}
+
+.admin-payroll-card h2{
+  font-size:30px;
+  color:#1e293b;
+  margin-bottom:8px;
+}
+
+.admin-payroll-card p{
+  color:#64748b;
+}
+
+/* ===========================
+   Payroll Form
+=========================== */
+
+.admin-payroll-form{
+  background:#fff;
+  border-radius:15px;
+  padding:25px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  margin-bottom:25px;
+}
+
+.admin-payroll-form-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.admin-payroll-form-header h2{
+  color:#1e293b;
+}
+
+.admin-payroll-buttons{
+  display:flex;
+  gap:12px;
+}
+
+.admin-payroll-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.admin-payroll-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.admin-payroll-group label{
+  font-weight:600;
+  color:#334155;
+  margin-bottom:8px;
+}
+
+.admin-payroll-group input,
+.admin-payroll-group select{
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  font-size:15px;
+  outline:none;
+}
+
+.admin-payroll-group input:focus,
+.admin-payroll-group select:focus{
+  border-color:#2563eb;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.admin-preview-btn,
+.admin-reset-btn,
+.admin-generate-btn {
+  border: none;
+  outline: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+
+.admin-preview-btn {
+  background: #2563eb;
+}
+
+.admin-preview-btn:hover {
+  background: #1d4ed8;
+}
+
+.admin-reset-btn {
+  background: #f97316;
+}
+
+.admin-reset-btn:hover {
+  background: #ea580c;
+}
+
+.admin-generate-btn {
+  background: #16a34a;
+}
+
+.admin-generate-btn:hover {
+  background: #15803d;
+}
+
+/* ===========================
+   Payslip Table
+=========================== */
+
+.admin-payroll-table {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.admin-payroll-table-header {
+  margin-bottom: 20px;
+}
+
+.admin-payroll-table-header h2 {
+  color: #1e293b;
+}
+
+.admin-payroll-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-payroll-table thead {
+  background: #2563eb;
+  color: #fff;
+}
+
+.admin-payroll-table th,
+.admin-payroll-table td {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-payroll-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.admin-no-data {
+  padding: 35px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 992px) {
+
+  .admin-payroll-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-payroll-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-payroll-table {
+    overflow-x: auto;
+  }
+
+  .admin-payroll-table table {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .admin-main {
+    margin-left: 220px;
+    padding: 20px;
+  }
+
+  .admin-payroll-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-payroll-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-payroll-form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .admin-payroll-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+
+  .admin-main {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .admin-preview-btn,
+  .admin-reset-btn,
+  .admin-generate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
