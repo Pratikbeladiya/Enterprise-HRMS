@@ -1270,6 +1270,7 @@ export default function App() {
               { name: 'Payroll', icon: DollarSign },
               { name: 'Reports', icon: FileText },
               { name: 'Tasks', icon: CheckSquare },
+              { name: 'About', icon: Award },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.name;
