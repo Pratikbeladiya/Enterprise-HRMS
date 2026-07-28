@@ -1225,6 +1225,99 @@ export default function App() {
       );
     }
 
+    if (activeTab === 'About') {
+  // Calculate raw storage size footprint inside the system
+  const storageKeys = ['hrise_employees', 'hrise_attendance', 'hrise_tasks', 'hrise_leaves', 'hrise_teams', 'hrise_payrolls'];
+  const totalBytes = storageKeys.reduce((acc, key) => acc + (localStorage.getItem(key)?.length || 0), 0);
+
+  return (
+    <div className="xl:col-span-4 space-y-6">
+      {/* Hero Welcome Banner */}
+      <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+        <h3 className="text-xl font-bold">HRise Workspace Ecosystem</h3>
+        <p className="text-xs text-indigo-100 mt-1 max-w-xl">
+          A unified engine built for comprehensive performance metrics, persistent local ledger systems, fluid role auditing, and real-time operational workflows.
+        </p>
+        <span className="inline-block mt-4 px-3 py-1 bg-white/20 rounded-full text-[10px] font-mono tracking-wider">
+          Enterprise Engine v2.4.0
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Core Architecture Matrix */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm md:col-span-2 space-y-4">
+          <h4 className="font-semibold text-sm border-b border-slate-100 dark:border-slate-800 pb-2">Technical Specifications</h4>
+          <div className="grid grid-cols-2 gap-4 text-xs font-medium">
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+              <span className="text-slate-400 block text-[10px] uppercase">Data State Pipeline</span>
+              <span className="text-slate-900 dark:text-white mt-1 block font-semibold">Reactive Hook Injections</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+              <span className="text-slate-400 block text-[10px] uppercase">Persistence Layer</span>
+              <span className="text-slate-900 dark:text-white mt-1 block font-semibold">Local Storage Sandboxing</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+              <span className="text-slate-400 block text-[10px] uppercase">Design Framework</span>
+              <span className="text-slate-900 dark:text-white mt-1 block font-semibold">Tailwind Utility Engine</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+              <span className="text-slate-400 block text-[10px] uppercase">Iconography Pack</span>
+              <span className="text-slate-900 dark:text-white mt-1 block font-semibold">Lucide Interface Vectors</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Diagnostic Storage Metric */}
+        
+
+      {/* Operational Release History (Native Tailwind Timeline) */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+        <h4 className="font-semibold text-sm mb-6">Platform Roadmap</h4>
+        
+        <div className="relative border-l border-slate-200 dark:border-slate-700 ml-4 space-y-6">
+          {/* Event 1 */}
+          <div className="mb-6 ml-6">
+            <span className="absolute flex items-center justify-center w-3 h-3 bg-indigo-600 rounded-full -left-[6px] ring-4 ring-white dark:ring-slate-900"></span>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <h5 className="text-xs font-bold text-slate-900 dark:text-white">Core Infrastructure Overhaul</h5>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">Q3 2026</span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-light">
+              Optimized memory state cycles, added explicit dark mode tokens across tables, and streamlined multi-state context synchronization rules.
+            </p>
+          </div>
+
+          {/* Event 2 */}
+          <div className="mb-6 ml-6">
+            <span className="absolute flex items-center justify-center w-3 h-3 bg-indigo-600 rounded-full -left-[6px] ring-4 ring-white dark:ring-slate-900"></span>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <h5 className="text-xs font-bold text-slate-900 dark:text-white">Financial Ledger Integration</h5>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">Q2 2026</span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-light">
+              Injected structural configuration dialogs to process custom salary profiles alongside local backup download handlers.
+            </p>
+          </div>
+
+          {/* Event 3 */}
+          <div className="ml-6">
+            <span className="absolute flex items-center justify-center w-3 h-3 bg-indigo-600 rounded-full -left-[6px] ring-4 ring-white dark:ring-slate-900"></span>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <h5 className="text-xs font-bold text-slate-900 dark:text-white">Initial Framework Launch</h5>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">Q1 2026</span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-light">
+              Deployed standard working structure covering basic employee directory sheets, task counters, and standard session logic.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
     return null;
   };
 
