@@ -1,0 +1,286 @@
+/* ===========================
+   Admin Reports Page
+=========================== */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+.admin-report-page{
+  display:flex;
+  min-height:100vh;
+  background:#f4f7fc;
+}
+
+.admin-main{
+  flex:1;
+  margin-left:260px;
+  padding:30px;
+}
+
+/* ===========================
+   Summary Cards
+=========================== */
+
+.admin-report-cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  margin:25px 0;
+}
+
+.admin-report-card{
+  background:#fff;
+  border-radius:15px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.admin-report-card:hover{
+  transform:translateY(-5px);
+}
+
+.admin-report-icon{
+  font-size:35px;
+  margin-bottom:15px;
+}
+
+.admin-report-icon.blue{
+  color:#2563eb;
+}
+
+.admin-report-icon.green{
+  color:#16a34a;
+}
+
+.admin-report-icon.orange{
+  color:#f97316;
+}
+
+.admin-report-icon.purple{
+  color:#9333ea;
+}
+
+.admin-report-card h2{
+  font-size:30px;
+  color:#1e293b;
+  margin-bottom:8px;
+}
+
+.admin-report-card p{
+  color:#64748b;
+}
+
+/* ===========================
+   Filter Section
+=========================== */
+
+.admin-report-filter{
+  background:#fff;
+  padding:25px;
+  border-radius:15px;
+  margin-bottom:25px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-report-filter h2{
+  color:#1e293b;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.admin-report-filter-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.admin-report-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.admin-report-group label{
+  font-weight:600;
+  margin-bottom:8px;
+  color:#334155;
+}
+
+.admin-report-group input,
+.admin-report-group select,
+.admin-report-group textarea{
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  font-size:15px;
+  outline:none;
+}
+
+.admin-report-group input:focus,
+.admin-report-group select:focus,
+.admin-report-group textarea:focus{
+  border-color:#2563eb;
+}
+
+/* ===========================
+   Send Report Form
+=========================== */
+
+.admin-report-form{
+  background:#fff;
+  padding:25px;
+  border-radius:15px;
+  margin-bottom:25px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-report-form h2{
+  color:#1e293b;
+  margin-bottom:20px;
+}
+
+.admin-report-form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.admin-report-message{
+  grid-column:1/3;
+}
+
+.admin-report-message textarea{
+  resize:none;
+  min-height:120px;
+}
+
+.admin-send-report-btn{
+  margin-top:20px;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:12px 25px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:600;
+  transition:.3s;
+}
+
+.admin-send-report-btn:hover{
+  background:#1d4ed8;
+}
+
+/* ===========================
+   Reports Table
+=========================== */
+
+.admin-report-table{
+  background:#fff;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-report-table-header{
+  margin-bottom:20px;
+}
+
+.admin-report-table-header h2{
+  color:#1e293b;
+}
+
+.admin-report-table table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.admin-report-table thead{
+  background:#2563eb;
+  color:#fff;
+}
+
+.admin-report-table th,
+.admin-report-table td{
+  padding:15px;
+  text-align:center;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.admin-report-table tbody tr:hover{
+  background:#f8fafc;
+}
+
+.admin-no-data{
+  padding:35px;
+  color:#94a3b8;
+  font-size:16px;
+  text-align:center;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+  .admin-report-cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .admin-report-filter-grid,
+  .admin-report-form-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .admin-report-message{
+    grid-column:1/3;
+  }
+
+  .admin-report-table{
+    overflow-x:auto;
+  }
+
+  .admin-report-table table{
+    min-width:900px;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .admin-main{
+    margin-left:220px;
+    padding:20px;
+  }
+
+  .admin-report-cards,
+  .admin-report-filter-grid,
+  .admin-report-form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .admin-report-message{
+    grid-column:auto;
+  }
+
+}
+
+@media(max-width:576px){
+
+  .admin-main{
+    margin-left:0;
+    padding:15px;
+  }
+
+  .admin-send-report-btn{
+    width:100%;
+  }
+
+}
