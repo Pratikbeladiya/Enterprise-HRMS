@@ -55,7 +55,7 @@ function Login() {
       return;
     }
 
-    alert("Login Successful!");
+    alert("User Login Successful!");
 
     navigate("/Dashboard");
 
