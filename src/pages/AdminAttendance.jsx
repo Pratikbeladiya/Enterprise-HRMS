@@ -52,7 +52,7 @@ function AdminAttendance() {
           break;
 
         case "reports":
-          navigate("/reports");
+          navigate("/admin-reports");
           break;
 
         case "settings":
