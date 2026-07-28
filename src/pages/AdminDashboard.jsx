@@ -67,7 +67,7 @@ function AdminDashboard() {
           break;
 
         case "settings":
-          navigate("/settings");
+          navigate("/admin-settings");
           break;
 
         default:

@@ -56,7 +56,7 @@ function AdminAttendance() {
           break;
 
         case "settings":
-          navigate("/settings");
+          navigate("/admin-settings");
           break;
 
         default:
