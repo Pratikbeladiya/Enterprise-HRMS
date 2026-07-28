@@ -1269,7 +1269,21 @@ export default function App() {
         </div>
 
         {/* Diagnostic Storage Metric */}
-        
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+          <div>
+            <h4 className="font-semibold text-sm mb-1">Local Ledger Diagnostics</h4>
+            <p className="text-[11px] text-slate-400">Total size footprint of persisted database tables currently stored inside browser memory.</p>
+          </div>
+          <div className="py-4 text-center">
+            <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400">
+              {totalBytes.toLocaleString()} <span className="text-xs font-normal text-slate-400">Bytes</span>
+            </span>
+          </div>
+          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${Math.min((totalBytes / 5000) * 100, 100)}%` }}></div>
+          </div>
+        </div>
+      </div>
 
       {/* Operational Release History (Native Tailwind Timeline) */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
