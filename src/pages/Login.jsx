@@ -55,9 +55,27 @@ function Login() {
       return;
     }
 
-    alert("User Login Successful!");
 
-    navigate("/Dashboard");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user) {
+  alert("Please create an account first.");
+  return;
+}
+
+if (
+  emailOrPhone !== user.email &&
+  emailOrPhone !== user.phone
+) {
+  alert("Invalid Email or Mobile Number.");
+  return;
+}
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+alert("User Login Successful!");
+
+navigate("/dashboard");
 
   };
 
