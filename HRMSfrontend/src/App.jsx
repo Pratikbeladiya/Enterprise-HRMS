@@ -157,10 +157,10 @@ export default function App() {
     setCurrentUser(user);
     setIsLoggingIn(true);
     
-    // setTimeout(() => {
-    //   setIsAuthenticated(true);
-    //   setIsLoggingIn(false);
-    // }, 1500); 
+    setTimeout(() => {
+      setIsAuthenticated(true);
+      setIsLoggingIn(false);
+    }, 1500); 
   };
 
   const handleLogout = () => {
