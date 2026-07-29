@@ -1428,7 +1428,7 @@ export default function App() {
           </nav>
         </div>
 
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-4 rounded-2xl text-white relative overflow-hidden hidden lg:block transition-opacity">
             <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
             <h4 className="font-semibold text-sm mb-1">Be a pro at using our platform</h4>
@@ -1437,7 +1437,7 @@ export default function App() {
               Watch now
             </button>
           </div>
-        )}
+        )} */}
       </aside>
 
       {/* MAIN CONTAINER */}
