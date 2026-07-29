@@ -46,9 +46,23 @@ function AdminLogin() {
       return;
     }
 
-    alert("Admin Login Successful!");
+    const admin = JSON.parse(localStorage.getItem("admin"));
 
-    navigate("/admin-dashboard");
+if (!admin) {
+  alert("Please create an admin account first.");
+  return;
+}
+
+if (email !== admin.email) {
+  alert("Invalid Email Address.");
+  return;
+}
+
+    localStorage.setItem("admin", JSON.stringify(admin));
+
+alert("Admin Login Successful!");
+
+navigate("/admin-dashboard");
 
   };
 
