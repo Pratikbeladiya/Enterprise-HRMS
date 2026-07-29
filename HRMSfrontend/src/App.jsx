@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, UserCheck, Calendar, FileText, CheckSquare, Sun, Moon, Search, 
-  Plus, Briefcase, Award, TrendingUp, 
+  Plus, Briefcase, Award, TrendingUp, Loader2,
   ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock
 } from 'lucide-react';
 import Login from './Login';
@@ -9,6 +9,7 @@ import Login from './Login';
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
@@ -154,7 +155,12 @@ export default function App() {
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
-    setIsAuthenticated(true);
+    setIsLoggingIn(true);
+    
+    // setTimeout(() => {
+    //   setIsAuthenticated(true);
+    //   setIsLoggingIn(false);
+    // }, 1500); 
   };
 
   const handleLogout = () => {
@@ -302,6 +308,12 @@ export default function App() {
   const handleDeleteTask = (id) => {
     setTasks(tasks.filter(t => t.id !== id));
   };
+
+
+  // 👇 PASTE STEP 3 HERE (Right after your task handlers and before authentication check) 👇
+  
+
+
 
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
