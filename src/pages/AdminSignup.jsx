@@ -53,6 +53,17 @@ function AdminSignup() {
       return;
     }
 
+    localStorage.setItem(
+  "admin",
+  JSON.stringify({
+    fullName: fullName,
+    email: email,
+    companyName: companyName,
+    companyCode: companyCode,
+    phone: phone,
+  })
+);
+
     alert("Admin Account Created Successfully!");
 
     navigate("/admin-login");
