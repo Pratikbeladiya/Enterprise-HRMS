@@ -1491,6 +1491,35 @@ if (activeTab === 'ID Cards') {
             </div>
           </div>
 
+          {/* LAYER MODAL WINDOW: Active Camera Feed overlay */}
+          {isScannerActive && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-xl">
+                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <h4 className="font-bold text-sm flex items-center gap-1.5"><Scan size={16} className="text-indigo-600" /> Scanning QR Code...</h4>
+                  <button onClick={stopCameraScanner} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <div className="relative aspect-video bg-black flex items-center justify-center">
+                  <video id="qr-video-stream" autoPlay playsInline className="w-full h-full object-cover"></video>
+                  {/* Visual target reticle bounds */}
+                  <div className="absolute inset-0 border-[40px] border-black/40 flex items-center justify-center">
+                    <div className="w-48 h-48 border-2 border-dashed border-indigo-400 rounded-xl animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 text-center">
+                  <button 
+                    onClick={simulateQrScanCapture}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition shadow"
+                  >
+                    Simulate Capture Detection
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          
+
         </div>
       );
     }
