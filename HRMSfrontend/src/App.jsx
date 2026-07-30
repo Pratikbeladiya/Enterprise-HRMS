@@ -1434,16 +1434,7 @@ export default function App() {
           </nav>
         </div>
 
-        {/* {!isCollapsed && (
-          <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-4 rounded-2xl text-white relative overflow-hidden hidden lg:block transition-opacity">
-            <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-            <h4 className="font-semibold text-sm mb-1">Be a pro at using our platform</h4>
-            <p className="text-xs text-indigo-100 mb-3 font-light">Watch our video guides and tutorials.</p>
-            <button className="bg-white text-indigo-600 px-4 py-2 rounded-xl text-xs font-semibold shadow-sm hover:bg-indigo-50 transition-colors w-full">
-              Watch now
-            </button>
-          </div>
-        )} */}
+
       </aside>
 
       {/* MAIN CONTAINER */}
