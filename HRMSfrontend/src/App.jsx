@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, UserCheck, Calendar, FileText, CheckSquare, Sun, Moon, Search, 
   Plus, Briefcase, Award, TrendingUp, Loader2,
-  ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock
+  ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock, QrCode
 } from 'lucide-react';
 import Login from './Login';
 
@@ -13,7 +13,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
-  const [isCollapsed, setIsCollapsed] = useState(false); 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  // const [selectedQrEmployee, setSelectedQrEmployee] = useState(null); 
 
   // ---------------------------------------------------------
   // LOCALSTORAGE PERSISTENT APP STATE
@@ -1359,6 +1360,10 @@ export default function App() {
   );
 }
 
+
+//Qr based functionality -------
+
+
     return null;
   };
 
@@ -1404,6 +1409,7 @@ export default function App() {
               { name: 'Payroll', icon: DollarSign },
               { name: 'Reports', icon: FileText },
               { name: 'Tasks', icon: CheckSquare },
+              { name: 'ID Cards', icon: QrCode },
               { name: 'About', icon: Award },
             ].map((item) => {
               const Icon = item.icon;
