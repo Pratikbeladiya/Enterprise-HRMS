@@ -2401,7 +2401,150 @@ export default function App() {
     }
 
     //Qr based functionality -------
-    
+    if (activeTab === 'ID Cards') {
+      return (
+        <div className="xl:col-span-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Left Panel: Directory List */}
+          <div className="lg:col-span-2 space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Employee Digital Badges</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Select a staff profile to view credentials and deploy secure QR codes.</p>
+              </div>
+              <button 
+                onClick={startCameraScanner}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm"
+              >
+                <Scan size={14} /> Open Live Scanner
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {employees.map((emp) => (
+                <div 
+                  key={emp.id} 
+                  onClick={() => setSelectedQrEmployee(emp)}
+                  className={`bg-white dark:bg-slate-900 rounded-2xl border p-5 shadow-sm cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between ${
+                    selectedQrEmployee?.id === emp.id ? 'border-indigo-600 ring-2 ring-indigo-500/10' : 'border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-600/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm">
+                      {emp.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight">{emp.name}</h4>
+                      <p className="text-xs text-slate-400 mt-0.5">{emp.role}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded">
+                    {emp.id}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Panel: Interactive ID Badge Preview */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center min-h-[400px]">
+              {selectedQrEmployee ? (
+                <div className="w-full space-y-4">
+                  <div className="mx-auto w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+                    {selectedQrEmployee.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">{selectedQrEmployee.name}</h3>
+                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">{selectedQrEmployee.role}</p>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl inline-block shadow-inner mx-auto border border-slate-100 dark:border-slate-700">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                        `ID: ${selectedQrEmployee.id}`
+                      )}`} 
+                      alt="QR badge" 
+                      className="w-40 h-40 object-contain block"
+                    />
+                  </div>
+
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full space-y-2 text-xs">
+                    <div className="flex justify-between"><span className="text-slate-400">Department:</span> <span className="font-semibold">{selectedQrEmployee.dept}</span></div>
+                    <div className="flex justify-between"><span className="text-slate-400">Reporting to:</span> <span className="font-semibold">{selectedQrEmployee.manager}</span></div>
+                    <div className="flex justify-between"><span className="text-slate-400">Onboard Date:</span> <span className="font-semibold font-mono">{selectedQrEmployee.joiningDate}</span></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-slate-400 space-y-2">
+                  <div className="mx-auto w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
+                    <QrCode size={24} />
+                  </div>
+                  <p className="text-xs font-medium">No profile active</p>
+                  <p className="text-[11px] text-slate-400 max-w-[200px] mx-auto">Click a record on the left directory layout or activate the camera to look up details.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* LAYER MODAL WINDOW: Live Video QR Stream */}
+          {isScannerActive && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-xl">
+                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <h4 className="font-bold text-sm flex items-center gap-1.5"><Scan size={16} className="text-indigo-600" /> Point at an HRise QR code...</h4>
+                  <button onClick={stopCameraScanner} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <div className="relative aspect-video bg-black flex items-center justify-center">
+                  <video id="qr-video-stream" muted playsInline className="w-full h-full object-cover"></video>
+                  <div className="absolute inset-0 border-[40px] border-black/40 flex items-center justify-center">
+                    <div className="w-44 h-44 border-2 border-indigo-500 rounded-xl animate-pulse relative">
+                      <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-indigo-600 -mt-1 -ml-1"></div>
+                      <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-indigo-600 -mt-1 -mr-1"></div>
+                      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-indigo-600 -mb-1 -ml-1"></div>
+                      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-indigo-600 -mb-1 -mr-1"></div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-3 text-center text-xs text-slate-400 font-medium">
+                  Hold QR card steady within the center targeting box to automatically decode.
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* LAYER MODAL WINDOW: Live Decoded Result Dashboard */}
+          {scannedEmployeeResult && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-sm w-full border border-slate-200 dark:border-slate-800 shadow-xl p-6 text-center space-y-4">
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle size={24} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-base">QR Profile Verified</h4>
+                  <p className="text-xs text-slate-400 mt-0.5">Decoded enterprise parameters successfully</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 text-left text-xs space-y-2 border border-slate-100 dark:border-slate-700">
+                  <div><span className="text-slate-400 block text-[10px] uppercase">ID Reference</span><span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{scannedEmployeeResult.id}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Full Name</span><span className="font-semibold text-sm text-slate-900 dark:text-white">{scannedEmployeeResult.name}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Designation</span><span className="font-medium">{scannedEmployeeResult.role}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Department Unit</span><span className="font-medium">{scannedEmployeeResult.dept}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Direct Manager</span><span className="font-medium">{scannedEmployeeResult.manager}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Onboarding Date</span><span className="font-mono font-medium">{scannedEmployeeResult.joiningDate}</span></div>
+                </div>
+                <button 
+                  onClick={() => setScannedEmployeeResult(null)}
+                  className="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-xl transition"
+                >
+                  Close Window
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
 
     return null;
   };
