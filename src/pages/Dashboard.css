@@ -192,3 +192,45 @@
     padding: 15px;
   }
 }
+
+/* ===== Dark Mode ===== */
+
+.dashboard-page.dark{
+    background:#0f172a;
+    color:#fff;
+}
+
+.dashboard-page.dark .main{
+    background:#0f172a;
+}
+
+.dashboard-page.dark .topbar,
+.dashboard-page.dark .welcome-card,
+.dashboard-page.dark .dashboard-card,
+.dashboard-page.dark .dashboard-box,
+.dashboard-page.dark .profile-box{
+    background:#1e293b;
+    color:#fff;
+}
+
+.dashboard-page.dark table{
+    color:#fff;
+}
+
+.dashboard-page.dark th{
+    background:#334155;
+}
+
+.dashboard-page.dark td{
+    border-color:#475569;
+}
+
+.dashboard-page.dark input{
+    background:#334155;
+    color:#fff;
+    border:1px solid #475569;
+}
+
+.dashboard-page.dark .search-box{
+    background:#334155;
+}
