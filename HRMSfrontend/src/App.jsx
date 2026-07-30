@@ -340,6 +340,45 @@ export default function App() {
     return <Login onLogin={handleLoginSuccess} />;
   }
 
+
+  // FOR QR scanning -----------------------------
+  const startCameraScanner = async () => {
+    setIsScannerActive(true);
+    setScannedEmployeeResult(null);
+    
+    // Request webcam access parameter locally
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      setTimeout(() => {
+        const videoElement = document.getElementById("qr-video-stream");
+        if (videoElement) {
+          videoElement.srcObject = stream;
+        }
+      }, 300);
+    } catch (err) {
+      alert("Camera access denied or unavailable.");
+      setIsScannerActive(false);
+    }
+  };
+
+  const stopCameraScanner = () => {
+    const videoElement = document.getElementById("qr-video-stream");
+    if (videoElement && videoElement.srcObject) {
+      videoElement.srcObject.getTracks().forEach(track => track.stop());
+    }
+    setIsScannerActive(false);
+  };
+
+  // Mock-capture event to match profile matrix instantly
+  const simulateQrScanCapture = () => {
+    // Select a random profile from current array entries to simulate detection
+    if (employees.length === 0) return;
+    const randomEmp = employees[Math.floor(Math.random() * employees.length)];
+    
+    setScannedEmployeeResult(randomEmp);
+    stopCameraScanner();
+  };
+
   // Helper to render active tab content
   const renderContent = () => {
     if (activeTab === 'Dashboard') {
