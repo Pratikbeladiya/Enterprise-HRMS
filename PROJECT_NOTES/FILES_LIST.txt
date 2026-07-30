@@ -1,0 +1,17 @@
+Key files and folders (HRMSfrontend/):
+
+- package.json — project metadata, scripts (`dev`, `build`, `preview`, `lint`) and dependencies
+- vite.config.js — Vite plugin and build configuration
+- tailwind.config.js — Tailwind CSS configuration
+- public/ — static assets served by Vite
+- src/
+  - App.jsx — main React component
+  - Login.jsx — login view/component
+  - main.jsx — app entry (ReactDOM render)
+  - index.css — global styles + Tailwind imports
+- eslint.config.js — ESLint rules and parser settings
+- README.md — any project-specific notes (check HRMSfrontend/README.md)
+
+Notes:
+- File names and locations are workspace-relative under HRMSfrontend/.
+- When editing, preserve `type: module` in package.json to keep ESM behavior.

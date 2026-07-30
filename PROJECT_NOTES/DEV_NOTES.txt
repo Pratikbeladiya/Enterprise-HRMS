@@ -1,0 +1,18 @@
+Dev notes and runtime observations:
+
+- Dev server used: Vite (v8.x)
+- Local dev URL: http://localhost:5173/
+- When running npm commands, ensure current working directory is `HRMSfrontend` to avoid `ENOENT: package.json` errors.
+- Previous terminal run: `npm install` completed; `npm run dev` started Vite successfully.
+- To expose the dev server on the local network: run `npm run dev -- --host`.
+- Linting: `npm run lint` uses ESLint; update `eslint.config.js` if new rules or parser options are required.
+- If adding TypeScript later: add `tsconfig.json` and update Vite + ESLint configs.
+
+Where to look next in code:
+- `src/App.jsx` — app-level layout and routing
+- `src/Login.jsx` — authentication flow
+- `src/main.jsx` — React entry and provider setup
+
+Notes about editing files:
+- Keep ESM `type: module` in package.json or adjust imports accordingly.
+- Use `npm run build` to test production build locally before deployment.

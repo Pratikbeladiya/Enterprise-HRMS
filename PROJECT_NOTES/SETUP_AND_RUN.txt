@@ -1,0 +1,18 @@
+Quick setup and run (from workspace root):
+
+# Recommended (explicit path to frontend folder)
+cd HRMSfrontend
+npm install
+npm run dev
+
+# Dev server (Vite) default:
+# - Local: http://localhost:5173/
+# - To expose on LAN: `npm run dev -- --host` or run `vite --host`
+
+Common commands:
+- Build for production: `npm run build`
+- Preview production build: `npm run preview`
+- Lint the project: `npm run lint`
+
+Notes about a previous run:
+- If you get `ENOENT: no such file or directory, open '/path/to/package.json'`, ensure your current directory is `HRMSfrontend` before running `npm` commands.

@@ -1,0 +1,9 @@
+Project TODOs and recommended next steps:
+
+- Run `npm audit` and fix high-severity vulnerabilities (`npm audit fix`).
+- Add a `.gitignore` and initialize a git repo if not already initialized.
+- Add basic tests and a CI workflow (GitHub Actions) for build + lint checks.
+- Improve ESLint rules to include React plugin configs and run `npm run lint` regularly.
+- Add environment config management (.env example) for API endpoints and keys.
+- Document component structure and state management approach in `DEV_NOTES.txt`.
+- Consider pinning critical dependencies or using a lockfile (`package-lock.json`) to ensure reproducible installs.
