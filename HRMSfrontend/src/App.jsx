@@ -1405,7 +1405,95 @@ export default function App() {
 
 
 //Qr based functionality -------
+if (activeTab === 'ID Cards') {
+      return (
+        <div className="xl:col-span-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Left Panel: Directory List */}
+          <div className="lg:col-span-2 space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Employee Digital Badges</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Select a staff profile to view credentials and deploy secure QR codes.</p>
+              </div>
+              <button 
+                onClick={startCameraScanner}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm"
+              >
+                <Scan size={14} /> Open Live Scanner
+              </button>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {employees.map((emp) => (
+                <div 
+                  key={emp.id} 
+                  onClick={() => setSelectedQrEmployee(emp)}
+                  className={`bg-white dark:bg-slate-900 rounded-2xl border p-5 shadow-sm cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between ${
+                    selectedQrEmployee?.id === emp.id ? 'border-indigo-600 ring-2 ring-indigo-500/10' : 'border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-600/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm">
+                      {emp.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight">{emp.name}</h4>
+                      <p className="text-xs text-slate-400 mt-0.5">{emp.role}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded">
+                    {emp.id}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Panel: Interactive ID Badge & QR Code Preview */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center min-h-[400px]">
+              {selectedQrEmployee ? (
+                <div className="w-full space-y-4">
+                  <div className="mx-auto w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+                    {selectedQrEmployee.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">{selectedQrEmployee.name}</h3>
+                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">{selectedQrEmployee.role}</p>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl inline-block shadow-inner mx-auto border border-slate-100 dark:border-slate-700">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                        `Verified HRise Profile:\nID: ${selectedQrEmployee.id}\nName: ${selectedQrEmployee.name}`
+                      )}`} 
+                      alt="QR badge" 
+                      className="w-40 h-40 object-contain block dark:invert-[0.05]"
+                    />
+                  </div>
+
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full space-y-2 text-xs">
+                    <div className="flex justify-between"><span className="text-slate-400">Department:</span> <span className="font-semibold">{selectedQrEmployee.dept}</span></div>
+                    <div className="flex justify-between"><span className="text-slate-400">Reporting to:</span> <span className="font-semibold">{selectedQrEmployee.manager}</span></div>
+                    <div className="flex justify-between"><span className="text-slate-400">Onboard Date:</span> <span className="font-semibold font-mono">{selectedQrEmployee.joiningDate}</span></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-slate-400 space-y-2">
+                  <div className="mx-auto w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
+                    <QrCode size={24} />
+                  </div>
+                  <p className="text-xs font-medium">No profile active</p>
+                  <p className="text-[11px] text-slate-400 max-w-[200px] mx-auto">Click a record on the left grid directory to view credentials.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      );
+    }
 
 
     return null;
