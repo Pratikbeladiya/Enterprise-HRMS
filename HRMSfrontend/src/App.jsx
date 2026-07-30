@@ -14,7 +14,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selectedQrEmployee, setSelectedQrEmployee] = useState(null); 
+  
+  // these state hooks for QR--------
+  const [selectedQrEmployee, setSelectedQrEmployee] = useState(null);
+  const [isScannerActive, setIsScannerActive] = useState(false);
+  const [scannedEmployeeResult, setScannedEmployeeResult] = useState(null);
 
   // ---------------------------------------------------------
   // LOCALSTORAGE PERSISTENT APP STATE
