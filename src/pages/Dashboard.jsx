@@ -112,12 +112,7 @@ const handleSearch = (e) => {
 >
   📝 Attendance
 </li>
-                <li
-  onClick={() => navigate("/payroll")}
-  style={{ cursor: "pointer" }}
->
-  💰 Payroll
-</li>
+               
                 <li
   onClick={() => navigate("/leave")}
   style={{ cursor: "pointer" }}
@@ -129,6 +124,13 @@ const handleSearch = (e) => {
   style={{ cursor: "pointer" }}
 >
   📊 Reports
+</li>
+
+<li
+  onClick={() => navigate("/payroll")}
+  style={{ cursor: "pointer" }}
+>
+  💰 Payroll
 </li>
       
                 <li
