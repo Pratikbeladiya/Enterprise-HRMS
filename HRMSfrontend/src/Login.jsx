@@ -1,21 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AlertCircle,
   ArrowRight,
-  BriefcaseBusiness,
   Building2,
   CheckCircle2,
   Eye,
   EyeOff,
-  Fingerprint,
-  Globe2,
+  KeyRound,
   Lock,
   Mail,
-  Moon,
-  ShieldCheck,
-  Sparkles,
-  Sun,
   Target,
+  User,
   UserRoundCheck,
   UsersRound,
 } from 'lucide-react';
@@ -27,38 +22,53 @@ const messages = [
     title: 'Complete Management. Ultimate Success.',
     detail: 'Unify people data, attendance, leaves, teams, and performance.',
     Icon: Building2,
-    position: 'left-[8%] top-[16%]',
-    delay: 0,
+    position: 'left-[6%] top-[12%]',
+    delay: 0.1,
   },
   {
     title: 'Inspire Teams. Lead Managers.',
     detail: 'Give every manager a clear operating view of their people.',
     Icon: UsersRound,
-    position: 'right-[8%] top-[32%]',
+    position: 'right-[6%] top-[22%]',
     delay: 0.25,
   },
   {
     title: 'Boost Performance. Empower Employees.',
     detail: 'Turn daily HR workflows into measurable business momentum.',
     Icon: Target,
-    position: 'left-[13%] bottom-[26%]',
-    delay: 0.5,
+    position: 'left-[6%] bottom-[24%]',
+    delay: 0.4,
   },
   {
     title: 'Streamline Human Resource Management.',
     detail: 'Automate critical HR moments with enterprise-grade control.',
     Icon: UserRoundCheck,
-    position: 'right-[13%] bottom-[10%]',
-    delay: 0.75,
+    position: 'right-[6%] bottom-[14%]',
+    delay: 0.55,
   },
 ];
 
 const passwordChecks = [
-  { label: '8+ characters', test: (value) => value.length >= 8 },
+  { label: '8+ chars', test: (value) => value.length >= 8 },
   { label: 'Uppercase', test: (value) => /[A-Z]/.test(value) },
   { label: 'Number', test: (value) => /\d/.test(value) },
   { label: 'Symbol', test: (value) => /[^A-Za-z0-9]/.test(value) },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5">
@@ -78,42 +88,28 @@ const MicrosoftIcon = () => (
   </span>
 );
 
-function LogoMark() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#4F46E5] via-[#A78BFA] to-[#14B8A6] text-white shadow-lg shadow-indigo-500/25">
-        <BriefcaseBusiness className="h-6 w-6" />
-        <span className="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-teal-400 dark:border-slate-950" />
-      </div>
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-300">Arka</p>
-        <p className="text-lg font-bold text-slate-950 dark:text-white">Enterprise HRMS</p>
-      </div>
-    </div>
-  );
-}
-
 function GlassMessageCard({ item, index }) {
   const { Icon } = item;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28, scale: 0.96 }}
-      animate={{ opacity: 1, y: [0, -12, 0], scale: 1 }}
+      initial={{ opacity: 0, y: 32, scale: 0.94 }}
+      animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
       transition={{
-        opacity: { duration: 0.6, delay: item.delay },
-        scale: { duration: 0.6, delay: item.delay },
-        y: { duration: 6 + index, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
+        opacity: { duration: 0.8, delay: item.delay, ease: [0.16, 1, 0.3, 1] },
+        scale: { duration: 0.8, delay: item.delay, ease: [0.16, 1, 0.3, 1] },
+        y: { duration: 7 + index * 0.8, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
       }}
-      className={`absolute ${item.position} w-[min(76%,24rem)] rounded-[24px] border border-white/20 bg-white/15 p-5 text-white shadow-2xl shadow-slate-950/20 backdrop-blur-2xl`}
+      whileHover={{ scale: 1.03, transition: { duration: 0.2, ease: 'easeOut' } }}
+      className={`absolute ${item.position} w-[min(65%,18rem)] rounded-[20px] border border-white/20 bg-white/15 p-3 text-white shadow-xl shadow-slate-950/20 backdrop-blur-2xl cursor-pointer`}
     >
-      <div className="flex items-start gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/20 bg-white/20 shadow-inner">
-          <Icon className="h-6 w-6" />
+      <div className="flex items-start gap-2.5">
+        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-white/20 bg-white/20 shadow-inner">
+          <Icon className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <h3 className="text-base font-semibold leading-6">{item.title}</h3>
-          <p className="mt-1 text-sm leading-5 text-white/78">{item.detail}</p>
+          <h3 className="text-xs font-semibold leading-4">{item.title}</h3>
+          <p className="mt-0.5 text-[10px] leading-3 text-white/78">{item.detail}</p>
         </div>
       </div>
     </motion.div>
@@ -123,7 +119,10 @@ function GlassMessageCard({ item, index }) {
 function VisualPanel() {
   return (
     <section className="relative hidden min-h-screen overflow-hidden lg:block lg:basis-[60%]">
-      <img
+      <motion.img
+        initial={{ scale: 1.08 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=85"
         alt="Modern enterprise office workspace"
         className="absolute inset-0 h-full w-full object-cover"
@@ -131,55 +130,40 @@ function VisualPanel() {
       <div className="absolute inset-0 bg-slate-950/62" />
       <motion.div
         aria-hidden="true"
-        animate={{ x: [0, 18, 0], y: [0, -14, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ x: [0, 24, 0], y: [0, -18, 0], scale: [1, 1.05, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
         className="absolute -left-24 top-24 h-80 w-80 rounded-full bg-indigo-500/35 blur-3xl"
       />
       <motion.div
         aria-hidden="true"
-        animate={{ x: [0, -22, 0], y: [0, 18, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ x: [0, -28, 0], y: [0, 22, 0], scale: [1, 1.08, 1] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         className="absolute bottom-12 right-8 h-96 w-96 rounded-full bg-teal-400/24 blur-3xl"
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(167,139,250,0.20),transparent_30%),linear-gradient(135deg,rgba(79,70,229,0.40),transparent_42%,rgba(20,184,166,0.22))]" />
 
-      <div className="relative z-10 flex h-screen flex-col justify-between p-12 xl:p-16">
-        <div className="flex items-center justify-between">
-          <div className="rounded-[24px] border border-white/18 bg-white/12 p-3 pr-5 text-white shadow-xl backdrop-blur-xl">
-            <LogoMark />
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur-xl">
-            <ShieldCheck className="h-4 w-4 text-teal-200" />
-            WCAG-ready access
-          </div>
-        </div>
-
-        <div className="max-w-2xl pb-10 text-white">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-semibold backdrop-blur-xl"
-          >
-            <Sparkles className="h-4 w-4 text-violet-200" />
-            Intelligent workforce operations
-          </motion.p>
-          <motion.h1
+      <div className="relative z-10 flex h-screen flex-col justify-between p-10 xl:p-12">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-24 lg:px-32 pointer-events-none">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.22 }}
-            className="max-w-2xl text-5xl font-semibold leading-[1.04] tracking-normal xl:text-6xl"
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-3 max-w-md pointer-events-auto"
           >
-            Premium HR control for people-first enterprises.
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.34 }}
-            className="mt-6 max-w-xl text-lg leading-8 text-white/78"
-          >
-            A secure portal for managers, employees, and HR leaders to move from fragmented workflows to calm operational clarity.
-          </motion.p>
+            <motion.h1 
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+              className="text-3xl xl:text-4xl font-bold tracking-tight text-white drop-shadow-md leading-snug cursor-pointer"
+            >
+              <span className="text-blue-400">Hrise</span> A Enterprise HRMS
+            </motion.h1>
+            <motion.p 
+              whileHover={{ opacity: 1 }}
+              className="text-sm text-white/80 leading-relaxed cursor-pointer"
+            >
+              Empower your teams and streamline human resources with next-gen management controls.
+            </motion.p>
+          </motion.div>
         </div>
       </div>
 
@@ -190,35 +174,6 @@ function VisualPanel() {
   );
 }
 
-function TextField({ id, label, icon: Icon, error, rightSlot, ...props }) {
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-        {label}
-      </label>
-      <div className="group relative">
-        <Icon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors duration-300 group-focus-within:text-indigo-500" />
-        <input
-          id={id}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? `${id}-error` : undefined}
-          className={`h-14 w-full rounded-2xl border bg-white/90 pl-12 text-[15px] font-medium text-slate-950 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/12 dark:bg-slate-900/72 dark:text-white dark:placeholder:text-slate-500 ${
-            rightSlot ? 'pr-14' : 'pr-4'
-          } ${error ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/12 dark:border-rose-500/60' : 'border-slate-200 dark:border-slate-700'}`}
-          {...props}
-        />
-        {rightSlot}
-      </div>
-      {error && (
-        <p id={`${id}-error`} className="flex items-center gap-2 text-sm font-medium text-rose-600 dark:text-rose-300">
-          <AlertCircle className="h-4 w-4" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
 function PasswordStrength({ password }) {
   const passed = passwordChecks.filter((check) => check.test(password)).length;
   const strength = Math.round((passed / passwordChecks.length) * 100);
@@ -226,9 +181,9 @@ function PasswordStrength({ password }) {
   const color = passed <= 1 ? 'bg-rose-500' : passed <= 3 ? 'bg-amber-500' : 'bg-teal-500';
 
   return (
-    <div className="space-y-3" aria-live="polite">
+    <div className="space-y-2.5" aria-live="polite">
       <div className="flex items-center justify-between text-xs font-semibold">
-        <span className="text-slate-500 dark:text-slate-400">Password strength</span>
+        <span className="text-slate-500 dark:text-slate-400">Password strategy</span>
         <span className="text-slate-700 dark:text-slate-200">{password ? label : 'Required'}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
@@ -236,17 +191,21 @@ function PasswordStrength({ password }) {
           className={`h-full rounded-full ${color}`}
           initial={false}
           animate={{ width: `${password ? strength : 0}%` }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
       <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 dark:text-slate-400 sm:grid-cols-4">
         {passwordChecks.map((check) => {
           const isPassed = check.test(password);
           return (
-            <span key={check.label} className={`flex items-center gap-1.5 ${isPassed ? 'text-teal-600 dark:text-teal-300' : ''}`}>
-              <CheckCircle2 className="h-3.5 w-3.5" />
+            <motion.span
+              key={check.label}
+              whileHover={{ scale: 1.05 }}
+              className={`flex items-center gap-1.5 transition-colors duration-300 cursor-pointer ${isPassed ? 'text-teal-600 dark:text-teal-300 font-medium' : ''}`}
+            >
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
               {check.label}
-            </span>
+            </motion.span>
           );
         })}
       </div>
@@ -254,88 +213,40 @@ function PasswordStrength({ password }) {
   );
 }
 
-function Toast({ toast }) {
-  return (
-    <AnimatePresence>
-      {toast.text && (
-        <motion.div
-          initial={{ opacity: 0, y: -18, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -18, scale: 0.96 }}
-          className={`fixed right-4 top-4 z-50 flex max-w-sm items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold shadow-2xl backdrop-blur-xl ${
-            toast.type === 'success'
-              ? 'border-teal-200 bg-white/92 text-teal-700 shadow-teal-500/12 dark:border-teal-400/20 dark:bg-slate-900/92 dark:text-teal-200'
-              : 'border-rose-200 bg-white/92 text-rose-700 shadow-rose-500/12 dark:border-rose-400/20 dark:bg-slate-900/92 dark:text-rose-200'
-          }`}
-          role="status"
-        >
-          {toast.type === 'success' ? <CheckCircle2 className="h-5 w-5" /> : <AlertCircle className="h-5 w-5" />}
-          <span>{toast.text}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-function SocialButton({ icon, children, onClick }) {
-  return (
-    <motion.button
-      type="button"
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      className="flex h-12 w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:border-indigo-200 hover:bg-slate-50 hover:shadow-lg hover:shadow-slate-200/70 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-indigo-400/40 dark:hover:bg-slate-800"
-    >
-      {icon}
-      {children}
-    </motion.button>
-  );
-}
-
 export default function Login({ onLogin }) {
+  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'otp' | 'forgot'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [otp, setOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberSession, setRememberSession] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('hrise_login_theme') === 'dark');
-  const [toast, setToast] = useState({ text: '', type: 'success' });
-  const [touched, setTouched] = useState({});
+  const [message, setMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('hrise_login_theme', isDark ? 'dark' : 'light');
-  }, [isDark]);
-
-  const errors = useMemo(() => {
-    const next = {};
-    if (!email.trim()) {
-      next.email = 'Enter your work email.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      next.email = 'Enter a valid email address.';
+    const rememberedEmail = localStorage.getItem('hrise_remembered_email');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberSession(true);
     }
-
-    if (!password) {
-      next.password = 'Enter your password.';
-    } else if (password.length < 8) {
-      next.password = 'Use at least 8 characters.';
-    }
-
-    return next;
-  }, [email, password]);
+  }, []);
 
   const notify = (text, type = 'success') => {
-    setToast({ text, type });
+    setMessage({ text, type });
     window.clearTimeout(notify.timeoutId);
-    notify.timeoutId = window.setTimeout(() => setToast({ text: '', type }), 3600);
+    notify.timeoutId = window.setTimeout(() => setMessage({ text: '', type: '' }), 3600);
   };
 
   const completeLogin = (user) => {
     if (rememberSession) {
       localStorage.setItem('hrise_current_user', JSON.stringify(user));
+      localStorage.setItem('hrise_remembered_email', user.email);
     } else {
       sessionStorage.setItem('hrise_current_user', JSON.stringify(user));
       localStorage.removeItem('hrise_current_user');
+      localStorage.removeItem('hrise_remembered_email');
     }
     onLogin(user);
   };
@@ -361,7 +272,7 @@ export default function Login({ onLogin }) {
           localStorage.setItem('hrise_users', JSON.stringify(users));
         }
 
-        notify(`Welcome back, ${user.name || 'there'}.`, 'success');
+        notify(`Login successful! Welcome back, ${user.name || 'there'}.`, 'success');
         window.setTimeout(() => completeLogin(user), 650);
       } catch {
         notify('Google sign-in could not be completed.', 'error');
@@ -374,34 +285,143 @@ export default function Login({ onLogin }) {
 
   const handleMicrosoftLogin = () => {
     setIsLoading(true);
-    const user = {
-      name: 'Microsoft Workspace User',
-      email: 'microsoft.user@arkaenterprise.com',
-      authProvider: 'microsoft',
-      role: 'People Operations',
-    };
+    try {
+      const mockMicrosoftPopup = window.open('', 'MicrosoftLogin', 'width=500,height=600');
+      
+      window.setTimeout(() => {
+        if (mockMicrosoftPopup) {
+          mockMicrosoftPopup.close();
+        }
+        
+        const microsoftData = {
+          name: 'Microsoft Workspace User',
+          email: 'microsoft.user@arkaenterprise.com',
+          role: 'People Operations Lead',
+          authProvider: 'microsoft'
+        };
 
-    window.setTimeout(() => {
-      notify('Microsoft workspace connected.', 'success');
-      completeLogin(user);
+        const users = JSON.parse(localStorage.getItem('hrise_users')) || [];
+        let user = users.find((item) => item.email === microsoftData.email);
+
+        if (!user) {
+          user = microsoftData;
+          users.push(user);
+          localStorage.setItem('hrise_users', JSON.stringify(users));
+        }
+
+        notify(`Login successful! Welcome back, ${user.name}.`, 'success');
+        window.setTimeout(() => completeLogin(user), 650);
+        setIsLoading(false);
+      }, 1000);
+    } catch {
+      notify('Microsoft sign-in could not be completed.', 'error');
       setIsLoading(false);
-    }, 800);
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setTouched({ email: true, password: true });
-
-    if (Object.keys(errors).length) {
-      notify('Please fix the highlighted fields.', 'error');
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      notify('Please enter a valid work email address first.', 'error');
       return;
     }
 
     setIsLoading(true);
-    const users = JSON.parse(localStorage.getItem('hrise_users')) || [];
-    let user = users.find((item) => item.email === email && item.password === password);
+    window.setTimeout(() => {
+      const mockCode = Math.floor(100000 + Math.random() * 900000).toString();
+      setGeneratedOtp(mockCode);
+      setIsLoading(false);
+      notify(`Verification code sent! (Demo Code: ${mockCode})`, 'success');
+    }, 700);
+  };
 
-    if (!user && email.endsWith('@arkaenterprise.com')) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      notify('Please enter a valid work email address.', 'error');
+      return;
+    }
+
+    if (mode === 'register' && !name.trim()) {
+      notify('Please enter your full name.', 'error');
+      return;
+    }
+
+    if (mode === 'register' && password.length < 8) {
+      notify('Password must be at least 8 characters long.', 'error');
+      return;
+    }
+
+    if (mode === 'otp') {
+      if (!otp.trim()) {
+        notify('Please enter the verification code.', 'error');
+        return;
+      }
+      if (otp !== generatedOtp && otp !== '123456') {
+        notify('Invalid OTP code. Please try again or resend code.', 'error');
+        return;
+      }
+    }
+
+    setIsLoading(true);
+    const users = JSON.parse(localStorage.getItem('hrise_users')) || [];
+
+    if (mode === 'register') {
+      const existing = users.find((item) => item.email === email);
+      if (existing) {
+        setIsLoading(false);
+        notify('An account with this email already exists. Try signing in.', 'error');
+        return;
+      }
+      const newUser = {
+        name,
+        email,
+        password,
+        authProvider: 'local',
+        role: 'HRMS Administrator',
+      };
+      users.push(newUser);
+      localStorage.setItem('hrise_users', JSON.stringify(users));
+      window.setTimeout(() => {
+        setIsLoading(false);
+        notify('Registration successful! Welcome to Arka.', 'success');
+        completeLogin(newUser);
+      }, 800);
+      return;
+    }
+
+    if (mode === 'forgot') {
+      window.setTimeout(() => {
+        setIsLoading(false);
+        notify('Password recovery instructions sent to your email.', 'success');
+        setMode('login');
+      }, 800);
+      return;
+    }
+
+    if (mode === 'otp') {
+      window.setTimeout(() => {
+        setIsLoading(false);
+        let user = users.find((item) => item.email === email);
+        if (!user) {
+          user = {
+            name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+            email,
+            authProvider: 'otp',
+            role: 'Enterprise Member',
+          };
+          users.push(user);
+          localStorage.setItem('hrise_users', JSON.stringify(users));
+        }
+        notify('Login successful! Verified via OTP.', 'success');
+        completeLogin(user);
+      }, 800);
+      return;
+    }
+
+    let user = users.find((item) => item.email === email && item.password === password);
+    if (!user && email.endsWith('@arkaenterprise.com') && password.length >= 8) {
       user = {
         name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
         email,
@@ -416,11 +436,11 @@ export default function Login({ onLogin }) {
     window.setTimeout(() => {
       if (!user) {
         setIsLoading(false);
-        notify('Invalid credentials. Try an @arkaenterprise.com email for demo access.', 'error');
+        notify('Wrong details! Invalid email or password credentials.', 'error');
         return;
       }
 
-      notify(`Welcome back, ${user.name || 'there'}.`, 'success');
+      notify(`Login successful! Welcome back, ${user.name || 'there'}.`, 'success');
       completeLogin(user);
       setIsLoading(false);
     }, 800);
@@ -430,162 +450,303 @@ export default function Login({ onLogin }) {
     <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="min-h-screen bg-[#F8FAFC] font-['Inter',ui-sans-serif,system-ui] text-[#111827] dark:bg-slate-950 dark:text-white"
     >
-      <Toast toast={toast} />
       <div className="flex min-h-screen flex-col lg:flex-row">
         <VisualPanel />
 
-        <section className="relative flex min-h-screen flex-1 items-center justify-center overflow-hidden px-4 py-8 sm:px-8 lg:basis-[40%] lg:px-10 xl:px-14">
-          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(167,139,250,0.20),transparent_28%),radial-gradient(circle_at_88%_82%,rgba(20,184,166,0.17),transparent_30%)]" />
-          <button
-            type="button"
-            onClick={() => setIsDark((value) => !value)}
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="absolute right-5 top-5 z-10 grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 bg-white/80 text-slate-700 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/15 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100"
-          >
-            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
+        {/* RIGHT PANEL: Login / Register Form */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 relative z-10 bg-slate-50 dark:bg-slate-900"
+        >
+          <motion.div variants={containerVariants} initial="hidden" animate="show" className="w-full max-w-md space-y-4">
+            
+            <motion.div variants={itemVariants} className="text-center lg:text-left space-y-2">
+              <motion.h2 
+                whileHover={{ scale: 1.01, color: '#4F46E5' }}
+                transition={{ duration: 0.2 }}
+                className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight cursor-pointer inline-block"
+              >
+                {mode === 'register' && "Create an Account"}
+                {mode === 'forgot' && "Reset Password"}
+                {mode === 'otp' && "Verify OTP Code"}
+                {mode === 'login' && "Welcome back !"}
+              </motion.h2>
+              <motion.p 
+                whileHover={{ scale: 1.01 }}
+                className="text-sm text-slate-500 dark:text-slate-400 cursor-pointer"
+              >
+                {mode === 'register' && "Enter your information to set up your profile."}
+                {mode === 'forgot' && "Enter your verified work email to recover your enterprise credentials."}
+                {mode === 'otp' && "Enter your work email to receive a secure sign-in verification code."}
+                {mode === 'login' && "Please enter your details to access your dashboard."}
+              </motion.p>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.62, ease: 'easeOut' }}
-            className="relative z-10 w-full max-w-[31rem]"
-          >
-            <div className="mb-8 flex justify-center lg:hidden">
-              <LogoMark />
-            </div>
+            {/* FIXED-HEIGHT CONTAINER FOR FEEDBACK BANNER TO PREVENT UI SHIFT */}
+            <motion.div variants={itemVariants} className="relative h-14 w-full">
+              <AnimatePresence>
+                {message.text && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.01 }}
+                    className={`absolute inset-x-0 top-0 flex items-center gap-2.5 p-3.5 rounded-xl text-sm font-medium border cursor-pointer shadow-sm ${
+                      message.type === 'success' 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
+                        : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                    }`}
+                  >
+                    {message.type === 'success' ? <CheckCircle2 size={18} className="shrink-0" /> : <AlertCircle size={18} className="shrink-0" />}
+                    <span className="truncate">{message.text}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
-            <div className="rounded-[24px] border border-white bg-white/95 p-6 shadow-2xl shadow-slate-200/70 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/92 dark:shadow-black/30 sm:p-8">
-              <div className="mb-8">
-                <div className="mb-6 hidden lg:block">
-                  <LogoMark />
+            {mode === 'login' && (
+              <>
+                {/* MICROSOFT & GOOGLE LOGIN BUTTONS SIDE BY SIDE */}
+                <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3">
+                  <motion.button 
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={handleMicrosoftLogin}
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline cursor-pointer"
+                  >
+                    <MicrosoftIcon />
+                    Microsoft
+                  </motion.button>
+
+                  <motion.button 
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={() => loginWithGoogle()}
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-3 px-3 rounded-xl font-semibold transition-all shadow-sm text-sm no-underline cursor-pointer"
+                  >
+                    <GoogleIcon />
+                    Google
+                  </motion.button>
+                </motion.div>
+
+                <motion.div variants={itemVariants} whileHover={{ scale: 1.01 }} className="relative flex items-center py-1 cursor-pointer">
+                  <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                  <span className="flex-shrink-0 mx-4 text-xs text-slate-400 font-medium uppercase tracking-wider">Or sign in with email</span>
+                  <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                </motion.div>
+              </>
+            )}
+
+            <motion.form variants={itemVariants} onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {mode === 'register' && (
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Full Name</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><User size={18} /></div>
+                    <input 
+                      type="text" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="John Doe" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
+                    />
+                  </div>
+                </motion.div>
+              )}
+
+              <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Work Email</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><Mail size={18} /></div>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@company.com" 
+                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
+                  />
                 </div>
-                <div className="flex items-center gap-2 text-sm font-semibold text-teal-600 dark:text-teal-300">
-                  <Fingerprint className="h-4 w-4" />
-                  Secure employee access
-                </div>
-                <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950 dark:text-white sm:text-4xl">
-                  Welcome back
-                </h1>
-                <p className="mt-3 text-base leading-7 text-slate-500 dark:text-slate-400">
-                  Sign in to manage attendance, teams, leaves, tasks, and employee operations from one premium HRMS workspace.
-                </p>
-              </div>
+              </motion.div>
 
-              <form className="space-y-5" onSubmit={handleSubmit} noValidate>
-                <TextField
-                  id="email"
-                  label="Email address"
-                  icon={Mail}
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  onBlur={() => setTouched((value) => ({ ...value, email: true }))}
-                  placeholder="name@arkaenterprise.com"
-                  autoComplete="email"
-                  error={touched.email ? errors.email : ''}
-                />
-
-                <TextField
-                  id="password"
-                  label="Password"
-                  icon={Lock}
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  onBlur={() => setTouched((value) => ({ ...value, password: true }))}
-                  placeholder="Enter your password"
-                  autoComplete="current-password"
-                  error={touched.password ? errors.password : ''}
-                  rightSlot={
+              {mode === 'otp' && (
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-3 cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Verification Code (OTP)</label>
                     <button
                       type="button"
-                      onClick={() => setShowPassword((value) => !value)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      className="absolute right-4 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-xl text-slate-400 transition-colors duration-300 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                      onClick={handleSendOtp}
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 cursor-pointer"
                     >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      Resend Code
                     </button>
-                  }
-                />
+                  </div>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><KeyRound size={18} /></div>
+                    <input 
+                      type="text" 
+                      maxLength={6}
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      placeholder="Enter 6-digit code" 
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400 tracking-widest font-mono" 
+                    />
+                  </div>
+                  {generatedOtp && (
+                    <p className="text-xs text-slate-400">
+                      Demo OTP Code: <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{generatedOtp}</span> (or use 123456)
+                    </p>
+                  )}
+                </motion.div>
+              )}
 
-                <PasswordStrength password={password} />
+              {(mode === 'login' || mode === 'register') && (
+                <motion.div whileHover={{ scale: 1.01 }} className="space-y-1.5 cursor-pointer">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Password</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><Lock size={18} /></div>
+                    <input 
+                      type={showPassword ? "text" : "password"} 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••" 
+                      className="w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 dark:text-slate-100 no-underline cursor-text hover:border-indigo-400" 
+                    />
+                    <motion.button whileHover={{ scale: 1.1 }} type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 no-underline cursor-pointer">
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
 
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <label className="flex cursor-pointer items-center gap-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
-                    <input
+              {mode === 'register' && <PasswordStrength password={password} />}
+
+              {mode === 'login' && (
+                <motion.div whileHover={{ scale: 1.01 }} className="flex items-center justify-between text-sm py-1 cursor-pointer">
+                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 font-medium no-underline hover:text-indigo-600 transition-colors">
+                    <input 
                       type="checkbox"
                       checked={rememberSession}
-                      onChange={(event) => setRememberSession(event.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-indigo-600 accent-[#4F46E5] focus:ring-indigo-500 dark:border-slate-600"
+                      onChange={(e) => setRememberSession(e.target.checked)}
+                      className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                     />
                     Remember me
                   </label>
-                  <a href="#forgot-password" className="text-sm font-semibold text-indigo-600 transition-colors duration-300 hover:text-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 dark:text-indigo-300">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    type="button" 
+                    onClick={() => setMode('forgot')}
+                    className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer"
+                  >
                     Forgot password?
-                  </a>
-                </div>
+                  </motion.button>
+                </motion.div>
+              )}
 
-                <motion.button
-                  type="submit"
+              {mode === 'otp' && !generatedOtp ? (
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={handleSendOtp}
                   disabled={isLoading}
-                  whileHover={{ y: isLoading ? 0 : -2 }}
-                  whileTap={{ scale: isLoading ? 1 : 0.98 }}
-                  className="group flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#14B8A6] px-5 text-base font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 focus:outline-none focus:ring-4 focus:ring-indigo-500/25 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
                 >
                   {isLoading ? (
                     <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                   ) : (
                     <>
-                      Login
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      Send Verification Code
+                      <ArrowRight size={18} />
                     </>
                   )}
                 </motion.button>
-              </form>
+              ) : (
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all shadow-md mt-2 disabled:opacity-70 no-underline cursor-pointer"
+                >
+                  {isLoading ? (
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  ) : (
+                    <>
+                      {mode === 'login' && "Sign In"}
+                      {mode === 'register' && "Register Account"}
+                      {mode === 'forgot' && "Send Recovery Link"}
+                      {mode === 'otp' && "Verify & Sign In"}
+                      <ArrowRight size={18} />
+                    </>
+                  )}
+                </motion.button>
+              )}
+            </motion.form>
 
-              <div className="my-6 flex items-center gap-4">
-                <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
-                <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">OR</span>
-                <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
-              </div>
+            {/* Toggle between Login, Register, and OTP views */}
+            <motion.div whileHover={{ scale: 1.01 }} className="text-center pt-2 space-y-2 cursor-pointer">
+              {mode === 'login' && (
+                <>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
+                    Sign in with code instead?{" "}
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }} 
+                      type="button" 
+                      onClick={() => {
+                        setMode('otp');
+                        if (email) {
+                          const mockCode = Math.floor(100000 + Math.random() * 900000).toString();
+                          setGeneratedOtp(mockCode);
+                        }
+                      }} 
+                      className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer"
+                    >
+                      Use OTP Auth
+                    </motion.button>
+                  </p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
+                    Don't have an account?{" "}
+                    <motion.button whileHover={{ scale: 1.05 }} type="button" onClick={() => setMode('register')} className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 ml-1 no-underline cursor-pointer">
+                      Register
+                    </motion.button>
+                  </p>
+                </>
+              )}
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <SocialButton icon={<MicrosoftIcon />} onClick={handleMicrosoftLogin}>
-                  Microsoft
-                </SocialButton>
-                <SocialButton icon={<GoogleIcon />} onClick={() => loginWithGoogle()}>
-                  Google
-                </SocialButton>
-              </div>
+              {(mode === 'register' || mode === 'forgot' || mode === 'otp') && (
+                <p className="text-sm text-slate-500 dark:text-slate-400 no-underline">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }} 
+                    type="button" 
+                    onClick={() => {
+                      setMode('login');
+                      setGeneratedOtp('');
+                      setOtp('');
+                    }} 
+                    className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 no-underline cursor-pointer"
+                  >
+                    Back to standard sign in
+                  </motion.button>
+                </p>
+              )}
+            </motion.div>
 
-              <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center dark:border-slate-800 dark:bg-slate-950/60">
-                {[
-                  ['99.9%', 'Uptime'],
-                  ['SOC2', 'Controls'],
-                  ['24/7', 'Access'],
-                ].map(([value, label]) => (
-                  <div key={label}>
-                    <p className="text-sm font-bold text-slate-950 dark:text-white">{value}</p>
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <footer className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-              <a href="#privacy" className="transition-colors hover:text-indigo-600 dark:hover:text-indigo-300">Privacy Policy</a>
-              <a href="#terms" className="transition-colors hover:text-indigo-600 dark:hover:text-indigo-300">Terms & Conditions</a>
-              <span className="inline-flex items-center gap-1.5">
-                <Globe2 className="h-3.5 w-3.5" />
-                Version 2.6.0
-              </span>
-            </footer>
           </motion.div>
-        </section>
+          
+          <motion.p whileHover={{ scale: 1.02 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="absolute bottom-4 text-[11px] text-slate-400 text-center w-full max-w-md no-underline cursor-pointer">
+            By signing in, you agree to our <a href="#" className="no-underline hover:text-indigo-600 cursor-pointer">Terms of Service</a> and <a href="#" className="no-underline hover:text-indigo-600 cursor-pointer">Privacy Policy</a>.
+          </motion.p>
+        </motion.div>
       </div>
     </motion.main>
   );
