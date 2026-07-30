@@ -14,7 +14,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false); 
   const [isCollapsed, setIsCollapsed] = useState(false);
-  // const [selectedQrEmployee, setSelectedQrEmployee] = useState(null); 
+  const [selectedQrEmployee, setSelectedQrEmployee] = useState(null); 
 
   // ---------------------------------------------------------
   // LOCALSTORAGE PERSISTENT APP STATE
