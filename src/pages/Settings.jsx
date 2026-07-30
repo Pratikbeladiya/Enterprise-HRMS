@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Settings.css";
 
@@ -17,6 +18,15 @@ import {
 
 function Settings() {
   const navigate = useNavigate();
+
+  const [theme, setTheme] = useState(
+  localStorage.getItem("theme") || "light"
+);
+
+useEffect(() => {
+  document.body.className = theme;
+  localStorage.setItem("theme", theme);
+}, [theme]);
 
   const handleLogout = () => {
   localStorage.clear();
@@ -192,10 +202,13 @@ function Settings() {
                 <FaMoon /> Theme
               </label>
 
-              <select>
-                <option>Light</option>
-                <option>Dark</option>
-              </select>
+             <select
+  value={theme}
+  onChange={(e) => setTheme(e.target.value)}
+>
+  <option value="light">Light</option>
+  <option value="dark">Dark</option>
+</select>
             </div>
 
             <div className="checkbox-group">

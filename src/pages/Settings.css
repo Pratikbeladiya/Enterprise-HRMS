@@ -153,3 +153,55 @@
 }
 
 }
+
+/* ===========================
+   Theme Variables
+=========================== */
+
+body.light {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --subtext: #6b7280;
+  --border: #e5e7eb;
+  --sidebar: #111827;
+}
+
+body.dark {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f8fafc;
+  --subtext: #cbd5e1;
+  --border: #334155;
+  --sidebar: #020617;
+}
+
+/* ===========================
+   Main Background
+=========================== */
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.3s;
+}
+
+.home {
+  background: var(--bg);
+}
+
+.main {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.settings-container {
+  background: var(--bg);
+}
+
+.settings-card {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: 0.3s;
+}
