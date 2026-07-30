@@ -52,12 +52,7 @@ const handleLogout = () => {
 
 
           <li className="active">📝 Attendance</li>
-         <li
-  onClick={() => navigate("/payroll")}
-  style={{ cursor: "pointer" }}
->
-  💰 Payroll
-</li>
+        
         <li
   onClick={() => navigate("/leave")}
   style={{ cursor: "pointer" }}
@@ -69,6 +64,13 @@ const handleLogout = () => {
   style={{ cursor: "pointer" }}
 >
   📊 Reports
+</li>
+
+ <li
+  onClick={() => navigate("/payroll")}
+  style={{ cursor: "pointer" }}
+>
+  💰 Payroll
 </li>
   <li
   onClick={() => navigate("/settings")}
