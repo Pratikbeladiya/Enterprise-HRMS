@@ -1518,7 +1518,33 @@ if (activeTab === 'ID Cards') {
             </div>
           )}
 
-          
+          {/* LAYER MODAL WINDOW: Scan Result Data Window */}
+          {scannedEmployeeResult && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-sm w-full border border-slate-200 dark:border-slate-800 shadow-xl p-6 text-center space-y-4">
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle size={24} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-base">QR Profile Verified</h4>
+                  <p className="text-xs text-slate-400 mt-0.5">Decoded enterprise parameters successfully</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 text-left text-xs space-y-2 border border-slate-100 dark:border-slate-700">
+                  <div><span className="text-slate-400 block text-[10px] uppercase">ID Reference</span><span className="font-mono font-bold">{scannedEmployeeResult.id}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Full Name</span><span className="font-semibold text-sm">{scannedEmployeeResult.name}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Designation</span><span className="font-medium">{scannedEmployeeResult.role}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Department Unit</span><span className="font-medium">{scannedEmployeeResult.dept}</span></div>
+                  <div><span className="text-slate-400 block text-[10px] uppercase">Direct Manager</span><span className="font-medium">{scannedEmployeeResult.manager}</span></div>
+                </div>
+                <button 
+                  onClick={() => setScannedEmployeeResult(null)}
+                  className="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-xl transition"
+                >
+                  Close Window
+                </button>
+              </div>
+            </div>
+          )}
 
         </div>
       );
