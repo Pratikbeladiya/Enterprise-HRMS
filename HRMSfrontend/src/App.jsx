@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, UserCheck, Calendar, FileText, CheckSquare, Sun, Moon, Search, 
   Plus, Briefcase, Award, TrendingUp, Loader2,
-  ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock, QrCode
+  ChevronRight, ChevronLeft, ArrowUpRight, DollarSign, Menu, X, LogOut, Trash2, CheckCircle, XCircle, Download, Clock, QrCode, Scan
 } from 'lucide-react';
 import Login from './Login';
 
