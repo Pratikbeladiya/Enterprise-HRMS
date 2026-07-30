@@ -579,7 +579,83 @@ export default function App() {
   }
 
   // FOR QR scanning -----------------------------
-  
+  // 👈 PASTE THESE COMPACT STATE ACTIONS DIRECTLY ABOVE RENDERCONTENT():
+  let scanAnimationId = null; 
+
+  const startCameraScanner = async () => {
+    setIsScannerActive(true);
+    setScannedEmployeeResult(null);
+
+    // Dynamic extraction layer: inject the decoding script instantly if not initialized
+    if (!window.jsQR) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/jsqr@1.4.0/dist/jsQR.js";
+      script.async = true;
+      document.body.appendChild(script);
+      await new Promise((resolve) => (script.onload = resolve));
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      setTimeout(() => {
+        const video = document.getElementById("qr-video-stream");
+        if (video) {
+          video.srcObject = stream;
+          video.setAttribute("playsinline", "true"); 
+          video.play();
+          scanAnimationId = requestAnimationFrame(() => tickQrScanner(video));
+        }
+      }, 300);
+    } catch (err) {
+      alert("Camera access denied or device interface unavailable.");
+      setIsScannerActive(false);
+    }
+  };
+
+  const stopCameraScanner = () => {
+    if (scanAnimationId) cancelAnimationFrame(scanAnimationId);
+    const video = document.getElementById("qr-video-stream");
+    if (video && video.srcObject) {
+      video.srcObject.getTracks().forEach((track) => track.stop());
+    }
+    setIsScannerActive(false);
+  };
+
+  const tickQrScanner = (video) => {
+    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) {
+      scanAnimationId = requestAnimationFrame(() => tickQrScanner(video));
+      return;
+    }
+
+    // Allocate memory bitmap structure via isolated shadow canvas framework
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = window.jsQR ? window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" }) : null;
+
+    if (code && code.data) {
+      // Decode criteria looking for custom matrix string: "ID: EI-XXXX"
+      const match = code.data.match(/ID:\s*(EI-\d+)/i);
+      const extractedId = match ? match[1] : code.data.trim();
+      
+      const targetEmp = employees.find(emp => emp.id.toLowerCase() === extractedId.toLowerCase() || emp.name.toLowerCase() === code.data.toLowerCase());
+      
+      if (targetEmp) {
+        setScannedEmployeeResult(targetEmp);
+        stopCameraScanner();
+        return;
+      }
+    }
+    
+    // Retain stream check continuously loop by loop
+    if (video.srcObject) {
+      scanAnimationId = requestAnimationFrame(() => tickQrScanner(video));
+    }
+  };
 
   // Helper to render active tab content
   const renderContent = () => {
