@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 
+
 const app = express();
 
 const authRoute = require("./routes/user.route");
@@ -13,7 +14,7 @@ const attendanceRoute = require("./routes/attendance.route");
 const payrollRoute = require("./routes/payroll.route");
 const leaveRoute = require("./routes/leave.route");
 
-const errorHandler = require("./middlewares/error.middleware");
+const errorHandler = require("./middleware/error.middleware");
 
 // Body Parsing Middleware
 app.use(express.json());

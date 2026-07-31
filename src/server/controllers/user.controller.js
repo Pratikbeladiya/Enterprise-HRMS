@@ -7,10 +7,10 @@ const jwt = require("jsonwebtoken");
 // ============================
 const registerUser = async (req, res) => {
   try {
-    const { username, email, contactNumber, password } = req.body;
+    const { username, email, contactNumber, password ,role , department} = req.body;
 
     // Validate required fields
-    if (!username || !email || !contactNumber || !password) {
+    if (!username || !email || !contactNumber || !password || !role || !department) {
       return res.status(400).json({
         success: false,
         message: "All fields are required"
@@ -33,6 +33,8 @@ const registerUser = async (req, res) => {
       email,
       contactNumber,
       password: hashedPassword,
+      role,
+      department
 
     });
 
@@ -146,11 +148,11 @@ const getProfile = async (req, res) => {
 
 const adminDashboard = async (req, res) => {
 
-    return res.status(200).json({
-        success: true,
-        message: "Welcome Admin",
-        user: req.user
-    });
+  return res.status(200).json({
+    success: true,
+    message: "Welcome Admin",
+    user: req.user
+  });
 
 };
 
