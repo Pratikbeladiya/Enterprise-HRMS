@@ -58,19 +58,21 @@ function Reports() {
             📝 Attendance
           </li>
 
-          <li
-            onClick={() => navigate("/payroll")}
-            style={{ cursor: "pointer" }}
-          >
-            💰 Payroll
-          </li>
-
+         
           <li
             onClick={() => navigate("/leave")}
             style={{ cursor: "pointer" }}
           >
             📅 Leave
           </li>
+
+           <li
+            onClick={() => navigate("/payroll")}
+            style={{ cursor: "pointer" }}
+          >
+            💰 Payroll
+          </li>
+
 
           <li className="active">
             📊 Reports
