@@ -28,6 +28,7 @@ import {
   Clock,
   QrCode,
   Scan,
+  Layers,
 } from "lucide-react";
 import Login from "./Login";
 
