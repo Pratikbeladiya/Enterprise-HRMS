@@ -56,12 +56,7 @@ function Leave() {
             📝 Attendance
           </li>
 
-          <li
-            onClick={() => navigate("/payroll")}
-            style={{ cursor: "pointer" }}
-          >
-            💰 Payroll
-          </li>
+          
 
           <li className="active">📅 Leave</li>
 
@@ -71,6 +66,13 @@ function Leave() {
 >
   📊 Reports
 </li>
+
+<li
+            onClick={() => navigate("/payroll")}
+            style={{ cursor: "pointer" }}
+          >
+            💰 Payroll
+          </li>
 
            <li
            onClick={() => navigate("/settings")}
