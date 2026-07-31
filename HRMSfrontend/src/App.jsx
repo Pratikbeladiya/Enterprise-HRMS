@@ -281,6 +281,8 @@ export default function App() {
         ];
   });
 
+  
+
   // Employee Tab Local States
   const [employeeSearchQuery, setEmployeeSearchQuery] = useState("");
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
@@ -2602,6 +2604,7 @@ export default function App() {
               { name: "Reports", icon: FileText },
               { name: "Tasks", icon: CheckSquare },
               { name: "ID Cards", icon: QrCode },
+              { name: 'Assets', icon: Layers },
               { name: "About", icon: Award },
             ].map((item) => {
               const Icon = item.icon;
