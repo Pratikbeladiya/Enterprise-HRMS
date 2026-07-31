@@ -417,7 +417,7 @@ export default function App() {
       { id: newEmp.id, name: newEmp.name, status: "Present", time: "09:00 AM" },
     ]);
 
-    // 👉 INSERT THIS LINE:
+    
     setPayrolls([
       ...payrolls,
       {
@@ -502,7 +502,7 @@ export default function App() {
     setLeaves(leaves.filter((l) => l.id !== id));
   };
 
-  // 👉 INSERT THESE FUNCTIONS:
+  
   const handleAddPayroll = (e) => {
     e.preventDefault();
     const targetEmp = employees.find((emp) => emp.id === payrollEmpId);
@@ -2565,6 +2565,170 @@ export default function App() {
             </div>
           )}
 
+        </div>
+      );
+    }
+
+
+    // 👈 PASTE THIS REGION INSIDE renderContent() TO DRIVE THE ASSET VIEW INTERFACE:
+    if (activeTab === 'Assets') {
+      const totalInventoryValuation = companyAssets.reduce((acc, curr) => acc + curr.cost, 0);
+      const hardwareCount = companyAssets.filter(a => a.category === 'Hardware').length;
+      const filteredAssets = companyAssets.filter(a => assetFilter === 'All' || a.category === assetFilter);
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          
+          {/* Top Operational Metrics Panels */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Value Allocated</span>
+              <h3 className="text-2xl font-black mt-1 text-indigo-600 dark:text-indigo-400">₹{totalInventoryValuation.toLocaleString()}</h3>
+              <span className="text-[11px] text-slate-400 mt-2 block font-medium">Enterprise CapEx Portfolio</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Hardware Devices</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{hardwareCount} Active Items</h3>
+              <span className="text-[11px] text-emerald-500 mt-2 block font-medium">Workstations & Displays</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Infrastructure Assets</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {companyAssets.filter(a => a.category === 'Cloud Infra' || a.category === 'Networking').length} Units
+              </h3>
+              <span className="text-[11px] text-violet-500 mt-2 block font-medium">AWS Pools & Gateways</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Licenses Running</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {companyAssets.filter(a => a.category === 'Software').length} Platforms
+              </h3>
+              <span className="text-[11px] text-amber-500 mt-2 block font-medium">SaaS Operational Tools</span>
+            </div>
+          </div>
+
+          {/* Configuration Header Controls */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Resource & Procurement Management</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Track hardware allocations, active SaaS instances, network infrastructure and licensing parameters.</p>
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <select 
+                value={assetFilter} 
+                onChange={(e) => setAssetFilter(e.target.value)}
+                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold outline-none text-slate-800 dark:text-slate-100 cursor-pointer"
+              >
+                <option value="All">All Categories</option>
+                <option value="Hardware">Hardware Devices</option>
+                <option value="Cloud Infra">Cloud Infra</option>
+                <option value="Software">Software Licenses</option>
+                <option value="Networking">Networking</option>
+              </select>
+              <button onClick={() => setShowAddAssetModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap">
+                <Plus size={14} /> Procure Asset
+              </button>
+            </div>
+          </div>
+
+          {/* Detailed Assets Ledger Sheet */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th className="p-4">Asset ID</th>
+                    <th className="p-4">Description / Resource</th>
+                    <th className="p-4">Category</th>
+                    <th className="p-4">Valuation (₹)</th>
+                    <th className="p-4">Current Custodian</th>
+                    <th className="p-4">Serial / Token Code</th>
+                    <th className="p-4">Purchase Date</th>
+                    <th className="p-4">Operational Status</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                  {filteredAssets.length > 0 ? filteredAssets.map((asset) => (
+                    <tr key={asset.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-4 font-mono font-bold text-slate-500">{asset.id}</td>
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white">{asset.name}</td>
+                      <td className="p-4">
+                        <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">
+                          {asset.category}
+                        </span>
+                      </td>
+                      <td className="p-4 font-bold">₹{asset.cost.toLocaleString()}</td>
+                      <td className="p-4 font-semibold text-slate-600 dark:text-slate-400">{asset.owner}</td>
+                      <td className="p-4 font-mono text-slate-400">{asset.serial}</td>
+                      <td className="p-4 text-slate-400 font-mono">{asset.purchaseDate}</td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          asset.status === 'Operational' || asset.status === 'Active License' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                          asset.status === 'Allocated' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400' :
+                          'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
+                        }`}>
+                          {asset.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <button onClick={() => handleDecommissionAsset(asset.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" title="Decommission Asset">
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="9" className="p-8 text-center text-slate-400">No resources found matching filter matrix criteria.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Procurement Modal Window Component */}
+          {showAddAssetModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Procure Company Resource</h3>
+                  <button onClick={() => setShowAddAssetModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleRegisterAsset} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Asset Name / Description</label>
+                    <input type="text" required value={newAssetName} onChange={(e) => setNewAssetName(e.target.value)} placeholder="e.g. MacBook Pro 14" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Category</label>
+                    <select value={newAssetCat} onChange={(e) => setNewAssetCat(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="Hardware">Hardware Devices</option>
+                      <option value="Cloud Infra">Cloud Infra Structure</option>
+                      <option value="Software">Software License</option>
+                      <option value="Networking">Networking Systems</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Asset Cost / Purchase Price (INR)</label>
+                    <input type="number" required value={newAssetCost} onChange={(e) => setNewAssetCost(e.target.value)} placeholder="140000" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Assigned Owner / Department (Optional)</label>
+                    <select value={newAssetOwner} onChange={(e) => setNewAssetOwner(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="">Unassigned (Operational Base)</option>
+                      {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
+                      {teams.map(team => <option key={team.id} value={team.name}>{team.name} (Team)</option>)}
+                    </select>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddAssetModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Approve Purchase</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
