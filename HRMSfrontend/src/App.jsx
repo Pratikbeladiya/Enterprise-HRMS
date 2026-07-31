@@ -400,6 +400,33 @@ export default function App() {
     setActiveTab("Dashboard");
   };
 
+
+  //Assets handlers 
+  // 👈 PASTE THIS REVENUE/PROCUREMENT HANDLER:
+  const handleRegisterAsset = (e) => {
+    e.preventDefault();
+    const registered = {
+      id: `AST-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: newAssetName,
+      category: newAssetCat,
+      cost: parseFloat(newAssetCost) || 0,
+      status: newAssetOwner ? 'Allocated' : 'Operational',
+      owner: newAssetOwner || 'IT and Infrastructure',
+      purchaseDate: new Date().toISOString().split('T')[0],
+      serial: `SRL-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
+    };
+    
+    setCompanyAssets([...companyAssets, registered]);
+    setNewAssetName('');
+    setNewAssetCost('');
+    setNewAssetOwner('');
+    setShowAddAssetModal(false);
+  };
+
+  const handleDecommissionAsset = (id) => {
+    setCompanyAssets(companyAssets.filter(a => a.id !== id));
+  };
+
   // Employee Handlers
   const handleAddEmployee = (e) => {
     e.preventDefault();
