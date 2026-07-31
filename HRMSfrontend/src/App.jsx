@@ -603,7 +603,6 @@ export default function App() {
   }
 
   // FOR QR scanning -----------------------------
-  // 👈 PASTE THESE COMPACT STATE ACTIONS DIRECTLY ABOVE RENDERCONTENT():
   let scanAnimationId = null; 
 
   const startCameraScanner = async () => {
