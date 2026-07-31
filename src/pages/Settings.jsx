@@ -187,15 +187,7 @@ useEffect(() => {
               />
             </div>
 
-            <div className="input-group">
-              <label>
-                <FaLock /> New Password
-              </label>
-              <input
-                type="password"
-                placeholder="New Password"
-              />
-            </div>
+           
 
             <div className="input-group">
               <label>
