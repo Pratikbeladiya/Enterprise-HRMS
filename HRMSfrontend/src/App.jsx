@@ -281,7 +281,28 @@ export default function App() {
         ];
   });
 
+  // 👈 ADD THIS RESOURCE LEDGER CODE WITH YOUR LOCALSTORAGE SYNCS:
+  const [companyAssets, setCompanyAssets] = useState(() => {
+    const saved = localStorage.getItem('hrise_assets');
+    return saved ? JSON.parse(saved) : [
+      { id: 'AST-9041', name: 'MacBook Pro 16" (M3 Max, 64GB)', category: 'Hardware', cost: 349900, status: 'Allocated', owner: 'Cameron Williamson', purchaseDate: '2024-09-15', serial: 'C02F89XXQ05D' },
+      { id: 'AST-7822', name: 'AWS Cloud Server Pool - Cluster 4B', category: 'Cloud Infra', cost: 185000, status: 'Operational', owner: 'IT and Infrastructure', purchaseDate: '2025-01-10', serial: 'us-east-1.prod-4b' },
+      { id: 'AST-3110', name: 'Enterprise Slack Grid Package', category: 'Software', cost: 48000, status: 'Active License', owner: 'Human Resources', purchaseDate: '2026-03-01', serial: 'LIC-SLK-90281' },
+      { id: 'AST-1104', name: 'Dell UltraSharp 32" 4K Monitor', category: 'Hardware', cost: 85000, status: 'Allocated', owner: 'Guy Hawkins', purchaseDate: '2024-11-20', serial: 'CN-073D2Y-74443' },
+      { id: 'AST-5590', name: 'Secure VPN Hardware Gateway (Cisco)', category: 'Networking', cost: 210000, status: 'Maintenance', owner: 'IT and Infrastructure', purchaseDate: '2025-05-14', serial: 'CSCO-ASA-5516-X' }
+    ];
+  });
+
+  const [assetFilter, setAssetFilter] = useState('All');
+  const [showAddAssetModal, setShowAddAssetModal] = useState(false);
   
+  // Modal Fields
+  const [newAssetName, setNewAssetName] = useState('');
+  const [newAssetCat, setNewAssetCat] = useState('Hardware');
+  const [newAssetCost, setNewAssetCost] = useState('');
+  const [newAssetOwner, setNewAssetOwner] = useState('');
+
+  useEffect(() => { localStorage.setItem('hrise_assets', JSON.stringify(companyAssets)); }, [companyAssets]);
 
   // Employee Tab Local States
   const [employeeSearchQuery, setEmployeeSearchQuery] = useState("");
