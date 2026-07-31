@@ -281,7 +281,7 @@ export default function App() {
         ];
   });
 
-  // 👈 ADD THIS RESOURCE LEDGER CODE WITH YOUR LOCALSTORAGE SYNCS:
+ 
   const [companyAssets, setCompanyAssets] = useState(() => {
     const saved = localStorage.getItem('hrise_assets');
     return saved ? JSON.parse(saved) : [
@@ -402,7 +402,7 @@ export default function App() {
 
 
   //Assets handlers 
-  // 👈 PASTE THIS REVENUE/PROCUREMENT HANDLER:
+  
   const handleRegisterAsset = (e) => {
     e.preventDefault();
     const registered = {
@@ -599,7 +599,7 @@ export default function App() {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
-  // 👇 PASTE STEP 3 HERE (Right after your task handlers and before authentication check) 👇
+  
   if (isLoggingIn) {
     return (
       <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white">
@@ -2597,7 +2597,7 @@ export default function App() {
     }
 
 
-    // 👈 PASTE THIS REGION INSIDE renderContent() TO DRIVE THE ASSET VIEW INTERFACE:
+    //Assets-------------
     if (activeTab === 'Assets') {
       const totalInventoryValuation = companyAssets.reduce((acc, curr) => acc + curr.cost, 0);
       const hardwareCount = companyAssets.filter(a => a.category === 'Hardware').length;
