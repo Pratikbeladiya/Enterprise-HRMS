@@ -1,8 +1,7 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-dotenv.config();
+require("dotenv").config();
 
 // Connect Database
 connectDB();
@@ -27,7 +26,7 @@ app.get("/", (req, res) => {
 app.use("/api/employees", employeeRoutes);
 
 // Handle Invalid Routes
-app.use("*", (req, res) => {
+app.use("/", (req, res) => {
   res.status(404).json({
     success: false,
     message: "Route Not Found",
