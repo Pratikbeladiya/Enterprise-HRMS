@@ -36,8 +36,6 @@ router.get("/employee/:employeeId", getEmployeeLeaveHistory);
 //get leave summary
 router.get("/summary", getLeaveSummary);
 
-//get employee leave history by employee id
-router.get("/employee/:employeeId", getEmployeeLeaveHistory);
 
 //get leave by id
 router.get("/:id", getLeaveById);
