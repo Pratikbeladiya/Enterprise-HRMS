@@ -615,9 +615,9 @@ export default function App() {
             <h3 className="text-base font-bold tracking-tight">
               Logging in to {currentUser?.name || "Workspace"}...
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
+            {/* <p className="text-xs text-slate-400 font-medium">
               Securing access parameters for {currentUser?.name || "Workspace"}
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
