@@ -13,6 +13,7 @@ app.use(express.json());
 
 // Import Routes
 const employeeRoutes = require("./routes/employee");
+const attendanceRoutes = require("./routes/attendance");
 
 // Home Route
 app.get("/", (req, res) => {
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/employees", employeeRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 // Handle Invalid Routes
 app.use("/", (req, res) => {
