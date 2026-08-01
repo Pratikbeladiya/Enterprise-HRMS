@@ -613,7 +613,7 @@ export default function App() {
           </div>
           <div className="space-y-1">
             <h3 className="text-base font-bold tracking-tight">
-              Authenticating Session...
+              Logging in to {currentUser?.name || "Workspace"}...
             </h3>
             <p className="text-xs text-slate-400 font-medium">
               Securing access parameters for {currentUser?.name || "Workspace"}
