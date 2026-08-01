@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import "./Signup.css";
 
@@ -35,7 +36,7 @@ function Signup() {
 
   // Signup Validation
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
 
     if (
       !fullName ||
@@ -78,18 +79,39 @@ function Signup() {
       return;
     }
 
-    localStorage.setItem(
-  "user",
-  JSON.stringify({
-    fullName: fullName,
-    email: email,
-    phone: phone,
-  })
-);
+    try {
 
-    alert("Account Created Successfully!");
+  const response = await axios.post(
+    "http://localhost:5000/api/auth/signup",
+    {
+      fullName,
+      email,
+      phone,
+      password,
+    }
+  );
 
-    navigate("/login");
+  localStorage.setItem(
+    "currentUser",
+    JSON.stringify(response.data.user)
+  );
+
+  alert(response.data.message);
+
+  navigate("/login");
+
+  return;
+
+} catch (error) {
+
+  alert(
+    error.response?.data?.message ||
+    "Signup Failed!"
+  );
+
+  return;
+
+}
   };
 
   return (
