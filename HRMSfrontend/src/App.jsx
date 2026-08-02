@@ -2829,6 +2829,174 @@ export default function App() {
       );
     }
 
+
+
+    // 👈 PASTE THIS MODULE INSIDE renderContent() TO DRIVE YOUR ATS WORKSPACE VIEW:
+    if (activeTab === 'Recruitment') {
+      const activePipelines = candidates.filter(c => c.stage !== 'Offered').length;
+      const filteredApplicants = candidates.filter(c => recruitmentFilter === 'All' || c.stage === recruitmentFilter);
+
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          
+          {/* Dashboard Summary Statistics Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Active Applicants</span>
+              <h3 className="text-2xl font-black mt-1 text-slate-900 dark:text-white">{candidates.length} Profiles</h3>
+              <span className="text-[11px] text-indigo-500 mt-2 block font-medium">Talent Bench Pipeline</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Interviews Processing</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {candidates.filter(c => ['Screening', 'Technical Round', 'HR Round'].includes(c.stage)).length} In Progress
+              </h3>
+              <span className="text-[11px] text-amber-500 mt-2 block font-medium">Active vetting schedules</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Pending Offers Issued</span>
+              <h3 className="text-2xl font-bold mt-1 text-emerald-600 dark:text-emerald-400">
+                {candidates.filter(c => c.stage === 'Offered').length} Selected
+              </h3>
+              <span className="text-[11px] text-slate-400 mt-2 block font-medium">Awaiting contract signing</span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Conversion Velocity</span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">84%</h3>
+              <span className="text-[11px] text-violet-500 mt-2 block font-medium">Offer acceptance indexing</span>
+            </div>
+          </div>
+
+          {/* Action Management Filter Bar */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Applicant Tracking Workspace (ATS)</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Vet incoming applications, scale interviews, update hiring statuses, and trigger one-click staff onboarding.</p>
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <select 
+                value={recruitmentFilter} 
+                onChange={(e) => setRecruitmentFilter(e.target.value)}
+                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold outline-none text-slate-800 dark:text-slate-100 cursor-pointer"
+              >
+                <option value="All">All Pipeline Stages</option>
+                <option value="Applied">Applied</option>
+                <option value="Screening">Screening</option>
+                <option value="Technical Round">Technical Round</option>
+                <option value="HR Round">HR Round</option>
+                <option value="Offered">Offered</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <button onClick={() => setShowAddCandidateModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap">
+                <Plus size={14} /> Add Candidate
+              </button>
+            </div>
+          </div>
+
+          {/* ATS Board Ledger Table */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th className="p-4">Candidate ID</th>
+                    <th className="p-4">Applicant Name</th>
+                    <th className="p-4">Target Mandate Role</th>
+                    <th className="p-4">Contact Email</th>
+                    <th className="p-4">Experience</th>
+                    <th className="p-4">Score Metric</th>
+                    <th className="p-4">Hiring Pipeline Stage</th>
+                    <th className="p-4 text-right">Operational Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                  {filteredApplicants.length > 0 ? filteredApplicants.map((can) => (
+                    <tr key={can.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-4 font-mono font-bold text-slate-500">{can.id}</td>
+                      <td className="p-4 font-bold text-slate-900 dark:text-white">{can.name}</td>
+                      <td className="p-4"><span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded font-semibold text-[10px]">{can.role}</span></td>
+                      <td className="p-4 text-slate-500">{can.email}</td>
+                      <td className="p-4 text-slate-600 dark:text-slate-400">{can.experience}</td>
+                      <td className="p-4 font-bold font-mono text-slate-700 dark:text-slate-300">{can.rating}</td>
+                      <td className="p-4">
+                        <select 
+                          value={can.stage}
+                          onChange={(e) => handleUpdateCandidateStage(can.id, e.target.value)}
+                          className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold outline-none cursor-pointer text-slate-800 dark:text-slate-100"
+                        >
+                          <option value="Applied">Applied</option>
+                          <option value="Screening">Screening</option>
+                          <option value="Technical Round">Technical Round</option>
+                          <option value="HR Round">HR Round</option>
+                          <option value="Offered">Offered</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
+                      </td>
+                      <td className="p-4 text-right">
+                        {can.stage === 'Offered' ? (
+                          <button 
+                            onClick={() => handleConvertCandidateToEmployee(can)}
+                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold rounded-lg shadow-sm transition-colors animate-pulse"
+                          >
+                            Onboard Staff
+                          </button>
+                        ) : (
+                          <span className="text-[10px] text-slate-400 font-semibold uppercase italic">In Evaluation</span>
+                        )}
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="8" className="p-8 text-center text-slate-400">No applicant tracking logs found matching criteria.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Sourcing Modal Add Dialog */}
+          {showAddCandidateModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">File Applicant Record</h3>
+                  <button onClick={() => setShowAddCandidateModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleRegisterCandidate} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Full Name</label>
+                    <input type="text" required value={newCanName} onChange={(e) => setNewCanName(e.target.value)} placeholder="Esther Howard" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Target Requisition Opening</label>
+                    <select value={newCanRole} onChange={(e) => setNewCanRole(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="Senior Frontend Engineer">Senior Frontend Engineer</option>
+                      <option value="DevOps Architect">DevOps Architect</option>
+                      <option value="Product UI Designer">Product UI Designer</option>
+                      <option value="Backend Dev (Go)">Backend Dev (Go)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Personal Email Address</label>
+                    <input type="email" required value={newCanEmail} onChange={(e) => setNewCanEmail(e.target.value)} placeholder="candidate@gmail.com" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Relevant Experience (Years)</label>
+                    <input type="number" required value={newCanExp} onChange={(e) => setNewCanExp(e.target.value)} placeholder="4" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowAddCandidateModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Add to Pipeline</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     return null;
   };
 
