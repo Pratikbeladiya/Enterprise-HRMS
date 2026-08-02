@@ -1,5 +1,5 @@
 const Project = require("../model/project.model");
-const { successResponse, errorResponse } = require("../src/server/utils/apiResponse");
+const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 // Get all projects
 const getAllProjects = async (req, res) => {
