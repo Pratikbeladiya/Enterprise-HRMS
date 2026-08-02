@@ -1,0 +1,89 @@
+const User = require("../models/User");
+
+// ==========================
+// User Signup
+// ==========================
+const signup = async (req, res) => {
+  try {
+    const { fullName, email, phone, password } = req.body;
+
+    // Check Existing User
+    const existingUser = await User.findOne({
+      $or: [{ email }, { phone }],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+    // Create User
+    const user = await User.create({
+      fullName,
+      email,
+      phone,
+      password,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Account Created Successfully",
+      user,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ==========================
+// User Login
+// ==========================
+const login = async (req, res) => {
+  try {
+    const { emailOrPhone, password } = req.body;
+
+    const user = await User.findOne({
+      $or: [
+        { email: emailOrPhone },
+        { phone: emailOrPhone },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.password !== password) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      user,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  signup,
+  login,
+};
