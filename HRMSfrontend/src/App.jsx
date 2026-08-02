@@ -29,6 +29,7 @@ import {
   QrCode,
   Scan,
   Layers,
+  UserPlus,
 } from "lucide-react";
 import Login from "./Login";
 
