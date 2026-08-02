@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 // ==========================
 // User Signup
@@ -86,4 +87,99 @@ const login = async (req, res) => {
 module.exports = {
   signup,
   login,
+  adminSignup,
+  adminLogin,
+};
+
+// ==========================
+// Admin Signup
+// ==========================
+const adminSignup = async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      companyName,
+      companyCode,
+      phone,
+      password,
+    } = req.body;
+
+    const existingAdmin = await Admin.findOne({
+      $or: [
+        { email },
+        { companyCode },
+      ],
+    });
+
+    if (existingAdmin) {
+      return res.status(400).json({
+        success: false,
+        message: "Admin already exists",
+      });
+    }
+
+    const admin = await Admin.create({
+      fullName,
+      email,
+      companyName,
+      companyCode,
+      phone,
+      password,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Admin Account Created Successfully",
+      admin,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+};
+
+// ==========================
+// Admin Login
+// ==========================
+const adminLogin = async (req, res) => {
+  try {
+
+    const { email, password } = req.body;
+
+    const admin = await Admin.findOne({ email });
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    if (admin.password !== password) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Admin Login Successful",
+      admin,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
 };
