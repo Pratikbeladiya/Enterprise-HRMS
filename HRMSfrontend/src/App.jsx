@@ -451,6 +451,52 @@ export default function App() {
     setCompanyAssets(companyAssets.filter(a => a.id !== id));
   };
 
+
+
+  // 👈 PASTE THESE PIPELINE INTERACTION HANDLERS:
+  const handleRegisterCandidate = (e) => {
+    e.preventDefault();
+    const freshApplicant = {
+      id: `CAN-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: newCanName,
+      role: newCanRole,
+      email: newCanEmail,
+      stage: 'Applied',
+      experience: `${newCanExp} Yrs`,
+      rating: '--'
+    };
+    setCandidates([...candidates, freshApplicant]);
+    setNewCanName('');
+    setNewCanEmail('');
+    setNewCanExp('');
+    setShowAddCandidateModal(false);
+  };
+
+  const handleUpdateCandidateStage = (id, nextStage) => {
+    setCandidates(candidates.map(c => c.id === id ? { ...c, stage: nextStage } : c));
+  };
+
+  // Automated System Action: Converts Candidate records straight into Live Directory Staff
+  const handleConvertCandidateToEmployee = (candidate) => {
+    const newEmp = {
+      id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: candidate.name,
+      role: candidate.role,
+      dept: 'IT and Infrastructure',
+      manager: 'Kailash Yadav',
+      joiningDate: new Date().toISOString().split('T')[0]
+    };
+    
+    // Push updates across system database tables concurrently
+    setEmployees([...employees, newEmp]);[cite: 1]
+    setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);[cite: 1]
+    setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 120000, bonus: 10000, deductions: 5000, status: 'Pending', month: 'August 2026' }]);[cite: 1]
+    
+    // Purge candidate profile safely out of active recruitment board tracking
+    setCandidates(candidates.filter(c => c.id !== candidate.id));
+    alert(`${candidate.name} has been successfully onboarded as a full-time employee!`);
+  };
+
   // Employee Handlers
   const handleAddEmployee = (e) => {
     e.preventDefault();
