@@ -55,7 +55,6 @@ export const Login = () => {
       showError(msg);
     } finally {
       setLoading(false);
-      // Cooldown timer to prevent request spamming
       setTimeout(() => {
         setIsCooldown(false);
       }, 1500);
@@ -69,48 +68,48 @@ export const Login = () => {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 bg-slate-900/90 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-xl">
-        {/* Left Side: Brand Showcase & Corporate Info */}
+        {/* Left Side: Brand Showcase */}
         <div className="p-8 sm:p-10 bg-gradient-to-b from-indigo-950/60 to-slate-950/80 border-r border-slate-800/80 flex flex-col justify-between relative overflow-hidden hidden md:flex">
           <div className="relative z-10 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
                 H
               </div>
               <div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight">HRMS Portal</h3>
-                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Enterprise Edition</span>
+                <h3 className="text-lg font-bold text-white tracking-tight">HRMS Portal</h3>
+                <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Enterprise Automation</span>
               </div>
             </div>
 
-            <div className="space-y-2 pt-4">
-              <h2 className="text-2xl font-black text-white leading-tight">
-                Streamline Your Workforce & Payroll
+            <div className="space-y-3 pt-2">
+              <h2 className="text-xl font-semibold text-white leading-relaxed">
+                Streamline Your Workforce & Payroll Systems
               </h2>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Complete HR automation suite with attendance tracking, leave workflows, department analytics, and compensation management.
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                All-in-one HR platform with automated attendance tracking, leave workflows, department analytics, and compensation management.
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 border-t border-slate-800/80 text-xs">
-              <div className="flex items-center gap-2 text-slate-300">
+            <div className="space-y-3 pt-4 border-t border-slate-800/80 text-sm">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>256-bit Bank-Grade Encryption</span>
+                <span>Bank-Grade 256-bit Encryption</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Real-Time Attendance & Leave Approval</span>
+                <span>Real-Time Attendance & Leave Workflows</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Automated Net Salary Calculation</span>
+                <span>Automated Payroll Calculation</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-800/80 relative z-10 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-6 border-t border-slate-800/80 relative z-10 flex items-center justify-between text-xs text-slate-400">
             <span>© 2026 HRMS Enterprise</span>
-            <span className="flex items-center gap-1 text-indigo-400 font-bold">
-              <Sparkles className="w-3.5 h-3.5" /> Secure Session
+            <span className="flex items-center gap-1.5 text-indigo-400 font-medium">
+              <Sparkles className="w-4 h-4" /> Secure Portal
             </span>
           </div>
         </div>
@@ -119,9 +118,9 @@ export const Login = () => {
         <div className="p-8 sm:p-10 flex flex-col justify-between">
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-black text-white tracking-tight">Sign In</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Enter your credentials to access your dashboard account
+              <h2 className="text-xl font-bold text-white tracking-tight">Sign In</h2>
+              <p className="text-sm text-slate-400 mt-1 font-normal">
+                Enter your registered credentials to access your account
               </p>
             </div>
 
@@ -133,7 +132,7 @@ export const Login = () => {
                 value={formData.username}
                 onChange={handleChange}
                 icon={User}
-                helperText="Use your exact registered Username, not email."
+                helperText="Use your exact Username, not your email address."
                 required
               />
 
@@ -160,7 +159,7 @@ export const Login = () => {
               <Button
                 type="submit"
                 variant="primary"
-                className="w-full py-3 mt-2"
+                className="w-full py-3 text-sm mt-2 font-semibold"
                 isLoading={loading}
                 disabled={isCooldown}
               >
@@ -169,11 +168,11 @@ export const Login = () => {
             </form>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-800/80 text-center text-xs text-slate-400">
+          <div className="mt-8 pt-6 border-t border-slate-800/80 text-center text-sm text-slate-400 font-normal">
             Don't have an account yet?{" "}
             <Link
               to="/register"
-              className="font-bold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
+              className="font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
             >
               Create an account
             </Link>

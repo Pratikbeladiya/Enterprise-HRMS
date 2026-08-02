@@ -80,44 +80,44 @@ export const Register = () => {
         <div className="p-8 sm:p-10 bg-gradient-to-b from-indigo-950/60 to-slate-950/80 border-r border-slate-800/80 flex flex-col justify-between relative overflow-hidden hidden md:flex">
           <div className="relative z-10 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
                 H
               </div>
               <div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight">HRMS Portal</h3>
-                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Register Account</span>
+                <h3 className="text-lg font-bold text-white tracking-tight">HRMS Portal</h3>
+                <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Register Account</span>
               </div>
             </div>
 
-            <div className="space-y-2 pt-4">
-              <h2 className="text-2xl font-black text-white leading-tight">
+            <div className="space-y-3 pt-2">
+              <h2 className="text-xl font-semibold text-white leading-relaxed">
                 Join Your Enterprise HR Network
               </h2>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Create your staff or management profile to log attendance, apply for leaves, and view payroll details.
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                Set up your staff or management credentials to manage attendance logs, leave approvals, and payroll data.
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 border-t border-slate-800/80 text-xs">
-              <div className="flex items-center gap-2 text-slate-300">
+            <div className="space-y-3 pt-4 border-t border-slate-800/80 text-sm">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Instant Account Provisioning</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Multi-role Support (Employee, HR, Admin)</span>
+                <span>Multi-Role Access Control</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2.5 text-slate-300 font-normal">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Secure Data Partitioning</span>
+                <span>Isolated Security Layers</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-800/80 relative z-10 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-6 border-t border-slate-800/80 relative z-10 flex items-center justify-between text-xs text-slate-400">
             <span>© 2026 HRMS Enterprise</span>
-            <span className="flex items-center gap-1 text-indigo-400 font-bold">
-              <ShieldCheck className="w-3.5 h-3.5" /> ISO 27001 Certified
+            <span className="flex items-center gap-1.5 text-indigo-400 font-medium">
+              <ShieldCheck className="w-4 h-4" /> ISO Certified
             </span>
           </div>
         </div>
@@ -126,9 +126,9 @@ export const Register = () => {
         <div className="p-8 sm:p-10 flex flex-col justify-between">
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-black text-white tracking-tight">Create Account</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Enter your details to set up your user credentials
+              <h2 className="text-xl font-bold text-white tracking-tight">Create Account</h2>
+              <p className="text-sm text-slate-400 mt-1 font-normal">
+                Enter your details to initialize your portal account
               </p>
             </div>
 
@@ -204,7 +204,7 @@ export const Register = () => {
                 <Input
                   label="Department"
                   name="department"
-                  placeholder="e.g. Engineering"
+                  placeholder="Engineering"
                   value={formData.department}
                   onChange={handleChange}
                   icon={Building}
@@ -215,7 +215,7 @@ export const Register = () => {
               <Button
                 type="submit"
                 variant="primary"
-                className="w-full py-3 mt-2"
+                className="w-full py-3 text-sm mt-2 font-semibold"
                 isLoading={loading}
                 disabled={isCooldown}
               >
@@ -224,11 +224,11 @@ export const Register = () => {
             </form>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-slate-800/80 text-center text-xs text-slate-400">
+          <div className="mt-6 pt-6 border-t border-slate-800/80 text-center text-sm text-slate-400 font-normal">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-bold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
+              className="font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
             >
               Sign in to your account
             </Link>
