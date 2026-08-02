@@ -25,17 +25,20 @@ const [user, setUser] = useState({
 });
 
 useEffect(() => {
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const userData = JSON.parse(localStorage.getItem("currentUser"));
 
-  if (userData) {
-    setUser(userData);
+  if (!userData) {
+    navigate("/login");
+    return;
   }
-}, []);
+
+  setUser(userData);
+}, [navigate]);
 
   const [searchTerm, setSearchTerm] = useState("");
   
 const handleLogout = () => {
-  localStorage.clear();
+  localStorage.removeItem("currentUser");
   navigate("/login");
 };
 
