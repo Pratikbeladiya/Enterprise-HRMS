@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import "./AdminSignup.css";
 
 import {
@@ -33,7 +35,7 @@ function AdminSignup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agree, setAgree] = useState(false);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
 
     if (
       !fullName ||
@@ -64,9 +66,38 @@ function AdminSignup() {
   })
 );
 
-    alert("Admin Account Created Successfully!");
+try {
 
-    navigate("/admin-login");
+  const response = await axios.post(
+    "http://localhost:5000/api/auth/admin-signup",
+    {
+      fullName,
+      email,
+      companyName,
+      companyCode,
+      phone,
+      password,
+    }
+  );
+
+  alert(response.data.message);
+
+  navigate("/admin-login");
+
+  return;
+
+} catch (error) {
+
+  alert(
+    error.response?.data?.message ||
+    "Admin Signup Failed!"
+  );
+
+  return;
+
+}
+
+    
   };
 
   return (
