@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import "./Login.css";
 
@@ -29,7 +30,7 @@ function Login() {
 
   // Login Validation
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
 
     if (!emailOrPhone || !password) {
       alert("Please fill all fields.");
@@ -56,26 +57,37 @@ function Login() {
     }
 
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  try {
 
-if (!user) {
-  alert("Please create an account first.");
+  const response = await axios.post(
+    "http://localhost:5000/api/auth/login",
+    {
+      emailOrPhone,
+      password,
+    }
+  );
+
+  localStorage.setItem(
+    "currentUser",
+    JSON.stringify(response.data.user)
+  );
+
+  alert(response.data.message);
+
+  navigate("/dashboard");
+
   return;
-}
 
-if (
-  emailOrPhone !== user.email &&
-  emailOrPhone !== user.phone
-) {
-  alert("Invalid Email or Mobile Number.");
+} catch (error) {
+
+  alert(
+    error.response?.data?.message ||
+    "Login Failed!"
+  );
+
   return;
+
 }
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-alert("User Login Successful!");
-
-navigate("/dashboard");
 
   };
 
