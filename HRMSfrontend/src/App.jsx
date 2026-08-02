@@ -2816,6 +2816,7 @@ export default function App() {
               { name: "Tasks", icon: CheckSquare },
               { name: "ID Cards", icon: QrCode },
               { name: 'Assets', icon: Layers },
+              { name: 'Recruitment', icon: UserPlus },
               { name: "About", icon: Award },
             ].map((item) => {
               const Icon = item.icon;
