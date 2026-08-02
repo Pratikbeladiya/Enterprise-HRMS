@@ -35,8 +35,11 @@ export const Projects = () => {
   const [projects, setProjects] = useState([]);
 
   const [formData, setFormData] = useState({
-    name: "", client: "", manager: "", teamSize: 4,
-    budget: 500000, status: "In Progress", priority: "Medium", dueDate: "2026-12-31",
+    name: "", client: "", manager: "",
+    teamSize: 4, budget: 500000,
+    status: "In Progress", priority: "Medium",
+    progress: 0, completedTasks: 0, totalTasks: 10,
+    dueDate: "2026-12-31",
   });
 
   const fetchProjects = useCallback(async () => {
@@ -53,14 +56,32 @@ export const Projects = () => {
   const handleOpenAdd = () => {
     if (!isHR) return;
     setCurrentProject(null);
-    setFormData({ name: "", client: "", manager: user?.username || "", teamSize: 4, budget: 500000, status: "In Progress", priority: "Medium", dueDate: "2026-12-31" });
+    setFormData({
+      name: "", client: "", manager: user?.username || "",
+      teamSize: 4, budget: 500000,
+      status: "In Progress", priority: "Medium",
+      progress: 0, completedTasks: 0, totalTasks: 10,
+      dueDate: "2026-12-31",
+    });
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (prj) => {
     if (!isHR) return;
     setCurrentProject(prj);
-    setFormData({ name: prj.name, client: prj.client, manager: prj.manager, teamSize: prj.teamSize, budget: prj.budget, status: prj.status, priority: prj.priority, dueDate: prj.dueDate?.split("T")[0] || prj.dueDate });
+    setFormData({
+      name: prj.name,
+      client: prj.client,
+      manager: prj.manager,
+      teamSize: prj.teamSize ?? 1,
+      budget: prj.budget ?? 0,
+      status: prj.status,
+      priority: prj.priority ?? "Medium",
+      progress: prj.progress ?? 0,
+      completedTasks: prj.completedTasks ?? 0,
+      totalTasks: prj.totalTasks ?? 10,
+      dueDate: prj.dueDate?.split("T")[0] || prj.dueDate || "",
+    });
     setIsModalOpen(true);
   };
 
@@ -82,7 +103,7 @@ export const Projects = () => {
         const res = await updateProject(currentProject._id, formData);
         if (res.success) { showSuccess("Project updated successfully!"); }
       } else {
-        const res = await createProject({ ...formData, progress: 0, completedTasks: 0, totalTasks: 10 });
+        const res = await createProject(formData);
         if (res.success) { showSuccess("New project created!"); }
       }
       setIsModalOpen(false);
@@ -279,11 +300,36 @@ export const Projects = () => {
                 required
               />
               <Input
+                label="Team Size"
+                name="teamSize"
+                type="number"
+                min="1"
+                value={formData.teamSize}
+                onChange={(e) => setFormData({ ...formData, teamSize: Number(e.target.value) })}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Input
                 label="Budget (₹)"
                 name="budget"
                 type="number"
+                min="0"
                 value={formData.budget}
                 onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) })}
+                required
+              />
+              <Select
+                label="Priority"
+                name="priority"
+                value={formData.priority}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                options={[
+                  { label: "Low",    value: "Low" },
+                  { label: "Medium", value: "Medium" },
+                  { label: "High",   value: "High" },
+                ]}
                 required
               />
             </div>
@@ -295,9 +341,11 @@ export const Projects = () => {
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                 options={[
+                  { label: "Planning",    value: "Planning" },
                   { label: "In Progress", value: "In Progress" },
-                  { label: "Completed", value: "Completed" },
-                  { label: "Planning", value: "Planning" },
+                  { label: "On Hold",     value: "On Hold" },
+                  { label: "Completed",   value: "Completed" },
+                  { label: "Cancelled",   value: "Cancelled" },
                 ]}
                 required
               />
@@ -307,6 +355,37 @@ export const Projects = () => {
                 type="date"
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <Input
+                label="Total Tasks"
+                name="totalTasks"
+                type="number"
+                min="0"
+                value={formData.totalTasks}
+                onChange={(e) => setFormData({ ...formData, totalTasks: Number(e.target.value) })}
+                required
+              />
+              <Input
+                label="Completed Tasks"
+                name="completedTasks"
+                type="number"
+                min="0"
+                value={formData.completedTasks}
+                onChange={(e) => setFormData({ ...formData, completedTasks: Number(e.target.value) })}
+                required
+              />
+              <Input
+                label="Progress (%)"
+                name="progress"
+                type="number"
+                min="0"
+                max="100"
+                value={formData.progress}
+                onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
                 required
               />
             </div>

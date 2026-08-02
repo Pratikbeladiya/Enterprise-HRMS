@@ -6,6 +6,7 @@ import {
   deleteDepartment,
 } from "../services/departmentService";
 import { getAllEmployees } from "../services/employeeService";
+import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { Card, CardHeader, CardTitle, CardBody, CardFooter } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
@@ -28,6 +29,8 @@ import {
 } from "lucide-react";
 
 export const Departments = () => {
+  const { user } = useAuth();
+  const isHR = user?.role === "HR" || user?.role === "Admin";
   const { showSuccess, showError } = useToast();
   const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -77,6 +80,7 @@ export const Departments = () => {
   }, []);
 
   const handleOpenAddModal = () => {
+    if (!isHR) return;
     setCurrentDept(null);
     setFormData({
       departmentName: "",
@@ -88,6 +92,7 @@ export const Departments = () => {
   };
 
   const handleOpenEditModal = (dept) => {
+    if (!isHR) return;
     setCurrentDept(dept);
     setFormData({
       departmentName: dept.departmentName || "",
@@ -99,6 +104,7 @@ export const Departments = () => {
   };
 
   const handleOpenDeleteModal = (dept) => {
+    if (!isHR) return;
     setCurrentDept(dept);
     setIsDeleteModalOpen(true);
   };
@@ -109,6 +115,7 @@ export const Departments = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isHR) return;
     if (!formData.departmentName || !formData.description || !formData.location) {
       showError("Department name, description, and location are required");
       return;
@@ -144,7 +151,7 @@ export const Departments = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!currentDept) return;
+    if (!currentDept || !isHR) return;
     setIsSubmitting(true);
     try {
       const res = await deleteDepartment(currentDept._id);
@@ -170,14 +177,16 @@ export const Departments = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-white">Departments Directory</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h2 className="text-xl font-bold text-white tracking-tight">Departments Directory</h2>
+          <p className="text-xs text-slate-400 mt-0.5 font-normal">
             Organize departments, locations, and assigned managers
           </p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={handleOpenAddModal}>
-          Add Department
-        </Button>
+        {isHR && (
+          <Button variant="primary" icon={Plus} onClick={handleOpenAddModal}>
+            Add Department
+          </Button>
+        )}
       </div>
 
       <div className="bg-slate-900/90 p-4 rounded-3xl border border-slate-800/80 shadow-xl">
@@ -198,12 +207,12 @@ export const Departments = () => {
               <div>
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-extrabold border border-indigo-500/30">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold border border-indigo-500/30">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
                       <CardTitle>{dept.departmentName}</CardTitle>
-                      <div className="flex items-center gap-1 text-xs text-slate-400 mt-0.5 font-semibold">
+                      <div className="flex items-center gap-1 text-xs text-slate-400 mt-0.5 font-normal">
                         <MapPin className="w-3.5 h-3.5 text-slate-500" /> {dept.location}
                       </div>
                     </div>
@@ -211,16 +220,16 @@ export const Departments = () => {
                 </CardHeader>
 
                 <CardBody className="space-y-4">
-                  <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                  <p className="text-xs text-slate-300 leading-relaxed line-clamp-2 font-normal">
                     {dept.description}
                   </p>
 
                   <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-400">
+                    <div className="flex items-center gap-1.5 text-slate-400 font-normal">
                       <UserCheck className="w-4 h-4 text-indigo-400" />
                       <span>Manager:</span>
                     </div>
-                    <span className="font-bold text-white">
+                    <span className="font-semibold text-white">
                       {dept.manager
                         ? `${dept.manager.firstName} ${dept.manager.lastName}`
                         : "Unassigned"}
@@ -228,7 +237,7 @@ export const Departments = () => {
                   </div>
 
                   <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-400">
+                    <div className="flex items-center gap-1.5 text-slate-400 font-normal">
                       <Users className="w-4 h-4 text-emerald-400" />
                       <span>Staff Count:</span>
                     </div>
@@ -237,26 +246,28 @@ export const Departments = () => {
                 </CardBody>
               </div>
 
-              <CardFooter>
-                <div className="flex items-center justify-end gap-2 w-full">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    icon={Edit2}
-                    onClick={() => handleOpenEditModal(dept)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    icon={Trash2}
-                    onClick={() => handleOpenDeleteModal(dept)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardFooter>
+              {isHR && (
+                <CardFooter>
+                  <div className="flex items-center justify-end gap-2 w-full">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      icon={Edit2}
+                      onClick={() => handleOpenEditModal(dept)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      icon={Trash2}
+                      onClick={() => handleOpenDeleteModal(dept)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </CardFooter>
+              )}
             </Card>
           ))}
         </div>
@@ -264,82 +275,86 @@ export const Departments = () => {
         <div className="bg-slate-900/90 rounded-3xl border border-slate-800/80 p-12 text-center shadow-xl">
           <Building2 className="w-10 h-10 text-slate-600 mx-auto mb-2" />
           <h4 className="text-base font-bold text-white">No departments found</h4>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-1 font-normal">
             Create a department unit to structure your organization.
           </p>
         </div>
       )}
 
-      <Modal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        title={currentDept ? "Edit Department" : "Create New Department"}
-        subtitle="Specify details for operational unit"
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Department Name"
-            name="departmentName"
-            placeholder="Engineering, Finance, HR"
-            value={formData.departmentName}
-            onChange={handleChange}
-            required
-          />
+      {isHR && (
+        <Modal
+          isOpen={isFormModalOpen}
+          onClose={() => setIsFormModalOpen(false)}
+          title={currentDept ? "Edit Department" : "Create New Department"}
+          subtitle="Specify details for operational unit"
+        >
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Department Name"
+              name="departmentName"
+              placeholder="Engineering, Finance, HR"
+              value={formData.departmentName}
+              onChange={handleChange}
+              required
+            />
 
-          <Input
-            label="Location"
-            name="location"
-            placeholder="Building A, 4th Floor / Remote"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
+            <Input
+              label="Location"
+              name="location"
+              placeholder="Building A, 4th Floor / Remote"
+              value={formData.location}
+              onChange={handleChange}
+              required
+            />
 
-          <Select
-            label="Department Manager"
-            name="manager"
-            value={formData.manager}
-            onChange={handleChange}
-            placeholder="Select Manager (Optional)"
-            options={employees.map((e) => ({
-              label: `${e.firstName} ${e.lastName} (${e.designation})`,
-              value: e._id,
-            }))}
-          />
+            <Select
+              label="Department Manager"
+              name="manager"
+              value={formData.manager}
+              onChange={handleChange}
+              placeholder="Select Manager (Optional)"
+              options={employees.map((e) => ({
+                label: `${e.firstName} ${e.lastName} (${e.designation})`,
+                value: e._id,
+              }))}
+            />
 
-          <TextArea
-            label="Description"
-            name="description"
-            rows={3}
-            placeholder="Brief overview of department responsibilities..."
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
+            <TextArea
+              label="Description"
+              name="description"
+              rows={3}
+              placeholder="Brief overview of department responsibilities..."
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
 
-          <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <Button
-              variant="outline"
-              onClick={() => setIsFormModalOpen(false)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" isLoading={isSubmitting}>
-              {currentDept ? "Update Department" : "Create Department"}
-            </Button>
-          </div>
-        </form>
-      </Modal>
+            <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <Button
+                variant="outline"
+                onClick={() => setIsFormModalOpen(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" isLoading={isSubmitting}>
+                {currentDept ? "Update Department" : "Create Department"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
-      <ConfirmDialog
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title="Delete Department"
-        message={`Are you sure you want to delete ${currentDept?.departmentName}?`}
-        isLoading={isSubmitting}
-      />
+      {isHR && (
+        <ConfirmDialog
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Department"
+          message={`Are you sure you want to delete ${currentDept?.departmentName}?`}
+          isLoading={isSubmitting}
+        />
+      )}
     </div>
   );
 };

@@ -331,6 +331,38 @@ export const Recruitment = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Job Type"
+                name="type"
+                value={jobFormData.type}
+                onChange={(e) => setJobFormData({ ...jobFormData, type: e.target.value })}
+                options={[
+                  { label: "Full-Time",   value: "Full-Time" },
+                  { label: "Part-Time",   value: "Part-Time" },
+                  { label: "Contract",    value: "Contract" },
+                  { label: "Internship",  value: "Internship" },
+                  { label: "Freelance",   value: "Freelance" },
+                ]}
+                required
+              />
+              <Select
+                label="Experience Required"
+                name="experience"
+                value={jobFormData.experience}
+                onChange={(e) => setJobFormData({ ...jobFormData, experience: e.target.value })}
+                options={[
+                  { label: "Fresher (0-1 Year)",  value: "Fresher" },
+                  { label: "1-2 Years",            value: "1-2 Years" },
+                  { label: "2-3 Years",            value: "2-3 Years" },
+                  { label: "3-5 Years",            value: "3-5 Years" },
+                  { label: "5-8 Years",            value: "5-8 Years" },
+                  { label: "8+ Years",             value: "8+ Years" },
+                ]}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Salary Budget Range"
                 name="salaryRange"
@@ -345,9 +377,9 @@ export const Recruitment = () => {
                 value={jobFormData.status}
                 onChange={(e) => setJobFormData({ ...jobFormData, status: e.target.value })}
                 options={[
-                  { label: "Open", value: "Open" },
+                  { label: "Open",      value: "Open" },
                   { label: "In Review", value: "In Review" },
-                  { label: "Closed", value: "Closed" },
+                  { label: "Closed",    value: "Closed" },
                 ]}
                 required
               />

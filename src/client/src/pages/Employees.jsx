@@ -6,6 +6,7 @@ import {
   deleteEmployee,
 } from "../services/employeeService";
 import { getAllDepartments } from "../services/departmentService";
+import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { Table } from "../components/ui/Table";
 import { Pagination } from "../components/ui/Pagination";
@@ -16,7 +17,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { Badge } from "../components/ui/Badge";
-import { Card, CardHeader, CardBody } from "../components/ui/Card";
+import { Card, CardBody } from "../components/ui/Card";
 import { formatDate, formatCurrency, formatDateForInput } from "../utils/formatters";
 import {
   Plus,
@@ -25,20 +26,17 @@ import {
   Eye,
   LayoutGrid,
   List,
-  Mail,
-  Phone,
-  Briefcase,
-  UserCheck,
 } from "lucide-react";
 
 export const Employees = () => {
+  const { user } = useAuth();
+  const isHR = user?.role === "HR" || user?.role === "Admin";
   const { showSuccess, showError } = useToast();
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("table"); // 'table' | 'grid'
+  const [viewMode, setViewMode] = useState("table");
 
-  // Pagination & Filtering
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEmployees, setTotalEmployees] = useState(0);
@@ -46,13 +44,11 @@ export const Employees = () => {
   const [selectedDept, setSelectedDept] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  // Modals state
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Selected Employee & Form State
   const [currentEmployee, setCurrentEmployee] = useState(null);
   const [selectedForView, setSelectedForView] = useState(null);
   const [formData, setFormData] = useState({
@@ -113,8 +109,8 @@ export const Employees = () => {
     fetchEmployeesList();
   }, [fetchEmployeesList]);
 
-  // Open Form Modal for Create / Edit
   const handleOpenAddModal = () => {
+    if (!isHR) return;
     setCurrentEmployee(null);
     setFormData({
       employeeId: `EMP-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -135,6 +131,7 @@ export const Employees = () => {
   };
 
   const handleOpenEditModal = (emp) => {
+    if (!isHR) return;
     setCurrentEmployee(emp);
     setFormData({
       employeeId: emp.employeeId || "",
@@ -160,6 +157,7 @@ export const Employees = () => {
   };
 
   const handleOpenDeleteModal = (emp) => {
+    if (!isHR) return;
     setCurrentEmployee(emp);
     setIsDeleteModalOpen(true);
   };
@@ -174,6 +172,7 @@ export const Employees = () => {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+    if (!isHR) return;
     setIsSubmitting(true);
     try {
       const payload = {
@@ -206,7 +205,7 @@ export const Employees = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!currentEmployee) return;
+    if (!currentEmployee || !isHR) return;
     setIsSubmitting(true);
     try {
       const res = await deleteEmployee(currentEmployee._id);
@@ -222,18 +221,20 @@ export const Employees = () => {
     }
   };
 
-  // Table Columns Definition
+  // Employees can view the full staff directory
+  const displayEmployees = employees;
+
   const columns = [
     {
       header: "Employee",
       accessor: "firstName",
       render: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 font-extrabold flex items-center justify-center border border-indigo-500/30 text-sm shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center border border-indigo-500/30 text-xs shrink-0">
             {row.firstName?.charAt(0)}{row.lastName?.charAt(0)}
           </div>
           <div>
-            <p className="font-bold text-white leading-tight">
+            <p className="font-semibold text-white leading-tight">
               {row.firstName} {row.lastName}
             </p>
             <p className="text-xs text-slate-400 font-normal">{row.email}</p>
@@ -253,7 +254,7 @@ export const Employees = () => {
     {
       header: "Designation",
       accessor: "designation",
-      render: (row) => <span className="text-xs font-bold text-slate-200">{row.designation}</span>,
+      render: (row) => <span className="text-xs font-semibold text-slate-200">{row.designation}</span>,
     },
     {
       header: "Department",
@@ -268,7 +269,7 @@ export const Employees = () => {
       header: "Salary",
       accessor: "salary",
       render: (row) => (
-        <span className="text-xs font-extrabold text-emerald-400">
+        <span className="text-xs font-bold text-emerald-400">
           {formatCurrency(row.salary)}
         </span>
       ),
@@ -296,20 +297,24 @@ export const Employees = () => {
           >
             <Eye className="w-4 h-4" />
           </button>
-          <button
-            onClick={() => handleOpenEditModal(row)}
-            className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
-            title="Edit Employee"
-          >
-            <Edit2 className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => handleOpenDeleteModal(row)}
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-            title="Delete Employee"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          {isHR && (
+            <>
+              <button
+                onClick={() => handleOpenEditModal(row)}
+                className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
+                title="Edit Employee"
+              >
+                <Edit2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleOpenDeleteModal(row)}
+                className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                title="Delete Employee"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
+          )}
         </div>
       ),
     },
@@ -317,21 +322,19 @@ export const Employees = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-white">Employee Directory</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h2 className="text-xl font-bold text-white tracking-tight">Employee Directory</h2>
+          <p className="text-xs text-slate-400 mt-0.5 font-normal">
             Manage staff profiles, designations, salaries, and reporting units
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* View Mode Toggle Buttons */}
           <div className="flex items-center p-1 rounded-2xl bg-slate-900 border border-slate-800">
             <button
               onClick={() => setViewMode("table")}
-              className={`p-2 rounded-xl text-xs font-bold transition-all ${
+              className={`p-2 rounded-xl text-xs font-semibold transition-all ${
                 viewMode === "table" ? "bg-indigo-600 text-white shadow-md" : "text-slate-400 hover:text-white"
               }`}
               title="Table View"
@@ -340,7 +343,7 @@ export const Employees = () => {
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-2 rounded-xl text-xs font-bold transition-all ${
+              className={`p-2 rounded-xl text-xs font-semibold transition-all ${
                 viewMode === "grid" ? "bg-indigo-600 text-white shadow-md" : "text-slate-400 hover:text-white"
               }`}
               title="Grid View"
@@ -349,13 +352,14 @@ export const Employees = () => {
             </button>
           </div>
 
-          <Button variant="primary" icon={Plus} onClick={handleOpenAddModal}>
-            Add Employee
-          </Button>
+          {isHR && (
+            <Button variant="primary" icon={Plus} onClick={handleOpenAddModal}>
+              Add Employee
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Filters Bar */}
       <div className="bg-slate-900/90 p-4 rounded-3xl border border-slate-800/80 shadow-xl flex flex-wrap items-center justify-between gap-4">
         <SearchBar
           value={search}
@@ -398,30 +402,29 @@ export const Employees = () => {
         </div>
       </div>
 
-      {/* Content Rendering: Table or Grid */}
       {viewMode === "table" ? (
         <Table
           columns={columns}
-          data={employees}
+          data={displayEmployees}
           isLoading={loading}
           emptyMessage="No employees found"
           emptyDescription="Try adjusting search or filters to locate employee records."
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {employees.map((emp) => (
+          {displayEmployees.map((emp) => (
             <Card key={emp._id} className="relative group">
               <CardBody className="p-6 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-indigo-600/30">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-bold text-base flex items-center justify-center shadow-md">
                       {emp.firstName?.charAt(0)}{emp.lastName?.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-extrabold text-white text-base leading-tight">
+                      <h4 className="font-bold text-white text-base leading-tight">
                         {emp.firstName} {emp.lastName}
                       </h4>
-                      <p className="text-xs text-indigo-400 font-semibold mt-0.5">{emp.designation}</p>
+                      <p className="text-xs text-indigo-400 font-medium mt-0.5">{emp.designation}</p>
                     </div>
                   </div>
                   <Badge variant={emp.isActive ? "success" : "danger"}>
@@ -432,15 +435,15 @@ export const Employees = () => {
                 <div className="pt-3 border-t border-slate-800/80 space-y-2 text-xs text-slate-300">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400 font-medium">ID:</span>
-                    <span className="font-mono text-white font-bold">{emp.employeeId}</span>
+                    <span className="font-mono text-white font-semibold">{emp.employeeId}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400 font-medium">Department:</span>
-                    <span className="font-bold text-white">{emp.department?.departmentName || "N/A"}</span>
+                    <span className="font-semibold text-white">{emp.department?.departmentName || "N/A"}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400 font-medium">Salary:</span>
-                    <span className="font-extrabold text-emerald-400">{formatCurrency(emp.salary)}</span>
+                    <span className="font-bold text-emerald-400">{formatCurrency(emp.salary)}</span>
                   </div>
                 </div>
 
@@ -451,18 +454,22 @@ export const Employees = () => {
                   >
                     <Eye className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={() => handleOpenEditModal(emp)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleOpenDeleteModal(emp)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {isHR && (
+                    <>
+                      <button
+                        onClick={() => handleOpenEditModal(emp)}
+                        className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleOpenDeleteModal(emp)}
+                        className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
                 </div>
               </CardBody>
             </Card>
@@ -470,7 +477,6 @@ export const Employees = () => {
         </div>
       )}
 
-      {/* Pagination */}
       <Pagination
         currentPage={page}
         totalPages={totalPages}
@@ -478,168 +484,168 @@ export const Employees = () => {
         onPageChange={(p) => setPage(p)}
       />
 
-      {/* Add / Edit Employee Modal */}
-      <Modal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        title={currentEmployee ? "Edit Employee Record" : "Add New Employee"}
-        subtitle="Fill in required staff record information"
-        maxWidth="max-w-2xl"
-      >
-        <form onSubmit={handleSubmitForm} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Input
-              label="Employee ID"
-              name="employeeId"
-              value={formData.employeeId}
-              onChange={handleFormChange}
-              required
-            />
-            <Input
-              label="First Name"
-              name="firstName"
-              placeholder="John"
-              value={formData.firstName}
-              onChange={handleFormChange}
-              required
-            />
-            <Input
-              label="Last Name"
-              name="lastName"
-              placeholder="Doe"
-              value={formData.lastName}
-              onChange={handleFormChange}
-              required
-            />
-          </div>
+      {isHR && (
+        <Modal
+          isOpen={isFormModalOpen}
+          onClose={() => setIsFormModalOpen(false)}
+          title={currentEmployee ? "Edit Employee Record" : "Add New Employee"}
+          subtitle="Fill in required staff record information"
+          maxWidth="max-w-2xl"
+        >
+          <form onSubmit={handleSubmitForm} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Input
+                label="Employee ID"
+                name="employeeId"
+                value={formData.employeeId}
+                onChange={handleFormChange}
+                required
+              />
+              <Input
+                label="First Name"
+                name="firstName"
+                placeholder="John"
+                value={formData.firstName}
+                onChange={handleFormChange}
+                required
+              />
+              <Input
+                label="Last Name"
+                name="lastName"
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={handleFormChange}
+                required
+              />
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Email Address"
-              name="email"
-              type="email"
-              placeholder="john@company.com"
-              value={formData.email}
-              onChange={handleFormChange}
-              required
-            />
-            <Input
-              label="Phone Number"
-              name="phone"
-              placeholder="+91 9876543210"
-              value={formData.phone}
-              onChange={handleFormChange}
-              required
-            />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Email Address"
+                name="email"
+                type="email"
+                placeholder="john@company.com"
+                value={formData.email}
+                onChange={handleFormChange}
+                required
+              />
+              <Input
+                label="Phone Number"
+                name="phone"
+                placeholder="+91 9876543210"
+                value={formData.phone}
+                onChange={handleFormChange}
+                required
+              />
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Select
-              label="Gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleFormChange}
-              options={[
-                { label: "Male", value: "Male" },
-                { label: "Female", value: "Female" },
-                { label: "Other", value: "Other" },
-              ]}
-              required
-            />
-            <Input
-              label="Date of Birth"
-              name="dateOfBirth"
-              type="date"
-              value={formData.dateOfBirth}
-              onChange={handleFormChange}
-              required
-            />
-            <Input
-              label="Joining Date"
-              name="joiningDate"
-              type="date"
-              value={formData.joiningDate}
-              onChange={handleFormChange}
-            />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Select
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleFormChange}
+                options={[
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
+                  { label: "Other", value: "Other" },
+                ]}
+                required
+              />
+              <Input
+                label="Date of Birth"
+                name="dateOfBirth"
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={handleFormChange}
+                required
+              />
+              <Input
+                label="Joining Date"
+                name="joiningDate"
+                type="date"
+                value={formData.joiningDate}
+                onChange={handleFormChange}
+              />
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Designation"
-              name="designation"
-              placeholder="Software Engineer"
-              value={formData.designation}
-              onChange={handleFormChange}
-              required
-            />
-            <Input
-              label="Monthly Salary (₹)"
-              name="salary"
-              type="number"
-              placeholder="65000"
-              value={formData.salary}
-              onChange={handleFormChange}
-              required
-            />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Designation"
+                name="designation"
+                placeholder="Software Engineer"
+                value={formData.designation}
+                onChange={handleFormChange}
+                required
+              />
+              <Input
+                label="Monthly Salary (₹)"
+                name="salary"
+                type="number"
+                placeholder="65000"
+                value={formData.salary}
+                onChange={handleFormChange}
+                required
+              />
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Select
-              label="Department"
-              name="department"
-              value={formData.department}
-              onChange={handleFormChange}
-              placeholder="Select Department"
-              options={departments.map((d) => ({
-                label: d.departmentName,
-                value: d._id,
-              }))}
-            />
-            <Select
-              label="Reporting Manager"
-              name="manager"
-              value={formData.manager}
-              onChange={handleFormChange}
-              placeholder="None (Top Level)"
-              options={employees
-                .filter((e) => e._id !== currentEmployee?._id)
-                .map((e) => ({
-                  label: `${e.firstName} ${e.lastName}`,
-                  value: e._id,
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Select
+                label="Department"
+                name="department"
+                value={formData.department}
+                onChange={handleFormChange}
+                placeholder="Select Department"
+                options={departments.map((d) => ({
+                  label: d.departmentName,
+                  value: d._id,
                 }))}
-            />
-          </div>
+              />
+              <Select
+                label="Reporting Manager"
+                name="manager"
+                value={formData.manager}
+                onChange={handleFormChange}
+                placeholder="None (Top Level)"
+                options={employees
+                  .filter((e) => e._id !== currentEmployee?._id)
+                  .map((e) => ({
+                    label: `${e.firstName} ${e.lastName}`,
+                    value: e._id,
+                  }))}
+              />
+            </div>
 
-          <div className="flex items-center gap-2 pt-2">
-            <input
-              type="checkbox"
-              id="isActive"
-              name="isActive"
-              checked={formData.isActive}
-              onChange={handleFormChange}
-              className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-800"
-            />
-            <label htmlFor="isActive" className="text-xs font-bold text-slate-300">
-              Active Employee Status
-            </label>
-          </div>
+            <div className="flex items-center gap-2 pt-2">
+              <input
+                type="checkbox"
+                id="isActive"
+                name="isActive"
+                checked={formData.isActive}
+                onChange={handleFormChange}
+                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-800"
+              />
+              <label htmlFor="isActive" className="text-xs font-semibold text-slate-300">
+                Active Employee Status
+              </label>
+            </div>
 
-          <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <Button
-              variant="outline"
-              onClick={() => setIsFormModalOpen(false)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" isLoading={isSubmitting}>
-              {currentEmployee ? "Save Changes" : "Create Employee"}
-            </Button>
-          </div>
-        </form>
-      </Modal>
+            <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <Button
+                variant="outline"
+                onClick={() => setIsFormModalOpen(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" isLoading={isSubmitting}>
+                {currentEmployee ? "Save Changes" : "Create Employee"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
-      {/* View Employee Detail Modal */}
       <Modal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
@@ -649,15 +655,15 @@ export const Employees = () => {
         {selectedForView && (
           <div className="space-y-6">
             <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-black text-xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white font-bold text-lg flex items-center justify-center shadow-md">
                 {selectedForView.firstName?.charAt(0)}
                 {selectedForView.lastName?.charAt(0)}
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">
+                <h3 className="text-lg font-bold text-white">
                   {selectedForView.firstName} {selectedForView.lastName}
                 </h3>
-                <p className="text-xs font-bold text-indigo-400 mt-0.5">
+                <p className="text-xs font-medium text-indigo-400 mt-0.5">
                   {selectedForView.designation}
                 </p>
                 <div className="mt-2">
@@ -670,38 +676,38 @@ export const Employees = () => {
 
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Employee ID</span>
+                <span className="text-slate-400 font-semibold uppercase">Employee ID</span>
                 <p className="font-mono text-white font-bold">{selectedForView.employeeId}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Department</span>
-                <p className="text-white font-bold">
+                <span className="text-slate-400 font-semibold uppercase">Department</span>
+                <p className="text-white font-semibold">
                   {selectedForView.department?.departmentName || "N/A"}
                 </p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Email</span>
+                <span className="text-slate-400 font-semibold uppercase">Email</span>
                 <p className="text-slate-300 font-medium">{selectedForView.email}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Phone</span>
+                <span className="text-slate-400 font-semibold uppercase">Phone</span>
                 <p className="text-slate-300 font-medium">{selectedForView.phone}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Gender</span>
+                <span className="text-slate-400 font-semibold uppercase">Gender</span>
                 <p className="text-slate-300 font-medium">{selectedForView.gender}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Date of Birth</span>
+                <span className="text-slate-400 font-semibold uppercase">Date of Birth</span>
                 <p className="text-slate-300 font-medium">{formatDate(selectedForView.dateOfBirth)}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Joining Date</span>
+                <span className="text-slate-400 font-semibold uppercase">Joining Date</span>
                 <p className="text-slate-300 font-medium">{formatDate(selectedForView.joiningDate)}</p>
               </div>
               <div className="space-y-1">
-                <span className="text-slate-400 font-bold uppercase">Monthly Salary</span>
-                <p className="text-emerald-400 font-black text-sm">
+                <span className="text-slate-400 font-semibold uppercase">Monthly Salary</span>
+                <p className="text-emerald-400 font-bold text-sm">
                   {formatCurrency(selectedForView.salary)}
                 </p>
               </div>
@@ -716,15 +722,16 @@ export const Employees = () => {
         )}
       </Modal>
 
-      {/* Delete Dialog */}
-      <ConfirmDialog
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title="Delete Employee Record"
-        message={`Are you sure you want to delete ${currentEmployee?.firstName} ${currentEmployee?.lastName}? This action cannot be undone.`}
-        isLoading={isSubmitting}
-      />
+      {isHR && (
+        <ConfirmDialog
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Employee Record"
+          message={`Are you sure you want to delete ${currentEmployee?.firstName} ${currentEmployee?.lastName}? This action cannot be undone.`}
+          isLoading={isSubmitting}
+        />
+      )}
     </div>
   );
 };
