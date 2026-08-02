@@ -488,9 +488,9 @@ export default function App() {
     };
     
     // Push updates across system database tables concurrently
-    setEmployees([...employees, newEmp]);[cite: 1]
-    setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);[cite: 1]
-    setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 120000, bonus: 10000, deductions: 5000, status: 'Pending', month: 'August 2026' }]);[cite: 1]
+    setEmployees([...employees, newEmp]);
+    setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
+    setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 120000, bonus: 10000, deductions: 5000, status: 'Pending', month: 'August 2026' }]);
     
     // Purge candidate profile safely out of active recruitment board tracking
     setCandidates(candidates.filter(c => c.id !== candidate.id));
