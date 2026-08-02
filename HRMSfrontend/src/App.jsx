@@ -2596,7 +2596,6 @@ export default function App() {
       );
     }
 
-
     //Assets-------------
     if (activeTab === 'Assets') {
       const totalInventoryValuation = companyAssets.reduce((acc, curr) => acc + curr.cost, 0);
