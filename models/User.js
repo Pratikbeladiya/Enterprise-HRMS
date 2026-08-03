@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
+    companyCode: {
+  type: String,
+  required: [true, "Company Code is required"],
+  trim: true,
+},
+
     role: {
       type: String,
       enum: ["user"],
