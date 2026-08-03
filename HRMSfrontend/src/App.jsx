@@ -669,7 +669,22 @@ export default function App() {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
-  
+  // 👈 UPDATE THE RETURN STATEMENT INSIDE YOUR BUFFER SCREEN CONDITIONAL:
+  if (isLoggingIn) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50/40 dark:bg-slate-950/40 backdrop-blur-md text-slate-800 dark:text-white pointer-events-auto">
+        <div className="text-center space-y-4 p-6 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-white/20 dark:border-slate-800/40 shadow-xl">
+          <div className="relative flex justify-center items-center">
+            <div className="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900/60 rounded-full"></div>
+            <Loader2 className="absolute text-indigo-600 dark:text-indigo-400 animate-spin" size={40} />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-bold tracking-tight">Authenticating Session...</h3>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
 
   // If user is NOT authenticated, show the Login screen
