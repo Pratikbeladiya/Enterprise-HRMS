@@ -84,13 +84,6 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = {
-  signup,
-  login,
-  adminSignup,
-  adminLogin,
-};
-
 // ==========================
 // Admin Signup
 // ==========================
@@ -183,3 +176,12 @@ const adminLogin = async (req, res) => {
 
   }
 };
+
+
+module.exports = {
+  signup,
+  login,
+  adminSignup,
+  adminLogin,
+};
+
