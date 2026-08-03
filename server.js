@@ -1,15 +1,20 @@
 const express = require("express");
-const connectDB = require("./config/db");
+const connectDB = require("./config/db"); 
+const cors = require("cors");
 
 require("dotenv").config();
 
 // Connect Database
 connectDB();
 
+
+
 const app = express();
 
 // Middleware
 app.use(express.json());
+// Use CORS
+app.use(cors());
 
 // Import Routes
 const employeeRoutes = require("./routes/employee");
