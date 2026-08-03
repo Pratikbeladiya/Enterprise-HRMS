@@ -32,6 +32,7 @@ function Signup() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [companyCode, setCompanyCode] = useState("");
   const [agree, setAgree] = useState(false);
 
   // Signup Validation
@@ -43,7 +44,8 @@ function Signup() {
       !email ||
       !phone ||
       !password ||
-      !confirmPassword
+      !confirmPassword ||
+      !companyCode
     ) {
       alert("Please fill all fields.");
       return;
@@ -262,6 +264,21 @@ function Signup() {
           </span>
 
         </div>
+
+        {/* Company Code */}
+
+<div className="input-box">
+
+  <FaLock className="icon" />
+
+  <input
+    type="text"
+    placeholder="Enter Company Code"
+    value={companyCode}
+    onChange={(e) => setCompanyCode(e.target.value)}
+  />
+
+</div>
 
         {/* Terms & Conditions */}
 
