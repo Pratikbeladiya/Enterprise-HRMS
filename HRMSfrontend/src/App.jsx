@@ -3002,82 +3002,57 @@ export default function App() {
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex font-sans antialiased transition-colors duration-200">
+      
       {/* SIDEBAR */}
-      <aside
-        className={`
+      <aside className={`
         fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out
-        ${sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full"} 
-        lg:translate-x-0 ${isCollapsed ? "lg:w-20" : "lg:w-64"}
-      `}
-      >
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden lg:flex items-center justify-center absolute -right-3.5 top-9 w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm z-50 transition-transform"
-        >
-          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-        </button>
+        ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full'} 
+        lg:translate-x-0 lg:w-64 overflow-y-auto scrollbar-thin
+      `}>
+        {/* 🛠️ NOTE: The absolute toggle button block that was right here has been completely removed */}
 
         <div>
-          <div
-            className={`flex items-center mb-8 ${isCollapsed ? "justify-center" : "justify-between"}`}
-          >
+          <div className="flex items-center mb-8 justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-500/30 flex-shrink-0">
                 <Award size={24} />
               </div>
-              {!isCollapsed && (
-                <span className="text-xl font-bold tracking-wider text-indigo-600 dark:text-indigo-400 transition-opacity">
-                  HRise
-                </span>
-              )}
+              <span className="text-xl font-bold tracking-wider text-indigo-600 dark:text-indigo-400 transition-opacity">HRise</span>
             </div>
-            {!isCollapsed && (
-              <button
-                className="lg:hidden text-slate-500"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <X size={20} />
-              </button>
-            )}
+            <button className="lg:hidden text-slate-500" onClick={() => setSidebarOpen(false)}>
+              <X size={20} />
+            </button>
           </div>
 
           <nav className="space-y-2">
             {[
-              { name: "Dashboard", icon: LayoutDashboard },
-              { name: "Attendance", icon: UserCheck },
-              { name: "Employee", icon: Users },
-              { name: "Team", icon: Briefcase },
-              { name: "Leaves", icon: Calendar },
-              { name: "Payroll", icon: DollarSign },
-              { name: "Reports", icon: FileText },
-              { name: "Tasks", icon: CheckSquare },
-              { name: "ID Cards", icon: QrCode },
+              { name: 'Dashboard', icon: LayoutDashboard },
+              { name: 'Attendance', icon: UserCheck },
+              { name: 'Employee', icon: Users },
+              { name: 'Team', icon: Briefcase },
+              { name: 'Leaves', icon: Calendar },
+              { name: 'Payroll', icon: DollarSign },
+              { name: 'Reports', icon: FileText },
+              { name: 'Tasks', icon: CheckSquare },
+              { name: 'ID Cards', icon: QrCode },
               { name: 'Assets', icon: Layers },
               { name: 'Recruitment', icon: UserPlus },
-              { name: "About", icon: Award },
+              { name: 'About', icon: Award },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.name;
               return (
                 <button
                   key={item.name}
-                  title={isCollapsed ? item.name : ""}
-                  onClick={() => {
-                    setActiveTab(item.name);
-                    setSidebarOpen(false);
-                  }}
-                  className={`flex items-center rounded-xl text-sm font-medium transition-all w-full
-                    ${isCollapsed ? "justify-center p-3" : "justify-start gap-3 px-4 py-3"}
-                    ${
-                      isActive
-                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
-                        : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                  onClick={() => { setActiveTab(item.name); setSidebarOpen(false); }}
+                  className={`flex items-center rounded-xl text-sm font-medium transition-all w-full justify-start gap-3 px-4 py-3
+                    ${isActive 
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
+                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                     }`}
                 >
                   <Icon size={18} className="flex-shrink-0" />
-                  {!isCollapsed && (
-                    <span className="whitespace-nowrap">{item.name}</span>
-                  )}
+                  <span className="whitespace-nowrap">{item.name}</span>
                 </button>
               );
             })}
@@ -3085,10 +3060,9 @@ export default function App() {
         </div>
       </aside>
 
+      
       {/* MAIN CONTAINER */}
-      <div
-        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${isCollapsed ? "lg:pl-20" : "lg:pl-64"}`}
-      >
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out lg:pl-64">
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <button
