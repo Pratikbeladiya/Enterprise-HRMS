@@ -679,7 +679,7 @@ export default function App() {
             <Loader2 className="absolute text-indigo-600 dark:text-indigo-400 animate-spin" size={40} />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold tracking-tight">Authenticating Session...</h3>
+            <h3 className="text-base font-bold tracking-tight">Logging in...</h3>
           </div>
         </div>
       </div>
