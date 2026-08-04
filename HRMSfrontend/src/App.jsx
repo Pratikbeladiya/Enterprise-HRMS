@@ -250,52 +250,7 @@ export default function App() {
   });
 
   // RECRUITMENT ATS LAYER:
-  const [candidates, setCandidates] = useState(() => {
-    const saved = localStorage.getItem("hrise_candidates");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            id: "CAN-4091",
-            name: "Eleanor Pena",
-            role: "Senior Frontend Engineer",
-            email: "eleanor.p@gmail.com",
-            stage: "Technical Round",
-            experience: "5 Yrs",
-            rating: "4.8/5",
-          },
-          {
-            id: "CAN-8821",
-            name: "Jerome Bell",
-            role: "DevOps Architect",
-            email: "j.bell@outlook.com",
-            stage: "HR Round",
-            experience: "8 Yrs",
-            rating: "4.9/5",
-          },
-          {
-            id: "CAN-1029",
-            name: "Jane Cooper",
-            role: "Product UI Designer",
-            email: "jane.cooper@design.co",
-            stage: "Offered",
-            experience: "3 Yrs",
-            rating: "4.7/5",
-          },
-          {
-            id: "CAN-5561",
-            name: "Cody Fisher",
-            role: "Backend Dev (Go)",
-            email: "cody.f@tech.io",
-            stage: "Screening",
-            experience: "2 Yrs",
-            rating: "4.2/5",
-          },
-        ];
-  });
-
-  const [recruitmentFilter, setRecruitmentFilter] = useState("All");
-  const [showAddCandidateModal, setShowAddCandidateModal] = useState(false);
+ 
 
   // Modal State Hooks
   const [newCanName, setNewCanName] = useState("");
