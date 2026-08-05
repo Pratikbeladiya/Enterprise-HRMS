@@ -250,6 +250,26 @@ export default function App() {
   });
 
 
+  // ---------------------------------------------------------
+  // QUERY & HELPDESK LAYER STATE
+  // ---------------------------------------------------------
+  const [tickets, setTickets] = useState(() => {
+    const saved = localStorage.getItem('hrise_tickets');
+    return saved ? JSON.parse(saved) : [
+      { id: 'TKT-101', subject: 'Payroll adjustment query for July', category: 'Payroll', priority: 'High', status: 'In Progress', createdAt: '2026-08-01' },
+      { id: 'TKT-102', subject: 'MacBook VPN access key reset', category: 'IT Support', priority: 'Medium', status: 'Resolved', createdAt: '2026-07-28' },
+    ];
+  });
+
+  const [showRaiseTicketModal, setShowRaiseTicketModal] = useState(false);
+  const [ticketSubject, setTicketSubject] = useState('');
+  const [ticketCategory, setTicketCategory] = useState('HR Operations');
+  const [ticketPriority, setTicketPriority] = useState('Medium');
+  const [ticketDescription, setTicketDescription] = useState('');
+
+
+
+
   // RECRUITMENT ATS LAYER:
   const [candidates, setCandidates] = useState(() => {
     const saved = localStorage.getItem('hrise_candidates');
@@ -327,6 +347,7 @@ export default function App() {
   const [newAssetOwner, setNewAssetOwner] = useState('');
 
   useEffect(() => { localStorage.setItem('hrise_assets', JSON.stringify(companyAssets)); }, [companyAssets]);
+
 
   // Employee Tab Local States
   const [employeeSearchQuery, setEmployeeSearchQuery] = useState("");
