@@ -277,7 +277,34 @@ export default function App() {
     localStorage.setItem('hrise_tickets', JSON.stringify(tickets));
   }, [tickets]);
 
-  
+  // Raise Ticket Handler
+  const handleRaiseTicket = (e) => {
+    e.preventDefault();
+    const newTicket = {
+      id: `TKT-${Math.floor(100 + Math.random() * 900)}`,
+      subject: ticketSubject,
+      category: ticketCategory,
+      priority: ticketPriority,
+      status: 'Open',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    setTickets([newTicket, ...tickets]);
+    setTicketSubject('');
+    setTicketDescription('');
+    setShowRaiseTicketModal(false);
+  };
+
+  // AI Chat Handler
+  const handleSendChatMessage = (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMsg = { sender: 'user', text: chatInput };
+    setChatMessages(prev => [...prev, userMsg]);
+    const currentQuery = chatInput.toLowerCase();
+    setChatInput('');
+
+    
 
       setChatMessages(prev => [...prev, { sender: 'ai', text: botResponse }]);
     }, 600);
