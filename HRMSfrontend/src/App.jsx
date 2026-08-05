@@ -267,7 +267,17 @@ export default function App() {
   const [ticketPriority, setTicketPriority] = useState('Medium');
   const [ticketDescription, setTicketDescription] = useState('');
 
+  // AI Assistant Chat State
+  const [chatMessages, setChatMessages] = useState([
+    { sender: 'ai', text: 'Hello! I am your HRise Workspace Assistant. How can I assist you with leaves, policies, or IT support today?' }
+  ]);
+  const [chatInput, setChatInput] = useState('');
 
+  useEffect(() => {
+    localStorage.setItem('hrise_tickets', JSON.stringify(tickets));
+  }, [tickets]);
+
+  
 
 
   // RECRUITMENT ATS LAYER:
