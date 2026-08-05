@@ -304,7 +304,16 @@ export default function App() {
     const currentQuery = chatInput.toLowerCase();
     setChatInput('');
 
-    
+    // Simulated Smart Response Logic
+    setTimeout(() => {
+      let botResponse = "I have logged your query. If you require further assistance, you can raise a ticket using the panel on the left.";
+      if (currentQuery.includes('leave') || currentQuery.includes('holiday')) {
+        botResponse = "To apply for leaves, head over to the 'Leaves' tab on the sidebar and submit a new request!";
+      } else if (currentQuery.includes('salary') || currentQuery.includes('payroll') || currentQuery.includes('pay')) {
+        botResponse = "Payroll summaries and monthly slips are accessible directly under the 'Payroll' section.";
+      } else if (currentQuery.includes('wifi') || currentQuery.includes('vpn') || currentQuery.includes('it') || currentQuery.includes('hardware')) {
+        botResponse = "For hardware or network issues, please raise an 'IT Support' ticket or contact our desk at it-support@company.com.";
+      }
 
       setChatMessages(prev => [...prev, { sender: 'ai', text: botResponse }]);
     }, 600);
