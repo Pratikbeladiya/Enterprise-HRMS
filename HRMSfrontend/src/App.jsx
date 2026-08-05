@@ -3102,6 +3102,7 @@ export default function App() {
               { name: 'Assets', icon: Layers },
               { name: 'Recruitment', icon: UserPlus },
               { name: 'About', icon: Award },
+              { name: 'Query Desk', icon: HelpCircle },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.name;
