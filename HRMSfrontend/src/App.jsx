@@ -279,6 +279,10 @@ export default function App() {
 
   
 
+      setChatMessages(prev => [...prev, { sender: 'ai', text: botResponse }]);
+    }, 600);
+  };
+
 
   // RECRUITMENT ATS LAYER:
   const [candidates, setCandidates] = useState(() => {
