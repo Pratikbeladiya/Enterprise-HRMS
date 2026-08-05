@@ -2584,6 +2584,199 @@ export default function App() {
       );
     }
 
+    //Query Desk Tab Content
+    
+    if (activeTab === 'Query Desk') {
+      return (
+        <div className="xl:col-span-4 space-y-6">
+          
+          {/* Top Banner */}
+          <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h3 className="text-xl font-bold">Help Desk & Query Resolution</h3>
+              <p className="text-xs text-indigo-100 mt-1 max-w-xl">
+                Need support? Raise an operational ticket, reach key department contacts directly, or ask our intelligent workspace AI assistant.
+              </p>
+            </div>
+            <button 
+              onClick={() => setShowRaiseTicketModal(true)}
+              className="px-4 py-2.5 bg-white text-indigo-600 hover:bg-indigo-50 font-bold rounded-xl text-xs transition shadow-sm whitespace-nowrap"
+            >
+              + Raise New Ticket
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* LEFT PANEL: Professional Contact Cards & Active Tickets */}
+            <div className="lg:col-span-2 space-y-6">
+              
+              {/* Professional Contacts Directory */}
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">Emergency & Department Contacts</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="font-semibold block text-slate-900 dark:text-white">HR Operations Desk</span>
+                    <span className="text-slate-400 text-[11px]">hr-ops@company.com</span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 11223</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="font-semibold block text-slate-900 dark:text-white">IT Infrastructure Desk</span>
+                    <span className="text-slate-400 text-[11px]">it-helpdesk@company.com</span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 44556</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="font-semibold block text-slate-900 dark:text-white">Payroll & Taxes</span>
+                    <span className="text-slate-400 text-[11px]">payroll@company.com</span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 77889</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="font-semibold block text-slate-900 dark:text-white">POSH & Ethics Committee</span>
+                    <span className="text-slate-400 text-[11px]">ethics@company.com</span>
+                    <span className="block text-rose-500 font-mono mt-1">Confidential Hotline</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Raised Tickets Log Table */}
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">Your Support Tickets</h4>
+                  <span className="text-xs text-slate-400">{tickets.length} Registered</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                    <thead>
+                      <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                        <th className="p-3.5">Ticket ID</th>
+                        <th className="p-3.5">Subject</th>
+                        <th className="p-3.5">Category</th>
+                        <th className="p-3.5">Priority</th>
+                        <th className="p-3.5">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+                      {tickets.map(tkt => (
+                        <tr key={tkt.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                          <td className="p-3.5 font-mono text-indigo-600 dark:text-indigo-400 font-bold">{tkt.id}</td>
+                          <td className="p-3.5 font-semibold text-slate-900 dark:text-white max-w-xs truncate">{tkt.subject}</td>
+                          <td className="p-3.5 text-slate-500">{tkt.category}</td>
+                          <td className="p-3.5">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              tkt.priority === 'High' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' :
+                              'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
+                            }`}>
+                              {tkt.priority}
+                            </span>
+                          </td>
+                          <td className="p-3.5">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                              tkt.status === 'Resolved' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
+                              'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400'
+                            }`}>
+                              {tkt.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+            {/* RIGHT PANEL: Live AI Help Assistant Chat */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-[520px]">
+              <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">AI Workspace Assistant</h4>
+                </div>
+                <span className="text-[10px] font-mono bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded">
+                  Demo
+                </span>
+              </div>
+
+              {/* Chat Message Stream */}
+              <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+                {chatMessages.map((msg, idx) => (
+                  <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] rounded-2xl p-3 ${
+                      msg.sender === 'user' 
+                        ? 'bg-indigo-600 text-white rounded-br-none' 
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200/50 dark:border-slate-700/50'
+                    }`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Input Form */}
+              <form onSubmit={handleSendChatMessage} className="p-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+                <input 
+                  type="text" 
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Ask AI about HR, IT, or policies..."
+                  className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100"
+                />
+                <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition">
+                  Send
+                </button>
+              </form>
+            </div>
+
+          </div>
+
+          {/* Raise Ticket Modal */}
+          {showRaiseTicketModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Submit Help Desk Ticket</h3>
+                  <button onClick={() => setShowRaiseTicketModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                </div>
+                <form onSubmit={handleRaiseTicket} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Issue Subject</label>
+                    <input type="text" required value={ticketSubject} onChange={(e) => setTicketSubject(e.target.value)} placeholder="e.g. Leave balance discrepancy" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department Category</label>
+                    <select value={ticketCategory} onChange={(e) => setTicketCategory(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="HR Operations">HR Operations</option>
+                      <option value="IT Support">IT Support</option>
+                      <option value="Payroll & Tax">Payroll & Tax</option>
+                      <option value="Facilities & Security">Facilities & Security</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Priority Level</label>
+                    <select value={ticketPriority} onChange={(e) => setTicketPriority(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                      <option value="Low">Low Priority</option>
+                      <option value="Medium">Medium Priority</option>
+                      <option value="High">High Priority</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Description</label>
+                    <textarea value={ticketDescription} onChange={(e) => setTicketDescription(e.target.value)} placeholder="Provide detailed information regarding your request..." rows="3" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"></textarea>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setShowRaiseTicketModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Submit Ticket</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
     //Qr based functionality -------
     if (activeTab === 'ID Cards') {
       return (
