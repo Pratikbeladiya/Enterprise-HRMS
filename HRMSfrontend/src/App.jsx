@@ -2894,8 +2894,8 @@ export default function App() {
     }
 
 
-
-    // 👈 PASTE THIS MODULE INSIDE renderContent() TO DRIVE YOUR ATS WORKSPACE VIEW:
+    //recruitment-------------
+    
     if (activeTab === 'Recruitment') {
       const activePipelines = candidates.filter(c => c.stage !== 'Offered').length;
       const filteredApplicants = candidates.filter(c => recruitmentFilter === 'All' || c.stage === recruitmentFilter);
