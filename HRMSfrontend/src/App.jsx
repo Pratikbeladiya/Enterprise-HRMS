@@ -48,9 +48,7 @@ export default function App() {
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [scannedEmployeeResult, setScannedEmployeeResult] = useState(null);
 
-  // ---------------------------------------------------------
-  // LOCALSTORAGE PERSISTENT APP STATE
-  // ---------------------------------------------------------
+ 
 
   // Employees State
   const [employees, setEmployees] = useState(() => {
