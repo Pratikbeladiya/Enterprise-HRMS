@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Loader2,
   ChevronRight,
-  ChevronLeft,
+  
+  HelpCircle,
   ArrowUpRight,
   DollarSign,
   Menu,
@@ -2585,7 +2586,7 @@ export default function App() {
     }
 
     //Query Desk Tab Content
-    
+
     if (activeTab === 'Query Desk') {
       return (
         <div className="xl:col-span-4 space-y-6">
