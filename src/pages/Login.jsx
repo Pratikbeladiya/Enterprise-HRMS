@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 import "./Login.css";
 
 import {
@@ -27,6 +28,7 @@ function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [companyCode, setCompanyCode] = useState("");
 
   // Login Validation
 
@@ -59,13 +61,14 @@ function Login() {
 
   try {
 
-  const response = await axios.post(
-    "http://localhost:5000/api/auth/login",
-    {
-      emailOrPhone,
-      password,
-    }
-  );
+  await axios.post(
+  "http://localhost:5000/api/auth/login",
+  {
+    emailOrPhone,
+    companyCode,
+    password,
+  }
+);
 
   localStorage.setItem(
     "currentUser",
@@ -178,6 +181,19 @@ function Login() {
           </span>
 
         </div>
+
+          <div className="input-box">
+
+  <FaLock className="icon" />
+
+  <input
+    type="text"
+    placeholder="Enter Company Code"
+    value={companyCode}
+    onChange={(e) => setCompanyCode(e.target.value)}
+  />
+
+</div>
 
         {/* Remember Me & Forgot Password */}
 
