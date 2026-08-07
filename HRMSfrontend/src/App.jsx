@@ -248,10 +248,8 @@ export default function App() {
         ];
   });
 
-
-  // ---------------------------------------------------------
-  // QUERY & HELPDESK LAYER STATE
-  // ---------------------------------------------------------
+// Query section code -----------------------
+  
   const [tickets, setTickets] = useState(() => {
     const saved = localStorage.getItem('hrise_tickets');
     return saved ? JSON.parse(saved) : [
