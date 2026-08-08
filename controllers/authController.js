@@ -6,8 +6,13 @@ const Admin = require("../models/Admin");
 // ==========================
 const signup = async (req, res) => {
   try {
-    const { fullName, email, phone, password, companycode} = req.body;
-
+    const {
+  fullName,
+  email,
+  phone,
+  password,
+  companyCode,
+} = req.body;
     // Check Existing User
     const existingUser = await User.findOne({
       $or: [{ email }, { phone }],
