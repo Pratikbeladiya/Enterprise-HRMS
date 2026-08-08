@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminEmployees.css";
+import axios from "axios";
 
 import {
   FaBell,
@@ -22,7 +23,9 @@ function AdminEmployees() {
   });
 
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [employees, setEmployees] = useState([]);
+const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     const adminData = JSON.parse(localStorage.getItem("admin"));
 
@@ -30,6 +33,25 @@ function AdminEmployees() {
       setAdmin(adminData);
     }
   }, []);
+
+  useEffect(() => {
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/employees"
+      );
+
+      setEmployees(response.data.employees || response.data);
+    } catch (error) {
+      console.error("Failed to fetch employees:", error);
+      alert("Failed to load employees.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchEmployees();
+}, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -268,19 +290,61 @@ function AdminEmployees() {
 
             <tbody>
 
-              <tr>
+  {loading ? (
+    <tr>
+      <td
+        colSpan="7"
+        className="admin-no-data"
+      >
+        Loading Employees...
+      </td>
+    </tr>
+  ) : employees.length === 0 ? (
+    <tr>
+      <td
+        colSpan="7"
+        className="admin-no-data"
+      >
+        No Employee Records Available
+      </td>
+    </tr>
+  ) : (
+    employees.map((employee) => (
+      <tr key={employee._id}>
 
-                <td
-                  colSpan="7"
-                  className="admin-no-data"
-                >
-                  No Employee Records Available
-                </td>
+        <td>
+          {employee.employeeId || employee._id}
+        </td>
 
-              </tr>
+        <td>
+          {employee.fullName || employee.name}
+        </td>
 
-            </tbody>
+        <td>
+          {employee.department || "-"}
+        </td>
 
+        <td>
+          {employee.designation || "-"}
+        </td>
+
+        <td>
+          {employee.email || "-"}
+        </td>
+
+        <td>
+          {employee.phone || "-"}
+        </td>
+
+        <td>
+          {employee.status || "Active"}
+        </td>
+
+      </tr>
+    ))
+  )}
+
+</tbody>
           </table>
 
         </div>
