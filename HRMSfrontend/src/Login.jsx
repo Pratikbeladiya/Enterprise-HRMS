@@ -456,6 +456,10 @@ export default function Login({ onLogin }) {
       <div className="flex min-h-screen flex-col lg:flex-row">
         <VisualPanel />
 
+
+
+
+
         {/* RIGHT PANEL*/}
         <motion.div 
           initial={{ opacity: 0 }}
