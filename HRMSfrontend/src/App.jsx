@@ -528,7 +528,7 @@ export default function App() {
 
 
 
-  // 👈 PASTE THESE PIPELINE INTERACTION HANDLERS:
+  
   const handleRegisterCandidate = (e) => {
     e.preventDefault();
     const freshApplicant = {
@@ -744,7 +744,7 @@ export default function App() {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
-  // 👈 UPDATE THE RETURN STATEMENT INSIDE YOUR BUFFER SCREEN CONDITIONAL:
+  
   if (isLoggingIn) {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50/40 dark:bg-slate-950/40 backdrop-blur-md text-slate-800 dark:text-white pointer-events-auto">
