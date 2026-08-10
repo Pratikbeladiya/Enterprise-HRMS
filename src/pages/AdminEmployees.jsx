@@ -319,9 +319,12 @@ const handleAddEmployee = (e) => {
 
             <div className="admin-employee-actions">
 
-              <button className="admin-add-btn">
-                <FaPlus /> Add Employee
-              </button>
+              <button
+  className="admin-add-btn"
+  onClick={() => setShowAddEmployee(true)}
+>
+  <FaPlus /> Add Employee
+</button>
 
               <button className="admin-export-btn">
                 <FaDownload /> Export
