@@ -4,14 +4,23 @@ const Hero = () => {
   return (
     <section className="hero">
       <div className="hero-content">
-        <h1>Manage Your Workforce Easily</h1>
+        <span className="hero-badge">Employee Management System</span>
+
+        <h1>
+          Manage Your Employees
+          <br />
+          <span>Smarter & Faster</span>
+        </h1>
 
         <p>
-          A powerful platform to manage employees, attendance, payroll,
-          and leave management from one place.
+          Manage employees, departments, attendance, payroll and leave
+          efficiently from a single platform.
         </p>
 
-        <button className="hero-btn">Get Started</button>
+        <div className="hero-actions">
+          <button className="primary-btn">Get Started</button>
+          <button className="secondary-btn">Learn More</button>
+        </div>
       </div>
     </section>
   );
