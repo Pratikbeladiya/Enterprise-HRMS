@@ -454,7 +454,7 @@ export default function App() {
   }, [teams]);
 
 
-  
+
   useEffect(() => {
     localStorage.setItem("hrise_payrolls", JSON.stringify(payrolls));
   }, [payrolls]);
@@ -467,6 +467,9 @@ export default function App() {
       setIsAuthenticated(true);
     }
   }, []);
+
+
+  // Dark mode handler----------------------
 
   // Handle Dark Mode globally
   useEffect(() => {
