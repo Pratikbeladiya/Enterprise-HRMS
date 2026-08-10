@@ -453,7 +453,8 @@ export default function App() {
     localStorage.setItem("hrise_teams", JSON.stringify(teams));
   }, [teams]);
 
-  // Sync Payroll state changes with localStorage
+
+  
   useEffect(() => {
     localStorage.setItem("hrise_payrolls", JSON.stringify(payrolls));
   }, [payrolls]);
