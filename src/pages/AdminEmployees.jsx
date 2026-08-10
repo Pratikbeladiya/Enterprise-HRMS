@@ -25,6 +25,18 @@ function AdminEmployees() {
   const [searchTerm, setSearchTerm] = useState("");
   const [employees, setEmployees] = useState([]);
 const [loading, setLoading] = useState(true);
+
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
+
+const [newEmployee, setNewEmployee] = useState({
+  employeeId: "",
+  fullName: "",
+  department: "",
+  designation: "",
+  email: "",
+  phone: "",
+  status: "Active",
+});
   
   useEffect(() => {
     const adminData = JSON.parse(localStorage.getItem("admin"));
@@ -52,6 +64,53 @@ const [loading, setLoading] = useState(true);
 
   fetchEmployees();
 }, []);
+
+  const handleEmployeeChange = (e) => {
+  const { name, value } = e.target;
+
+  setNewEmployee((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
+const handleAddEmployee = (e) => {
+  e.preventDefault();
+
+  if (
+    !newEmployee.employeeId ||
+    !newEmployee.fullName ||
+    !newEmployee.department ||
+    !newEmployee.designation ||
+    !newEmployee.email ||
+    !newEmployee.phone
+  ) {
+    alert("Please fill all employee fields.");
+    return;
+  }
+
+  setEmployees((prev) => [
+    ...prev,
+    {
+      ...newEmployee,
+      _id: Date.now(),
+    },
+  ]);
+
+  setNewEmployee({
+    employeeId: "",
+    fullName: "",
+    department: "",
+    designation: "",
+    email: "",
+    phone: "",
+    status: "Active",
+  });
+
+  setShowAddEmployee(false);
+
+  alert("Employee added successfully.");
+};
 
   const handleLogout = () => {
     localStorage.clear();
