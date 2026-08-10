@@ -3,16 +3,18 @@ import React from "react";
 const Sidebar = () => {
   return (
     <aside className="sidebar">
-      <h3>Dashboard</h3>
+      <div className="sidebar-header">
+        <h3>EmployeeHub</h3>
+      </div>
 
-      <ul>
-        <li>Home</li>
-        <li>Employees</li>
-        <li>Attendance</li>
-        <li>Payroll</li>
-        <li>Leave Management</li>
-        <li>Settings</li>
-      </ul>
+      <nav className="sidebar-menu">
+        <a href="/">Dashboard</a>
+        <a href="/employees">Employees</a>
+        <a href="/departments">Departments</a>
+        <a href="/attendance">Attendance</a>
+        <a href="/payroll">Payroll</a>
+        <a href="/leave">Leave Management</a>
+      </nav>
     </aside>
   );
 };
