@@ -424,3 +424,121 @@
     display: none;
   }
 }
+
+/* ================================
+   Add Employee Modal
+================================ */
+
+.employee-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.employee-modal {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.employee-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.employee-modal-header h2 {
+  margin: 0;
+  color: #111827;
+}
+
+.employee-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.employee-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.employee-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.employee-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.employee-form-group input,
+.employee-form-group select {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  outline: none;
+  font-size: 14px;
+}
+
+.employee-form-group input:focus,
+.employee-form-group select:focus {
+  border-color: #2563eb;
+}
+
+.employee-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.employee-cancel-btn,
+.employee-save-btn {
+  border: none;
+  padding: 11px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.employee-cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.employee-save-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.employee-save-btn:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 600px) {
+  .employee-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
