@@ -3,16 +3,20 @@ import React from "react";
 const Navbar = () => {
   return (
     <nav className="navbar">
-      <div className="navbar-logo">MyProject</div>
-
-      <div className="navbar-links">
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/services">Services</a>
-        <a href="/contact">Contact</a>
+      <div className="navbar-brand">
+        <h2>EmployeeHub</h2>
       </div>
 
-      <button className="navbar-btn">Login</button>
+      <div className="navbar-menu">
+        <a href="/">Home</a>
+        <a href="/employees">Employees</a>
+        <a href="/departments">Departments</a>
+        <a href="/profile">Profile</a>
+      </div>
+
+      <div className="navbar-actions">
+        <button>Logout</button>
+      </div>
     </nav>
   );
 };
