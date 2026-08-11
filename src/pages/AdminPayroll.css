@@ -289,3 +289,257 @@
     justify-content: center;
   }
 }
+
+/* =========================================
+   PAYSLIP PREVIEW
+========================================= */
+
+.admin-payslip-preview {
+  width: 100%;
+  margin-top: 25px;
+
+  background: #ffffff;
+  border-radius: 16px;
+
+  padding: 25px;
+
+  border: 1px solid #eeeeee;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.admin-payslip-preview-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 25px;
+}
+
+.admin-payslip-preview-header h2 {
+  margin: 0;
+
+  font-size: 21px;
+  color: #30282a;
+}
+
+.admin-payslip-preview-header p {
+  margin: 5px 0 0;
+
+  color: #777;
+  font-size: 13px;
+}
+
+.admin-preview-close {
+  border: none;
+  background: transparent;
+
+  font-size: 28px;
+
+  color: #777;
+
+  cursor: pointer;
+}
+
+.admin-preview-close:hover {
+  color: #e74c3c;
+}
+
+.admin-payslip-preview-content {
+  border: 1px solid #eeeeee;
+
+  border-radius: 12px;
+
+  padding: 22px;
+}
+
+.admin-payslip-company {
+  text-align: center;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-payslip-company h2 {
+  margin: 0;
+
+  font-size: 25px;
+
+  color: #6c63ff;
+}
+
+.admin-payslip-company p {
+  margin: 5px 0 0;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.admin-payslip-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 15px;
+
+  padding: 20px 0;
+}
+
+.admin-payslip-info div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.admin-payslip-info span {
+  font-size: 12px;
+
+  color: #888;
+}
+
+.admin-payslip-info strong {
+  font-size: 14px;
+
+  color: #30282a;
+}
+
+.admin-salary-details {
+  border-top: 1px solid #eeeeee;
+
+  padding-top: 15px;
+}
+
+.admin-salary-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 10px 0;
+
+  font-size: 14px;
+
+  color: #555;
+}
+
+.admin-salary-row strong {
+  color: #30282a;
+}
+
+.admin-salary-row.deduction strong {
+  color: #e74c3c;
+}
+
+.admin-salary-total {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 10px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  background: #f5f4ff;
+
+  font-size: 16px;
+
+  color: #30282a;
+}
+
+.admin-salary-total strong {
+  color: #6c63ff;
+
+  font-size: 18px;
+}
+
+
+/* =========================================
+   PAYSLIP EMPLOYEE
+========================================= */
+
+.admin-payslip-employee {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.admin-payslip-employee strong {
+  color: #30282a;
+}
+
+.admin-payslip-employee small {
+  color: #888;
+
+  font-size: 11px;
+}
+
+
+/* =========================================
+   PAYSLIP STATUS
+========================================= */
+
+.admin-payslip-status {
+  display: inline-block;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.admin-payslip-status.generated {
+  background: #e8f0ff;
+
+  color: #4267d5;
+}
+
+.admin-payslip-status.paid {
+  background: #e7f8ef;
+
+  color: #1f9d55;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .admin-payslip-info {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .admin-payslip-preview {
+    padding: 18px;
+  }
+
+  .admin-payslip-preview-content {
+    padding: 15px;
+  }
+
+  .admin-payslip-info {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-payslip-preview-header {
+    gap: 10px;
+  }
+
+}
