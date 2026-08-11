@@ -141,15 +141,7 @@ export default function App() {
             status: "Processing",
             month: "July 2026",
           },
-          {
-            id: "EI-0173",
-            name: "Arlene McCoy",
-            baseSalary: 130000,
-            bonus: 25000,
-            deductions: 7000,
-            status: "Paid",
-            month: "July 2026",
-          },
+          
         ];
   });
 
