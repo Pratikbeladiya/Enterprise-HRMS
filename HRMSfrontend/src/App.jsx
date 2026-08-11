@@ -184,7 +184,7 @@ export default function App() {
         ];
   });
 
-  // Tasks State
+  // Tasks State for handling tasks -----------
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("hrise_tasks");
     return saved
