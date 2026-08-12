@@ -3314,7 +3314,7 @@ export default function App() {
         </div>
       </aside>
 
-      
+      //Main container starts from here --------------------------------
       {/* MAIN CONTAINER */}
       <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out lg:pl-64">
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-40">
