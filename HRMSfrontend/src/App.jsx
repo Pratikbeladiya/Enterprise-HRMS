@@ -3083,7 +3083,7 @@ export default function App() {
     }
 
 
-    //recruitment-------------
+    //recruitment panel------------------------------
     
     if (activeTab === 'Recruitment') {
       const activePipelines = candidates.filter(c => c.stage !== 'Offered').length;
@@ -3262,7 +3262,7 @@ export default function App() {
         ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full'} 
         lg:translate-x-0 lg:w-64 overflow-y-auto scrollbar-thin
       `}>
-        {/* 🛠️ NOTE: The absolute toggle button block that was right here has been completely removed */}
+        
 
         <div>
           <div className="flex items-center mb-8 justify-between">
