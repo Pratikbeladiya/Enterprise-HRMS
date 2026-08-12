@@ -638,7 +638,7 @@ export default function App() {
     setTeams(teams.filter((t) => t.id !== id));
   };
 
-  // Leave Handlers
+  // Leave Handlers -------------------------------
   const handleAddLeave = (e) => {
     e.preventDefault();
     const newLeave = {
@@ -701,7 +701,7 @@ export default function App() {
     );
   };
 
-  // Task Handlers
+  // Task Handlers -----------------------------
   const handleAddTask = (e) => {
     e.preventDefault();
     const newTask = {
