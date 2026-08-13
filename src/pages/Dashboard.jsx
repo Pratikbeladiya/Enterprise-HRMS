@@ -22,9 +22,6 @@ function Dashboard() {
 
 const [user, setUser] = useState({
   fullName: "",
-  email: "",
-  role: "",
-  employeeId: "",
 });
 
 useEffect(() => {
@@ -185,70 +182,11 @@ const handleSearch = (e) => {
       
                   <FaBell className="bell" />
       
-                 <div className="profile-container">
-
-  <img
-    src="https://i.pravatar.cc/150?img=12"
-    alt="profile"
-    className="profile"
-    onClick={() => setShowProfileMenu(!showProfileMenu)}
-  />
-
-  {showProfileMenu && (
-    <div className="profile-dropdown">
-
-      <div className="profile-dropdown-header">
-        <img
-          src="https://i.pravatar.cc/150?img=12"
-          alt="profile"
-        />
-
-        <div>
-          <h4>{user.fullName || "User"}</h4>
-          <p>{user.email || "No Email"}</p>
-        </div>
-      </div>
-
-      <div className="profile-info">
-
-        <div className="profile-info-item">
-          <FaUser />
-          <div>
-            <span>Role</span>
-            <strong>{user.role || "Employee"}</strong>
-          </div>
-        </div>
-
-        <div className="profile-info-item">
-          <FaIdBadge />
-          <div>
-            <span>Employee ID</span>
-            <strong>{user.employeeId || "Not Available"}</strong>
-          </div>
-        </div>
-
-        <div className="profile-info-item">
-          <FaEnvelope />
-          <div>
-            <span>Email</span>
-            <strong>{user.email || "Not Available"}</strong>
-          </div>
-        </div>
-
-      </div>
-
-      <button
-        className="profile-logout"
-        onClick={handleLogout}
-      >
-        <FaSignOutAlt />
-        Logout
-      </button>
-
-    </div>
-  )}
-
-</div>
+                  <img
+                    src="https://i.pravatar.cc/150?img=12"
+                    alt="profile"
+                    className="profile"
+                  />
       
                 </div>
       
