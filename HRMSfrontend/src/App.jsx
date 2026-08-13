@@ -87,14 +87,6 @@ export default function App() {
             manager: "Kailash Yadav",
             joiningDate: "2024-08-10",
           },
-          {
-            id: "EI-0173",
-            name: "Arlene McCoy",
-            role: "SDE - Level 2",
-            dept: "IT and Infrastructure",
-            manager: "Kailash Yadav",
-            joiningDate: "2024-08-10",
-          },
         ];
   });
 
