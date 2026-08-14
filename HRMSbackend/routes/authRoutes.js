@@ -98,7 +98,7 @@ router.post('/login', async (req, res) => {
 });
 
 // verify tokens
-// In routes/authRoutes.js
+
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/me', protect, async (req, res) => {
