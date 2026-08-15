@@ -453,3 +453,88 @@ table{
 }
 
 }
+
+/* =========================
+   LEAVE FORM ENHANCEMENTS
+========================= */
+
+.form-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-title h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #222;
+}
+
+.form-title p {
+  margin: 5px 0 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.leave-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.leave-message.success {
+  background: #e8f8ef;
+  color: #16834b;
+  border: 1px solid #b8e8cd;
+}
+
+.leave-message.error {
+  background: #fff0f0;
+  color: #d93030;
+  border: 1px solid #f2bcbc;
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #fff4df;
+  color: #d98a00;
+}
+
+.leave-form form {
+  width: 100%;
+}
+
+.leave-form .form-group {
+  margin-bottom: 20px;
+}
+
+.leave-form select,
+.leave-form input,
+.leave-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.leave-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.apply-btn {
+  transition: 0.3s ease;
+}
+
+.apply-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
