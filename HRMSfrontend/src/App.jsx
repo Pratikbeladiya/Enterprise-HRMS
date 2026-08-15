@@ -2472,6 +2472,83 @@ useEffect(() => {
         }
       };
 
+      return (
+        <div className="xl:col-span-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+          <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                Daily Attendance Management
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Real-time attendance status and clock tracking
+              </p>
+            </div>
+            <span className="text-xs bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-xl font-bold">
+              Total Staff: {attendance.length}
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-medium uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                  <th className="p-4">Employee ID</th>
+                  <th className="p-4">Name</th>
+                  <th className="p-4">Check-in Time</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4 text-right">Update Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                {attendance.map((record) => (
+                  <tr
+                    key={record.id || record._id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
+                  >
+                    <td className="p-4 font-mono text-slate-500">
+                      {record.id}
+                    </td>
+                    <td className="p-4 font-semibold text-slate-900 dark:text-white">
+                      {record.name}
+                    </td>
+                    <td className="p-4 text-slate-500">{record.time}</td>
+                    <td className="p-4">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          record.status === "Present"
+                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+                            : record.status === "On Leave"
+                              ? "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400"
+                              : "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
+                        }`}
+                      >
+                        {record.status}
+                      </span>
+                    </td>
+
+                    {/* 👇 HERE IS THE SELECT DROPDOWN ELEMENT 👇 */}
+                    <td className="p-4 text-right">
+                      <select
+                        value={record.status}
+                        onChange={(e) =>
+                          handleStatusChange(record, e.target.value)
+                        }
+                        className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer text-slate-800 dark:text-slate-100"
+                      >
+                        <option value="Present">Present</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Sick Leave">Sick Leave</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     if (activeTab === "About") {
       // Calculate raw storage size footprint inside the system
       const storageKeys = [
