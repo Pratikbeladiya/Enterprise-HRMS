@@ -2438,6 +2438,40 @@ useEffect(() => {
     //   );
     // }
 
+    if (activeTab === "Attendance") {
+      const handleStatusChange = async (record, newStatus) => {
+        // 1. Optimistic UI update
+        setAttendance(
+          attendance.map((item) =>
+            item.id === record.id ? { ...item, status: newStatus } : item
+          )
+        );
+
+        // 2. Persist update to MongoDB
+        try {
+          if (record._id) {
+            await fetch(`http://localhost:5000/api/attendance/${record._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: newStatus }),
+            });
+          } else {
+            // If entry was newly created, post as a record
+            await fetch('http://localhost:5000/api/attendance', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                employeeId: record.id,
+                name: record.name,
+                status: newStatus,
+              }),
+            });
+          }
+        } catch (err) {
+          console.error('Failed to update attendance on server:', err);
+        }
+      };
+
     if (activeTab === "About") {
       // Calculate raw storage size footprint inside the system
       const storageKeys = [
