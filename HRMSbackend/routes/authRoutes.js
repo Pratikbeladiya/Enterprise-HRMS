@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { protect } = require('../middleware/authMiddleware');
 
 // Helper to generate JWT
 const generateToken = (id) => {
@@ -99,7 +100,7 @@ router.post('/login', async (req, res) => {
 
 // verify tokens
 
-const { protect } = require('../middleware/authMiddleware');
+// const { protect } = require('../middleware/authMiddleware');
 
 router.get('/me', protect, async (req, res) => {
   res.status(200).json({
