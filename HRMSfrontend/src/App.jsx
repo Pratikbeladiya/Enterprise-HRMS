@@ -453,9 +453,11 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem("hrise_employees", JSON.stringify(employees));
   }, [employees]);
-  useEffect(() => {
-    localStorage.setItem("hrise_attendance", JSON.stringify(attendance));
-  }, [attendance]);
+  // useEffect(() => {
+  //   localStorage.setItem("hrise_attendance", JSON.stringify(attendance));
+  // }, [attendance]);
+
+  
   useEffect(() => {
     localStorage.setItem("hrise_tasks", JSON.stringify(tasks));
   }, [tasks]);
