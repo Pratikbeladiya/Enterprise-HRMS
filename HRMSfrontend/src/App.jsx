@@ -176,33 +176,7 @@ export default function App() {
   // });
 
 
-  // Attendance State from MongoDB
-const [attendance, setAttendance] = useState([]);
-
-// Fetch live attendance records on mount
-useEffect(() => {
-  const fetchAttendance = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/attendance");
-      const json = await res.json();
-      if (json.success && json.data.length > 0) {
-        setAttendance(
-          json.data.map((item) => ({
-            _id: item._id,
-            id: item.employeeId,
-            name: item.name,
-            status: item.status,
-            time: item.time,
-          }))
-        );
-      }
-    } catch (err) {
-      console.error("Failed to load attendance from backend:", err);
-    }
-  };
-
-  fetchAttendance();
-}, []);
+  
 
   // Tasks State for handling tasks -----------
   const [tasks, setTasks] = useState(() => {
