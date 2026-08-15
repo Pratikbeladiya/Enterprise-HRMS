@@ -136,44 +136,73 @@ export default function App() {
         ];
   });
 
-  // Attendance State
-  const [attendance, setAttendance] = useState(() => {
-    const saved = localStorage.getItem("hrise_attendance");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            id: "EI-0123",
-            name: "Cameron Williamson",
-            status: "Present",
-            time: "09:15 AM",
-          },
-          {
-            id: "EI-0124",
-            name: "Guy Hawkins",
-            status: "Present",
-            time: "09:30 AM",
-          },
-          {
-            id: "EI-0125",
-            name: "Brooklyn Simmons",
-            status: "On Leave",
-            time: "-",
-          },
-          {
-            id: "EI-0126",
-            name: "Albert Flores",
-            status: "Sick Leave",
-            time: "-",
-          },
-          {
-            id: "EI-0173",
-            name: "Arlene McCoy",
-            status: "Present",
-            time: "09:05 AM",
-          },
-        ];
-  });
+  // // Attendance State
+  // const [attendance, setAttendance] = useState(() => {
+  //   const saved = localStorage.getItem("hrise_attendance");
+  //   return saved
+  //     ? JSON.parse(saved)
+  //     : [
+  //         {
+  //           id: "EI-0123",
+  //           name: "Cameron Williamson",
+  //           status: "Present",
+  //           time: "09:15 AM",
+  //         },
+  //         {
+  //           id: "EI-0124",
+  //           name: "Guy Hawkins",
+  //           status: "Present",
+  //           time: "09:30 AM",
+  //         },
+  //         {
+  //           id: "EI-0125",
+  //           name: "Brooklyn Simmons",
+  //           status: "On Leave",
+  //           time: "-",
+  //         },
+  //         {
+  //           id: "EI-0126",
+  //           name: "Albert Flores",
+  //           status: "Sick Leave",
+  //           time: "-",
+  //         },
+  //         {
+  //           id: "EI-0173",
+  //           name: "Arlene McCoy",
+  //           status: "Present",
+  //           time: "09:05 AM",
+  //         },
+  //       ];
+  // });
+
+
+  // Attendance State from MongoDB
+const [attendance, setAttendance] = useState([]);
+
+// Fetch live attendance records on mount
+useEffect(() => {
+  const fetchAttendance = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/attendance");
+      const json = await res.json();
+      if (json.success && json.data.length > 0) {
+        setAttendance(
+          json.data.map((item) => ({
+            _id: item._id,
+            id: item.employeeId,
+            name: item.name,
+            status: item.status,
+            time: item.time,
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to load attendance from backend:", err);
+    }
+  };
+
+  fetchAttendance();
+}, []);
 
   // Tasks State for handling tasks -----------
   const [tasks, setTasks] = useState(() => {
@@ -3305,7 +3334,7 @@ export default function App() {
         </div>
       </aside>
 
-      //Main container starts from here --------------------------------
+      
       {/* MAIN CONTAINER */}
       <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out lg:pl-64">
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-40">
