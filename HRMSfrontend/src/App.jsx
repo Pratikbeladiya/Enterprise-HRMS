@@ -87,7 +87,35 @@ export default function App() {
   //       ];
   // });
 
-  
+  // Employees State from MongoDB
+  const [employees, setEmployees] = useState([]);
+
+  // Fetch live employee records on mount
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const res = aliasFetch ? await fetch("http://localhost:5000/api/employees") : await fetch("http://localhost:5000/api/employees");
+        const json = await res.json();
+        if (json.success) {
+          setEmployees(
+            json.data.map((item) => ({
+              _id: item._id,
+              id: item.employeeId,
+              name: item.name,
+              role: item.role,
+              dept: item.dept,
+              manager: item.manager,
+              joiningDate: item.joiningDate,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to load employees from backend:", err);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   // Payroll State
   const [payrolls, setPayrolls] = useState(() => {
