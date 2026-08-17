@@ -733,46 +733,46 @@ export default function App() {
   };
 
   // Employee Handlers
-  const handleAddEmployee = (e) => {
-    e.preventDefault();
-    const newEmp = {
-      id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
-      name: newEmpName,
-      role: newEmpRole || "SDE - Level 1",
-      dept: newEmpDept || "IT and Infrastructure",
-      manager: newEmpManager || "Kailash Yadav",
-      joiningDate: new Date().toISOString().split("T")[0],
-    };
-    setEmployees([...employees, newEmp]);
-    setAttendance([
-      ...attendance,
-      { id: newEmp.id, name: newEmp.name, status: "Present", time: "09:00 AM" },
-    ]);
+  // const handleAddEmployee = (e) => {
+  //   e.preventDefault();
+  //   const newEmp = {
+  //     id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
+  //     name: newEmpName,
+  //     role: newEmpRole || "SDE - Level 1",
+  //     dept: newEmpDept || "IT and Infrastructure",
+  //     manager: newEmpManager || "Kailash Yadav",
+  //     joiningDate: new Date().toISOString().split("T")[0],
+  //   };
+  //   setEmployees([...employees, newEmp]);
+  //   setAttendance([
+  //     ...attendance,
+  //     { id: newEmp.id, name: newEmp.name, status: "Present", time: "09:00 AM" },
+  //   ]);
 
-    setPayrolls([
-      ...payrolls,
-      {
-        id: newEmp.id,
-        name: newEmp.name,
-        baseSalary: 100000,
-        bonus: 5000,
-        deductions: 3000,
-        status: "Pending",
-        month: "July 2026",
-      },
-    ]);
+  //   setPayrolls([
+  //     ...payrolls,
+  //     {
+  //       id: newEmp.id,
+  //       name: newEmp.name,
+  //       baseSalary: 100000,
+  //       bonus: 5000,
+  //       deductions: 3000,
+  //       status: "Pending",
+  //       month: "July 2026",
+  //     },
+  //   ]);
 
-    setNewEmpName("");
-    setNewEmpRole("");
-    setNewEmpDept("");
-    setNewEmpManager("");
-    setShowAddEmployeeModal(false);
-  };
+  //   setNewEmpName("");
+  //   setNewEmpRole("");
+  //   setNewEmpDept("");
+  //   setNewEmpManager("");
+  //   setShowAddEmployeeModal(false);
+  // };
 
-  const handleDeleteEmployee = (id) => {
-    setEmployees(employees.filter((emp) => emp.id !== id));
-    setAttendance(attendance.filter((att) => att.id !== id));
-  };
+  // const handleDeleteEmployee = (id) => {
+  //   setEmployees(employees.filter((emp) => emp.id !== id));
+  //   setAttendance(attendance.filter((att) => att.id !== id));
+  // };
 
   // Team Handlers
   const handleAddTeam = (e) => {
