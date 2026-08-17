@@ -40,55 +40,54 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
 
   // these state hooks for QR--------
   const [selectedQrEmployee, setSelectedQrEmployee] = useState(null);
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [scannedEmployeeResult, setScannedEmployeeResult] = useState(null);
 
- 
-
   // Employees State
-  const [employees, setEmployees] = useState(() => {
-    const saved = localStorage.getItem("hrise_employees");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            id: "EI-0123",
-            name: "Cameron Williamson",
-            role: "SDE - Level 2",
-            dept: "IT and Infrastructure",
-            manager: "Kailash Yadav",
-            joiningDate: "2024-08-12",
-          },
-          {
-            id: "EI-0124",
-            name: "Guy Hawkins",
-            role: "SDE - Level 2",
-            dept: "IT and Infrastructure",
-            manager: "Kailash Yadav",
-            joiningDate: "2024-09-11",
-          },
-          {
-            id: "EI-0125",
-            name: "Brooklyn Simmons",
-            role: "SDE - Level 2",
-            dept: "IT and Infrastructure",
-            manager: "Kailash Yadav",
-            joiningDate: "2024-09-11",
-          },
-          {
-            id: "EI-0126",
-            name: "Albert Flores",
-            role: "SDE - Level 2",
-            dept: "IT and Infrastructure",
-            manager: "Kailash Yadav",
-            joiningDate: "2024-08-10",
-          },
-        ];
-  });
+  // const [employees, setEmployees] = useState(() => {
+  //   const saved = localStorage.getItem("hrise_employees");
+  //   return saved
+  //     ? JSON.parse(saved)
+  //     : [
+  //         {
+  //           id: "EI-0123",
+  //           name: "Cameron Williamson",
+  //           role: "SDE - Level 2",
+  //           dept: "IT and Infrastructure",
+  //           manager: "Kailash Yadav",
+  //           joiningDate: "2024-08-12",
+  //         },
+  //         {
+  //           id: "EI-0124",
+  //           name: "Guy Hawkins",
+  //           role: "SDE - Level 2",
+  //           dept: "IT and Infrastructure",
+  //           manager: "Kailash Yadav",
+  //           joiningDate: "2024-09-11",
+  //         },
+  //         {
+  //           id: "EI-0125",
+  //           name: "Brooklyn Simmons",
+  //           role: "SDE - Level 2",
+  //           dept: "IT and Infrastructure",
+  //           manager: "Kailash Yadav",
+  //           joiningDate: "2024-09-11",
+  //         },
+  //         {
+  //           id: "EI-0126",
+  //           name: "Albert Flores",
+  //           role: "SDE - Level 2",
+  //           dept: "IT and Infrastructure",
+  //           manager: "Kailash Yadav",
+  //           joiningDate: "2024-08-10",
+  //         },
+  //       ];
+  // });
+
+  
 
   // Payroll State
   const [payrolls, setPayrolls] = useState(() => {
@@ -132,7 +131,6 @@ export default function App() {
             status: "Processing",
             month: "July 2026",
           },
-          
         ];
   });
 
@@ -176,34 +174,32 @@ export default function App() {
   // });
 
   // Attendance State from MongoDB
-const [attendance, setAttendance] = useState([]);
+  const [attendance, setAttendance] = useState([]);
 
-// Fetch live attendance records on mount
-useEffect(() => {
-  const fetchAttendance = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/attendance");
-      const json = await res.json();
-      if (json.success && json.data.length > 0) {
-        setAttendance(
-          json.data.map((item) => ({
-            _id: item._id,
-            id: item.employeeId,
-            name: item.name,
-            status: item.status,
-            time: item.time,
-          }))
-        );
+  // Fetch live attendance records on mount
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/attendance");
+        const json = await res.json();
+        if (json.success && json.data.length > 0) {
+          setAttendance(
+            json.data.map((item) => ({
+              _id: item._id,
+              id: item.employeeId,
+              name: item.name,
+              status: item.status,
+              time: item.time,
+            })),
+          );
+        }
+      } catch (err) {
+        console.error("Failed to load attendance from backend:", err);
       }
-    } catch (err) {
-      console.error("Failed to load attendance from backend:", err);
-    }
-  };
+    };
 
-  fetchAttendance();
-}, []);
-
-  
+    fetchAttendance();
+  }, []);
 
   // Tasks State for handling tasks -----------
   const [tasks, setTasks] = useState(() => {
@@ -261,33 +257,49 @@ useEffect(() => {
         ];
   });
 
-// Query section code -----------------------
-  
+  // Query section code -----------------------
+
   const [tickets, setTickets] = useState(() => {
-    const saved = localStorage.getItem('hrise_tickets');
-    return saved ? JSON.parse(saved) : [
-      { id: 'TKT-101', subject: 'Payroll adjustment query for July', category: 'Payroll', priority: 'High', status: 'In Progress', createdAt: '2026-08-01' },
-      { id: 'TKT-102', subject: 'MacBook VPN access key reset', category: 'IT Support', priority: 'Medium', status: 'Resolved', createdAt: '2026-07-28' },
-    ];
+    const saved = localStorage.getItem("hrise_tickets");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          {
+            id: "TKT-101",
+            subject: "Payroll adjustment query for July",
+            category: "Payroll",
+            priority: "High",
+            status: "In Progress",
+            createdAt: "2026-08-01",
+          },
+          {
+            id: "TKT-102",
+            subject: "MacBook VPN access key reset",
+            category: "IT Support",
+            priority: "Medium",
+            status: "Resolved",
+            createdAt: "2026-07-28",
+          },
+        ];
   });
 
-
-  
-
   const [showRaiseTicketModal, setShowRaiseTicketModal] = useState(false);
-  const [ticketSubject, setTicketSubject] = useState('');
-  const [ticketCategory, setTicketCategory] = useState('HR Operations');
-  const [ticketPriority, setTicketPriority] = useState('Medium');
-  const [ticketDescription, setTicketDescription] = useState('');
+  const [ticketSubject, setTicketSubject] = useState("");
+  const [ticketCategory, setTicketCategory] = useState("HR Operations");
+  const [ticketPriority, setTicketPriority] = useState("Medium");
+  const [ticketDescription, setTicketDescription] = useState("");
 
   // AI Assistant Chat State
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'ai', text: 'Hello! I am your HRise Workspace Assistant. How can I assist you with leaves, policies, or IT support today?' }
+    {
+      sender: "ai",
+      text: "Hello! I am your HRise Workspace Assistant. How can I assist you with leaves, policies, or IT support today?",
+    },
   ]);
-  const [chatInput, setChatInput] = useState('');
+  const [chatInput, setChatInput] = useState("");
 
   useEffect(() => {
-    localStorage.setItem('hrise_tickets', JSON.stringify(tickets));
+    localStorage.setItem("hrise_tickets", JSON.stringify(tickets));
   }, [tickets]);
 
   // Raise Ticket Handler
@@ -298,12 +310,12 @@ useEffect(() => {
       subject: ticketSubject,
       category: ticketCategory,
       priority: ticketPriority,
-      status: 'Open',
-      createdAt: new Date().toISOString().split('T')[0]
+      status: "Open",
+      createdAt: new Date().toISOString().split("T")[0],
     };
     setTickets([newTicket, ...tickets]);
-    setTicketSubject('');
-    setTicketDescription('');
+    setTicketSubject("");
+    setTicketDescription("");
     setShowRaiseTicketModal(false);
   };
 
@@ -312,48 +324,96 @@ useEffect(() => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
-    const userMsg = { sender: 'user', text: chatInput };
-    setChatMessages(prev => [...prev, userMsg]);
+    const userMsg = { sender: "user", text: chatInput };
+    setChatMessages((prev) => [...prev, userMsg]);
     const currentQuery = chatInput.toLowerCase();
-    setChatInput('');
+    setChatInput("");
 
     // Simulated Smart Response Logic
     setTimeout(() => {
-      let botResponse = "I have logged your query. If you require further assistance, you can raise a ticket using the panel on the left.";
-      if (currentQuery.includes('leave') || currentQuery.includes('holiday')) {
-        botResponse = "To apply for leaves, head over to the 'Leaves' tab on the sidebar and submit a new request!";
-      } else if (currentQuery.includes('salary') || currentQuery.includes('payroll') || currentQuery.includes('pay')) {
-        botResponse = "Payroll summaries and monthly slips are accessible directly under the 'Payroll' section.";
-      } else if (currentQuery.includes('wifi') || currentQuery.includes('vpn') || currentQuery.includes('it') || currentQuery.includes('hardware')) {
-        botResponse = "For hardware or network issues, please raise an 'IT Support' ticket or contact our desk at it-support@company.com.";
+      let botResponse =
+        "I have logged your query. If you require further assistance, you can raise a ticket using the panel on the left.";
+      if (currentQuery.includes("leave") || currentQuery.includes("holiday")) {
+        botResponse =
+          "To apply for leaves, head over to the 'Leaves' tab on the sidebar and submit a new request!";
+      } else if (
+        currentQuery.includes("salary") ||
+        currentQuery.includes("payroll") ||
+        currentQuery.includes("pay")
+      ) {
+        botResponse =
+          "Payroll summaries and monthly slips are accessible directly under the 'Payroll' section.";
+      } else if (
+        currentQuery.includes("wifi") ||
+        currentQuery.includes("vpn") ||
+        currentQuery.includes("it") ||
+        currentQuery.includes("hardware")
+      ) {
+        botResponse =
+          "For hardware or network issues, please raise an 'IT Support' ticket or contact our desk at it-support@company.com.";
       }
 
-      setChatMessages(prev => [...prev, { sender: 'ai', text: botResponse }]);
+      setChatMessages((prev) => [...prev, { sender: "ai", text: botResponse }]);
     }, 600);
   };
 
-
   // RECRUITMENT ATS LAYER:
   const [candidates, setCandidates] = useState(() => {
-    const saved = localStorage.getItem('hrise_candidates');
-    return saved ? JSON.parse(saved) : [
-      { id: 'CAN-4091', name: 'Eleanor Pena', role: 'Senior Frontend Engineer', email: 'eleanor.p@gmail.com', stage: 'Technical Round', experience: '5 Yrs', rating: '4.8/5' },
-      { id: 'CAN-8821', name: 'Jerome Bell', role: 'DevOps Architect', email: 'j.bell@outlook.com', stage: 'HR Round', experience: '8 Yrs', rating: '4.9/5' },
-      { id: 'CAN-1029', name: 'Jane Cooper', role: 'Product UI Designer', email: 'jane.cooper@design.co', stage: 'Offered', experience: '3 Yrs', rating: '4.7/5' },
-      { id: 'CAN-5561', name: 'Cody Fisher', role: 'Backend Dev (Go)', email: 'cody.f@tech.io', stage: 'Screening', experience: '2 Yrs', rating: '4.2/5' }
-    ];
+    const saved = localStorage.getItem("hrise_candidates");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          {
+            id: "CAN-4091",
+            name: "Eleanor Pena",
+            role: "Senior Frontend Engineer",
+            email: "eleanor.p@gmail.com",
+            stage: "Technical Round",
+            experience: "5 Yrs",
+            rating: "4.8/5",
+          },
+          {
+            id: "CAN-8821",
+            name: "Jerome Bell",
+            role: "DevOps Architect",
+            email: "j.bell@outlook.com",
+            stage: "HR Round",
+            experience: "8 Yrs",
+            rating: "4.9/5",
+          },
+          {
+            id: "CAN-1029",
+            name: "Jane Cooper",
+            role: "Product UI Designer",
+            email: "jane.cooper@design.co",
+            stage: "Offered",
+            experience: "3 Yrs",
+            rating: "4.7/5",
+          },
+          {
+            id: "CAN-5561",
+            name: "Cody Fisher",
+            role: "Backend Dev (Go)",
+            email: "cody.f@tech.io",
+            stage: "Screening",
+            experience: "2 Yrs",
+            rating: "4.2/5",
+          },
+        ];
   });
 
-  const [recruitmentFilter, setRecruitmentFilter] = useState('All');
+  const [recruitmentFilter, setRecruitmentFilter] = useState("All");
   const [showAddCandidateModal, setShowAddCandidateModal] = useState(false);
-  
-  // Modal State Hooks
-  const [newCanName, setNewCanName] = useState('');
-  const [newCanRole, setNewCanRole] = useState('Senior Frontend Engineer');
-  const [newCanEmail, setNewCanEmail] = useState('');
-  const [newCanExp, setNewCanExp] = useState('');
 
-  useEffect(() => { localStorage.setItem('hrise_candidates', JSON.stringify(candidates)); }, [candidates]);
+  // Modal State Hooks
+  const [newCanName, setNewCanName] = useState("");
+  const [newCanRole, setNewCanRole] = useState("Senior Frontend Engineer");
+  const [newCanEmail, setNewCanEmail] = useState("");
+  const [newCanExp, setNewCanExp] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("hrise_candidates", JSON.stringify(candidates));
+  }, [candidates]);
 
   // Teams State
   const [teams, setTeams] = useState(() => {
@@ -388,29 +448,76 @@ useEffect(() => {
         ];
   });
 
- 
   const [companyAssets, setCompanyAssets] = useState(() => {
-    const saved = localStorage.getItem('hrise_assets');
-    return saved ? JSON.parse(saved) : [
-      { id: 'AST-9041', name: 'MacBook Pro 16" (M3 Max, 64GB)', category: 'Hardware', cost: 349900, status: 'Allocated', owner: 'Cameron Williamson', purchaseDate: '2024-09-15', serial: 'C02F89XXQ05D' },
-      { id: 'AST-7822', name: 'AWS Cloud Server Pool - Cluster 4B', category: 'Cloud Infra', cost: 185000, status: 'Operational', owner: 'IT and Infrastructure', purchaseDate: '2025-01-10', serial: 'us-east-1.prod-4b' },
-      { id: 'AST-3110', name: 'Enterprise Slack Grid Package', category: 'Software', cost: 48000, status: 'Active License', owner: 'Human Resources', purchaseDate: '2026-03-01', serial: 'LIC-SLK-90281' },
-      { id: 'AST-1104', name: 'Dell UltraSharp 32" 4K Monitor', category: 'Hardware', cost: 85000, status: 'Allocated', owner: 'Guy Hawkins', purchaseDate: '2024-11-20', serial: 'CN-073D2Y-74443' },
-      { id: 'AST-5590', name: 'Secure VPN Hardware Gateway (Cisco)', category: 'Networking', cost: 210000, status: 'Maintenance', owner: 'IT and Infrastructure', purchaseDate: '2025-05-14', serial: 'CSCO-ASA-5516-X' }
-    ];
+    const saved = localStorage.getItem("hrise_assets");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          {
+            id: "AST-9041",
+            name: 'MacBook Pro 16" (M3 Max, 64GB)',
+            category: "Hardware",
+            cost: 349900,
+            status: "Allocated",
+            owner: "Cameron Williamson",
+            purchaseDate: "2024-09-15",
+            serial: "C02F89XXQ05D",
+          },
+          {
+            id: "AST-7822",
+            name: "AWS Cloud Server Pool - Cluster 4B",
+            category: "Cloud Infra",
+            cost: 185000,
+            status: "Operational",
+            owner: "IT and Infrastructure",
+            purchaseDate: "2025-01-10",
+            serial: "us-east-1.prod-4b",
+          },
+          {
+            id: "AST-3110",
+            name: "Enterprise Slack Grid Package",
+            category: "Software",
+            cost: 48000,
+            status: "Active License",
+            owner: "Human Resources",
+            purchaseDate: "2026-03-01",
+            serial: "LIC-SLK-90281",
+          },
+          {
+            id: "AST-1104",
+            name: 'Dell UltraSharp 32" 4K Monitor',
+            category: "Hardware",
+            cost: 85000,
+            status: "Allocated",
+            owner: "Guy Hawkins",
+            purchaseDate: "2024-11-20",
+            serial: "CN-073D2Y-74443",
+          },
+          {
+            id: "AST-5590",
+            name: "Secure VPN Hardware Gateway (Cisco)",
+            category: "Networking",
+            cost: 210000,
+            status: "Maintenance",
+            owner: "IT and Infrastructure",
+            purchaseDate: "2025-05-14",
+            serial: "CSCO-ASA-5516-X",
+          },
+        ];
   });
 
-  const [assetFilter, setAssetFilter] = useState('All');
+  const [assetFilter, setAssetFilter] = useState("All");
   const [showAddAssetModal, setShowAddAssetModal] = useState(false);
-  
+
   // Modal Fields
-  const [newAssetName, setNewAssetName] = useState('');
-  const [newAssetCat, setNewAssetCat] = useState('Hardware');
-  const [newAssetCost, setNewAssetCost] = useState('');
-  const [newAssetOwner, setNewAssetOwner] = useState('');
+  const [newAssetName, setNewAssetName] = useState("");
+  const [newAssetCat, setNewAssetCat] = useState("Hardware");
+  const [newAssetCost, setNewAssetCost] = useState("");
+  const [newAssetOwner, setNewAssetOwner] = useState("");
 
-  useEffect(() => { localStorage.setItem('hrise_assets', JSON.stringify(companyAssets)); }, [companyAssets]);
-
+  useEffect(() => {
+    localStorage.setItem("hrise_assets", JSON.stringify(companyAssets));
+  }, [companyAssets]);
 
   // Employee Tab Local States
   const [employeeSearchQuery, setEmployeeSearchQuery] = useState("");
@@ -457,7 +564,6 @@ useEffect(() => {
   //   localStorage.setItem("hrise_attendance", JSON.stringify(attendance));
   // }, [attendance]);
 
-
   useEffect(() => {
     localStorage.setItem("hrise_tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -467,8 +573,6 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem("hrise_teams", JSON.stringify(teams));
   }, [teams]);
-
-
 
   useEffect(() => {
     localStorage.setItem("hrise_payrolls", JSON.stringify(payrolls));
@@ -482,7 +586,6 @@ useEffect(() => {
       setIsAuthenticated(true);
     }
   }, []);
-
 
   // Dark mode handler----------------------
 
@@ -514,9 +617,8 @@ useEffect(() => {
     setActiveTab("Dashboard");
   };
 
+  //Assets handlers
 
-  //Assets handlers 
-  
   const handleRegisterAsset = (e) => {
     e.preventDefault();
     const registered = {
@@ -524,26 +626,23 @@ useEffect(() => {
       name: newAssetName,
       category: newAssetCat,
       cost: parseFloat(newAssetCost) || 0,
-      status: newAssetOwner ? 'Allocated' : 'Operational',
-      owner: newAssetOwner || 'IT and Infrastructure',
-      purchaseDate: new Date().toISOString().split('T')[0],
-      serial: `SRL-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
+      status: newAssetOwner ? "Allocated" : "Operational",
+      owner: newAssetOwner || "IT and Infrastructure",
+      purchaseDate: new Date().toISOString().split("T")[0],
+      serial: `SRL-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
     };
-    
+
     setCompanyAssets([...companyAssets, registered]);
-    setNewAssetName('');
-    setNewAssetCost('');
-    setNewAssetOwner('');
+    setNewAssetName("");
+    setNewAssetCost("");
+    setNewAssetOwner("");
     setShowAddAssetModal(false);
   };
 
   const handleDecommissionAsset = (id) => {
-    setCompanyAssets(companyAssets.filter(a => a.id !== id));
+    setCompanyAssets(companyAssets.filter((a) => a.id !== id));
   };
 
-
-
-  
   const handleRegisterCandidate = (e) => {
     e.preventDefault();
     const freshApplicant = {
@@ -551,19 +650,21 @@ useEffect(() => {
       name: newCanName,
       role: newCanRole,
       email: newCanEmail,
-      stage: 'Applied',
+      stage: "Applied",
       experience: `${newCanExp} Yrs`,
-      rating: '--'
+      rating: "--",
     };
     setCandidates([...candidates, freshApplicant]);
-    setNewCanName('');
-    setNewCanEmail('');
-    setNewCanExp('');
+    setNewCanName("");
+    setNewCanEmail("");
+    setNewCanExp("");
     setShowAddCandidateModal(false);
   };
 
   const handleUpdateCandidateStage = (id, nextStage) => {
-    setCandidates(candidates.map(c => c.id === id ? { ...c, stage: nextStage } : c));
+    setCandidates(
+      candidates.map((c) => (c.id === id ? { ...c, stage: nextStage } : c)),
+    );
   };
 
   // Automated System Action: Converts Candidate records straight into Live Directory Staff
@@ -572,19 +673,35 @@ useEffect(() => {
       id: `EI-${Math.floor(1000 + Math.random() * 9000)}`,
       name: candidate.name,
       role: candidate.role,
-      dept: 'IT and Infrastructure',
-      manager: 'Kailash Yadav',
-      joiningDate: new Date().toISOString().split('T')[0]
+      dept: "IT and Infrastructure",
+      manager: "Kailash Yadav",
+      joiningDate: new Date().toISOString().split("T")[0],
     };
-    
+
     // Push updates across system database tables concurrently
     setEmployees([...employees, newEmp]);
-    setAttendance([...attendance, { id: newEmp.id, name: newEmp.name, status: 'Present', time: '09:00 AM' }]);
-    setPayrolls([...payrolls, { id: newEmp.id, name: newEmp.name, baseSalary: 120000, bonus: 10000, deductions: 5000, status: 'Pending', month: 'August 2026' }]);
-    
+    setAttendance([
+      ...attendance,
+      { id: newEmp.id, name: newEmp.name, status: "Present", time: "09:00 AM" },
+    ]);
+    setPayrolls([
+      ...payrolls,
+      {
+        id: newEmp.id,
+        name: newEmp.name,
+        baseSalary: 120000,
+        bonus: 10000,
+        deductions: 5000,
+        status: "Pending",
+        month: "August 2026",
+      },
+    ]);
+
     // Purge candidate profile safely out of active recruitment board tracking
-    setCandidates(candidates.filter(c => c.id !== candidate.id));
-    alert(`${candidate.name} has been successfully onboarded as a full-time employee!`);
+    setCandidates(candidates.filter((c) => c.id !== candidate.id));
+    alert(
+      `${candidate.name} has been successfully onboarded as a full-time employee!`,
+    );
   };
 
   // Employee Handlers
@@ -604,7 +721,6 @@ useEffect(() => {
       { id: newEmp.id, name: newEmp.name, status: "Present", time: "09:00 AM" },
     ]);
 
-    
     setPayrolls([
       ...payrolls,
       {
@@ -689,7 +805,6 @@ useEffect(() => {
     setLeaves(leaves.filter((l) => l.id !== id));
   };
 
-  
   const handleAddPayroll = (e) => {
     e.preventDefault();
     const targetEmp = employees.find((emp) => emp.id === payrollEmpId);
@@ -759,23 +874,26 @@ useEffect(() => {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
-  
   if (isLoggingIn) {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50/40 dark:bg-slate-950/40 backdrop-blur-md text-slate-800 dark:text-white pointer-events-auto">
         <div className="text-center space-y-4 p-6 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-white/20 dark:border-slate-800/40 shadow-xl">
           <div className="relative flex justify-center items-center">
             <div className="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900/60 rounded-full"></div>
-            <Loader2 className="absolute text-indigo-600 dark:text-indigo-400 animate-spin" size={40} />
+            <Loader2
+              className="absolute text-indigo-600 dark:text-indigo-400 animate-spin"
+              size={40}
+            />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold tracking-tight">Logging in...</h3>
+            <h3 className="text-base font-bold tracking-tight">
+              Logging in...
+            </h3>
           </div>
         </div>
       </div>
     );
   }
-  
 
   // If user is NOT authenticated, show the Login screen
   if (!isAuthenticated) {
@@ -783,7 +901,7 @@ useEffect(() => {
   }
 
   // FOR QR scanning -----------------------------
-  let scanAnimationId = null; 
+  let scanAnimationId = null;
 
   const startCameraScanner = async () => {
     setIsScannerActive(true);
@@ -799,12 +917,14 @@ useEffect(() => {
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
       setTimeout(() => {
         const video = document.getElementById("qr-video-stream");
         if (video) {
           video.srcObject = stream;
-          video.setAttribute("playsinline", "true"); 
+          video.setAttribute("playsinline", "true");
           video.play();
           scanAnimationId = requestAnimationFrame(() => tickQrScanner(video));
         }
@@ -836,24 +956,32 @@ useEffect(() => {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
+
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = window.jsQR ? window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" }) : null;
+    const code = window.jsQR
+      ? window.jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        })
+      : null;
 
     if (code && code.data) {
       // Decode criteria looking for custom matrix string: "ID: EI-XXXX"
       const match = code.data.match(/ID:\s*(EI-\d+)/i);
       const extractedId = match ? match[1] : code.data.trim();
-      
-      const targetEmp = employees.find(emp => emp.id.toLowerCase() === extractedId.toLowerCase() || emp.name.toLowerCase() === code.data.toLowerCase());
-      
+
+      const targetEmp = employees.find(
+        (emp) =>
+          emp.id.toLowerCase() === extractedId.toLowerCase() ||
+          emp.name.toLowerCase() === code.data.toLowerCase(),
+      );
+
       if (targetEmp) {
         setScannedEmployeeResult(targetEmp);
         stopCameraScanner();
         return;
       }
     }
-    
+
     // Retain stream check continuously loop by loop
     if (video.srcObject) {
       scanAnimationId = requestAnimationFrame(() => tickQrScanner(video));
@@ -2443,23 +2571,23 @@ useEffect(() => {
         // 1. Optimistic UI update
         setAttendance(
           attendance.map((item) =>
-            item.id === record.id ? { ...item, status: newStatus } : item
-          )
+            item.id === record.id ? { ...item, status: newStatus } : item,
+          ),
         );
 
         // 2. Persist update to MongoDB
         try {
           if (record._id) {
             await fetch(`http://localhost:5000/api/attendance/${record._id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ status: newStatus }),
             });
           } else {
             // If entry was newly created, post as a record
-            await fetch('http://localhost:5000/api/attendance', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+            await fetch("http://localhost:5000/api/attendance", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 employeeId: record.id,
                 name: record.name,
@@ -2468,7 +2596,7 @@ useEffect(() => {
             });
           }
         } catch (err) {
-          console.error('Failed to update attendance on server:', err);
+          console.error("Failed to update attendance on server:", err);
         }
       };
 
@@ -2500,48 +2628,55 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
-                {attendance.map((record) => (
-                  <tr
-                    key={record.id || record._id}
-                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
-                  >
-                    <td className="p-4 font-mono text-slate-500">
-                      {record.id}
-                    </td>
-                    <td className="p-4 font-semibold text-slate-900 dark:text-white">
-                      {record.name}
-                    </td>
-                    <td className="p-4 text-slate-500">{record.time}</td>
-                    <td className="p-4">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          record.status === "Present"
-                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
-                            : record.status === "On Leave"
-                              ? "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400"
-                              : "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
-                        }`}
-                      >
-                        {record.status}
-                      </span>
-                    </td>
-
-                    {/* 👇 HERE IS THE SELECT DROPDOWN ELEMENT 👇 */}
-                    <td className="p-4 text-right">
-                      <select
-                        value={record.status}
-                        onChange={(e) =>
-                          handleStatusChange(record, e.target.value)
-                        }
-                        className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer text-slate-800 dark:text-slate-100"
-                      >
-                        <option value="Present">Present</option>
-                        <option value="On Leave">On Leave</option>
-                        <option value="Sick Leave">Sick Leave</option>
-                      </select>
+                {attendance.length > 0 ? (
+                  attendance.map((record) => (
+                    <tr
+                      key={record.id || record._id}
+                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
+                    >
+                      <td className="p-4 font-mono text-slate-500">
+                        {record.id}
+                      </td>
+                      <td className="p-4 font-semibold text-slate-900 dark:text-white">
+                        {record.name}
+                      </td>
+                      <td className="p-4 text-slate-500">{record.time}</td>
+                      <td className="p-4">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                            record.status === "Present"
+                              ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+                              : record.status === "On Leave"
+                                ? "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400"
+                                : "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
+                          }`}
+                        >
+                          {record.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <select
+                          value={record.status}
+                          onChange={(e) =>
+                            handleStatusChange(record, e.target.value)
+                          }
+                          className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer text-slate-800 dark:text-slate-100"
+                        >
+                          <option value="Present">Present</option>
+                          <option value="On Leave">On Leave</option>
+                          <option value="Sick Leave">Sick Leave</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="p-8 text-center text-slate-400">
+                      No attendance records found. Clock-in or add staff to
+                      populate records.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -2716,19 +2851,22 @@ useEffect(() => {
 
     //Query Desk Tab Content
 
-    if (activeTab === 'Query Desk') {
+    if (activeTab === "Query Desk") {
       return (
         <div className="xl:col-span-4 space-y-6">
-          
           {/* Top Banner */}
           <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h3 className="text-xl font-bold">Help Desk & Query Resolution</h3>
+              <h3 className="text-xl font-bold">
+                Help Desk & Query Resolution
+              </h3>
               <p className="text-xs text-indigo-100 mt-1 max-w-xl">
-                Need support? Raise an operational ticket, reach key department contacts directly, or ask our intelligent workspace AI assistant.
+                Need support? Raise an operational ticket, reach key department
+                contacts directly, or ask our intelligent workspace AI
+                assistant.
               </p>
             </div>
-            <button 
+            <button
               onClick={() => setShowRaiseTicketModal(true)}
               className="px-4 py-2.5 bg-white text-indigo-600 hover:bg-indigo-50 font-bold rounded-xl text-xs transition shadow-sm whitespace-nowrap"
             >
@@ -2737,33 +2875,57 @@ useEffect(() => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
             {/* LEFT PANEL: Professional Contact Cards & Active Tickets */}
             <div className="lg:col-span-2 space-y-6">
-              
               {/* Professional Contacts Directory */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
-                <h4 className="font-bold text-sm text-slate-900 dark:text-white">Emergency & Department Contacts</h4>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                  Emergency & Department Contacts
+                </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                    <span className="font-semibold block text-slate-900 dark:text-white">HR Operations Desk</span>
-                    <span className="text-slate-400 text-[11px]">hr-ops@company.com</span>
-                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 11223</span>
+                    <span className="font-semibold block text-slate-900 dark:text-white">
+                      HR Operations Desk
+                    </span>
+                    <span className="text-slate-400 text-[11px]">
+                      hr-ops@company.com
+                    </span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">
+                      +91 98000 11223
+                    </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                    <span className="font-semibold block text-slate-900 dark:text-white">IT Infrastructure Desk</span>
-                    <span className="text-slate-400 text-[11px]">it-helpdesk@company.com</span>
-                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 44556</span>
+                    <span className="font-semibold block text-slate-900 dark:text-white">
+                      IT Infrastructure Desk
+                    </span>
+                    <span className="text-slate-400 text-[11px]">
+                      it-helpdesk@company.com
+                    </span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">
+                      +91 98000 44556
+                    </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                    <span className="font-semibold block text-slate-900 dark:text-white">Payroll & Taxes</span>
-                    <span className="text-slate-400 text-[11px]">payroll@company.com</span>
-                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">+91 98000 77889</span>
+                    <span className="font-semibold block text-slate-900 dark:text-white">
+                      Payroll & Taxes
+                    </span>
+                    <span className="text-slate-400 text-[11px]">
+                      payroll@company.com
+                    </span>
+                    <span className="block text-indigo-600 dark:text-indigo-400 font-mono mt-1">
+                      +91 98000 77889
+                    </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                    <span className="font-semibold block text-slate-900 dark:text-white">POSH & Ethics Committee</span>
-                    <span className="text-slate-400 text-[11px]">ethics@company.com</span>
-                    <span className="block text-rose-500 font-mono mt-1">Confidential Hotline</span>
+                    <span className="font-semibold block text-slate-900 dark:text-white">
+                      POSH & Ethics Committee
+                    </span>
+                    <span className="text-slate-400 text-[11px]">
+                      ethics@company.com
+                    </span>
+                    <span className="block text-rose-500 font-mono mt-1">
+                      Confidential Hotline
+                    </span>
                   </div>
                 </div>
               </div>
@@ -2771,8 +2933,12 @@ useEffect(() => {
               {/* Raised Tickets Log Table */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">Your Support Tickets</h4>
-                  <span className="text-xs text-slate-400">{tickets.length} Registered</span>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Your Support Tickets
+                  </h4>
+                  <span className="text-xs text-slate-400">
+                    {tickets.length} Registered
+                  </span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -2786,24 +2952,39 @@ useEffect(() => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
-                      {tickets.map(tkt => (
-                        <tr key={tkt.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
-                          <td className="p-3.5 font-mono text-indigo-600 dark:text-indigo-400 font-bold">{tkt.id}</td>
-                          <td className="p-3.5 font-semibold text-slate-900 dark:text-white max-w-xs truncate">{tkt.subject}</td>
-                          <td className="p-3.5 text-slate-500">{tkt.category}</td>
+                      {tickets.map((tkt) => (
+                        <tr
+                          key={tkt.id}
+                          className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20"
+                        >
+                          <td className="p-3.5 font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+                            {tkt.id}
+                          </td>
+                          <td className="p-3.5 font-semibold text-slate-900 dark:text-white max-w-xs truncate">
+                            {tkt.subject}
+                          </td>
+                          <td className="p-3.5 text-slate-500">
+                            {tkt.category}
+                          </td>
                           <td className="p-3.5">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                              tkt.priority === 'High' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' :
-                              'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
-                            }`}>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                tkt.priority === "High"
+                                  ? "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
+                                  : "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400"
+                              }`}
+                            >
                               {tkt.priority}
                             </span>
                           </td>
                           <td className="p-3.5">
-                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                              tkt.status === 'Resolved' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
-                              'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400'
-                            }`}>
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                tkt.status === "Resolved"
+                                  ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+                                  : "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
+                              }`}
+                            >
                               {tkt.status}
                             </span>
                           </td>
@@ -2813,7 +2994,6 @@ useEffect(() => {
                   </table>
                 </div>
               </div>
-
             </div>
 
             {/* RIGHT PANEL: Live AI Help Assistant Chat */}
@@ -2821,7 +3001,9 @@ useEffect(() => {
               <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">AI Workspace Assistant</h4>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                    AI Workspace Assistant
+                  </h4>
                 </div>
                 <span className="text-[10px] font-mono bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded">
                   Demo
@@ -2831,12 +3013,17 @@ useEffect(() => {
               {/* Chat Message Stream */}
               <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
                 {chatMessages.map((msg, idx) => (
-                  <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] rounded-2xl p-3 ${
-                      msg.sender === 'user' 
-                        ? 'bg-indigo-600 text-white rounded-br-none' 
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200/50 dark:border-slate-700/50'
-                    }`}>
+                  <div
+                    key={idx}
+                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-2xl p-3 ${
+                        msg.sender === "user"
+                          ? "bg-indigo-600 text-white rounded-br-none"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200/50 dark:border-slate-700/50"
+                      }`}
+                    >
                       {msg.text}
                     </div>
                   </div>
@@ -2844,20 +3031,25 @@ useEffect(() => {
               </div>
 
               {/* Input Form */}
-              <form onSubmit={handleSendChatMessage} className="p-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
-                <input 
-                  type="text" 
+              <form
+                onSubmit={handleSendChatMessage}
+                className="p-3 border-t border-slate-100 dark:border-slate-800 flex gap-2"
+              >
+                <input
+                  type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   placeholder="Ask AI about HR, IT, or policies..."
                   className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100"
                 />
-                <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition"
+                >
                   Send
                 </button>
               </form>
             </div>
-
           </div>
 
           {/* Raise Ticket Modal */}
@@ -2865,61 +3057,113 @@ useEffect(() => {
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Submit Help Desk Ticket</h3>
-                  <button onClick={() => setShowRaiseTicketModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    Submit Help Desk Ticket
+                  </h3>
+                  <button
+                    onClick={() => setShowRaiseTicketModal(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
                 <form onSubmit={handleRaiseTicket} className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Issue Subject</label>
-                    <input type="text" required value={ticketSubject} onChange={(e) => setTicketSubject(e.target.value)} placeholder="e.g. Leave balance discrepancy" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Issue Subject
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={ticketSubject}
+                      onChange={(e) => setTicketSubject(e.target.value)}
+                      placeholder="e.g. Leave balance discrepancy"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Department Category</label>
-                    <select value={ticketCategory} onChange={(e) => setTicketCategory(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Department Category
+                    </label>
+                    <select
+                      value={ticketCategory}
+                      onChange={(e) => setTicketCategory(e.target.value)}
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    >
                       <option value="HR Operations">HR Operations</option>
                       <option value="IT Support">IT Support</option>
                       <option value="Payroll & Tax">Payroll & Tax</option>
-                      <option value="Facilities & Security">Facilities & Security</option>
+                      <option value="Facilities & Security">
+                        Facilities & Security
+                      </option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Priority Level</label>
-                    <select value={ticketPriority} onChange={(e) => setTicketPriority(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Priority Level
+                    </label>
+                    <select
+                      value={ticketPriority}
+                      onChange={(e) => setTicketPriority(e.target.value)}
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    >
                       <option value="Low">Low Priority</option>
                       <option value="Medium">Medium Priority</option>
                       <option value="High">High Priority</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Description</label>
-                    <textarea value={ticketDescription} onChange={(e) => setTicketDescription(e.target.value)} placeholder="Provide detailed information regarding your request..." rows="3" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"></textarea>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Description
+                    </label>
+                    <textarea
+                      value={ticketDescription}
+                      onChange={(e) => setTicketDescription(e.target.value)}
+                      placeholder="Provide detailed information regarding your request..."
+                      rows="3"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    ></textarea>
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
-                    <button type="button" onClick={() => setShowRaiseTicketModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
-                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Submit Ticket</button>
+                    <button
+                      type="button"
+                      onClick={() => setShowRaiseTicketModal(false)}
+                      className="px-4 py-2 border rounded-xl text-xs font-semibold"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold"
+                    >
+                      Submit Ticket
+                    </button>
                   </div>
                 </form>
               </div>
             </div>
           )}
-
         </div>
       );
     }
 
     //Qr based functionality -------
-    if (activeTab === 'ID Cards') {
+    if (activeTab === "ID Cards") {
       return (
         <div className="xl:col-span-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* Left Panel: Directory List */}
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">Employee Digital Badges</h3>
-                <p className="text-xs text-slate-400 mt-0.5">Select a staff profile to view credentials and deploy secure QR codes.</p>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                  Employee Digital Badges
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Select a staff profile to view credentials and deploy secure
+                  QR codes.
+                </p>
               </div>
-              <button 
+              <button
                 onClick={startCameraScanner}
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm"
               >
@@ -2929,11 +3173,13 @@ useEffect(() => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {employees.map((emp) => (
-                <div 
-                  key={emp.id} 
+                <div
+                  key={emp.id}
                   onClick={() => setSelectedQrEmployee(emp)}
                   className={`bg-white dark:bg-slate-900 rounded-2xl border p-5 shadow-sm cursor-pointer transition-all hover:scale-[1.02] flex items-center justify-between ${
-                    selectedQrEmployee?.id === emp.id ? 'border-indigo-600 ring-2 ring-indigo-500/10' : 'border-slate-200 dark:border-slate-800'
+                    selectedQrEmployee?.id === emp.id
+                      ? "border-indigo-600 ring-2 ring-indigo-500/10"
+                      : "border-slate-200 dark:border-slate-800"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -2941,8 +3187,12 @@ useEffect(() => {
                       {emp.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight">{emp.name}</h4>
-                      <p className="text-xs text-slate-400 mt-0.5">{emp.role}</p>
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight">
+                        {emp.name}
+                      </h4>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {emp.role}
+                      </p>
                     </div>
                   </div>
                   <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded">
@@ -2962,24 +3212,43 @@ useEffect(() => {
                     {selectedQrEmployee.name.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-slate-900 dark:text-white">{selectedQrEmployee.name}</h3>
-                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">{selectedQrEmployee.role}</p>
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                      {selectedQrEmployee.name}
+                    </h3>
+                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                      {selectedQrEmployee.role}
+                    </p>
                   </div>
 
                   <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl inline-block shadow-inner mx-auto border border-slate-100 dark:border-slate-700">
-                    <img 
+                    <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
-                        `ID: ${selectedQrEmployee.id}`
-                      )}`} 
-                      alt="QR badge" 
+                        `ID: ${selectedQrEmployee.id}`,
+                      )}`}
+                      alt="QR badge"
                       className="w-40 h-40 object-contain block"
                     />
                   </div>
 
                   <div className="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full space-y-2 text-xs">
-                    <div className="flex justify-between"><span className="text-slate-400">Department:</span> <span className="font-semibold">{selectedQrEmployee.dept}</span></div>
-                    <div className="flex justify-between"><span className="text-slate-400">Reporting to:</span> <span className="font-semibold">{selectedQrEmployee.manager}</span></div>
-                    <div className="flex justify-between"><span className="text-slate-400">Onboard Date:</span> <span className="font-semibold font-mono">{selectedQrEmployee.joiningDate}</span></div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Department:</span>{" "}
+                      <span className="font-semibold">
+                        {selectedQrEmployee.dept}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Reporting to:</span>{" "}
+                      <span className="font-semibold">
+                        {selectedQrEmployee.manager}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Onboard Date:</span>{" "}
+                      <span className="font-semibold font-mono">
+                        {selectedQrEmployee.joiningDate}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -2988,7 +3257,10 @@ useEffect(() => {
                     <QrCode size={24} />
                   </div>
                   <p className="text-xs font-medium">No profile active</p>
-                  <p className="text-[11px] text-slate-400 max-w-[200px] mx-auto">Click a record on the left directory layout or activate the camera to look up details.</p>
+                  <p className="text-[11px] text-slate-400 max-w-[200px] mx-auto">
+                    Click a record on the left directory layout or activate the
+                    camera to look up details.
+                  </p>
                 </div>
               )}
             </div>
@@ -2999,11 +3271,24 @@ useEffect(() => {
             <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-xl">
                 <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <h4 className="font-bold text-sm flex items-center gap-1.5"><Scan size={16} className="text-indigo-600" /> Point at an HRise QR code...</h4>
-                  <button onClick={stopCameraScanner} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                  <h4 className="font-bold text-sm flex items-center gap-1.5">
+                    <Scan size={16} className="text-indigo-600" /> Point at an
+                    HRise QR code...
+                  </h4>
+                  <button
+                    onClick={stopCameraScanner}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
                 <div className="relative aspect-video bg-black flex items-center justify-center">
-                  <video id="qr-video-stream" muted playsInline className="w-full h-full object-cover"></video>
+                  <video
+                    id="qr-video-stream"
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  ></video>
                   <div className="absolute inset-0 border-[40px] border-black/40 flex items-center justify-center">
                     <div className="w-44 h-44 border-2 border-indigo-500 rounded-xl animate-pulse relative">
                       <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-indigo-600 -mt-1 -ml-1"></div>
@@ -3014,7 +3299,8 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="p-3 text-center text-xs text-slate-400 font-medium">
-                  Hold QR card steady within the center targeting box to automatically decode.
+                  Hold QR card steady within the center targeting box to
+                  automatically decode.
                 </div>
               </div>
             </div>
@@ -3029,17 +3315,61 @@ useEffect(() => {
                 </div>
                 <div>
                   <h4 className="font-bold text-base">QR Profile Verified</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">Decoded enterprise parameters successfully</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Decoded enterprise parameters successfully
+                  </p>
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 text-left text-xs space-y-2 border border-slate-100 dark:border-slate-700">
-                  <div><span className="text-slate-400 block text-[10px] uppercase">ID Reference</span><span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{scannedEmployeeResult.id}</span></div>
-                  <div><span className="text-slate-400 block text-[10px] uppercase">Full Name</span><span className="font-semibold text-sm text-slate-900 dark:text-white">{scannedEmployeeResult.name}</span></div>
-                  <div><span className="text-slate-400 block text-[10px] uppercase">Designation</span><span className="font-medium">{scannedEmployeeResult.role}</span></div>
-                  <div><span className="text-slate-400 block text-[10px] uppercase">Department Unit</span><span className="font-medium">{scannedEmployeeResult.dept}</span></div>
-                  <div><span className="text-slate-400 block text-[10px] uppercase">Direct Manager</span><span className="font-medium">{scannedEmployeeResult.manager}</span></div>
-                  <div><span className="text-slate-400 block text-[10px] uppercase">Onboarding Date</span><span className="font-mono font-medium">{scannedEmployeeResult.joiningDate}</span></div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      ID Reference
+                    </span>
+                    <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                      {scannedEmployeeResult.id}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      Full Name
+                    </span>
+                    <span className="font-semibold text-sm text-slate-900 dark:text-white">
+                      {scannedEmployeeResult.name}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      Designation
+                    </span>
+                    <span className="font-medium">
+                      {scannedEmployeeResult.role}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      Department Unit
+                    </span>
+                    <span className="font-medium">
+                      {scannedEmployeeResult.dept}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      Direct Manager
+                    </span>
+                    <span className="font-medium">
+                      {scannedEmployeeResult.manager}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase">
+                      Onboarding Date
+                    </span>
+                    <span className="font-mono font-medium">
+                      {scannedEmployeeResult.joiningDate}
+                    </span>
+                  </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setScannedEmployeeResult(null)}
                   className="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-xl transition"
                 >
@@ -3048,57 +3378,95 @@ useEffect(() => {
               </div>
             </div>
           )}
-
         </div>
       );
     }
 
     //Assets-------------
-    if (activeTab === 'Assets') {
-      const totalInventoryValuation = companyAssets.reduce((acc, curr) => acc + curr.cost, 0);
-      const hardwareCount = companyAssets.filter(a => a.category === 'Hardware').length;
-      const filteredAssets = companyAssets.filter(a => assetFilter === 'All' || a.category === assetFilter);
+    if (activeTab === "Assets") {
+      const totalInventoryValuation = companyAssets.reduce(
+        (acc, curr) => acc + curr.cost,
+        0,
+      );
+      const hardwareCount = companyAssets.filter(
+        (a) => a.category === "Hardware",
+      ).length;
+      const filteredAssets = companyAssets.filter(
+        (a) => assetFilter === "All" || a.category === assetFilter,
+      );
 
       return (
         <div className="xl:col-span-4 space-y-6">
-          
           {/* Top Operational Metrics Panels */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Value Allocated</span>
-              <h3 className="text-2xl font-black mt-1 text-indigo-600 dark:text-indigo-400">₹{totalInventoryValuation.toLocaleString()}</h3>
-              <span className="text-[11px] text-slate-400 mt-2 block font-medium">Enterprise CapEx Portfolio</span>
-            </div>
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Hardware Devices</span>
-              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{hardwareCount} Active Items</h3>
-              <span className="text-[11px] text-emerald-500 mt-2 block font-medium">Workstations & Displays</span>
-            </div>
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Infrastructure Assets</span>
-              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
-                {companyAssets.filter(a => a.category === 'Cloud Infra' || a.category === 'Networking').length} Units
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Total Value Allocated
+              </span>
+              <h3 className="text-2xl font-black mt-1 text-indigo-600 dark:text-indigo-400">
+                ₹{totalInventoryValuation.toLocaleString()}
               </h3>
-              <span className="text-[11px] text-violet-500 mt-2 block font-medium">AWS Pools & Gateways</span>
+              <span className="text-[11px] text-slate-400 mt-2 block font-medium">
+                Enterprise CapEx Portfolio
+              </span>
             </div>
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Licenses Running</span>
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Hardware Devices
+              </span>
               <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
-                {companyAssets.filter(a => a.category === 'Software').length} Platforms
+                {hardwareCount} Active Items
               </h3>
-              <span className="text-[11px] text-amber-500 mt-2 block font-medium">SaaS Operational Tools</span>
+              <span className="text-[11px] text-emerald-500 mt-2 block font-medium">
+                Workstations & Displays
+              </span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Infrastructure Assets
+              </span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {
+                  companyAssets.filter(
+                    (a) =>
+                      a.category === "Cloud Infra" ||
+                      a.category === "Networking",
+                  ).length
+                }{" "}
+                Units
+              </h3>
+              <span className="text-[11px] text-violet-500 mt-2 block font-medium">
+                AWS Pools & Gateways
+              </span>
+            </div>
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Licenses Running
+              </span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                {companyAssets.filter((a) => a.category === "Software").length}{" "}
+                Platforms
+              </h3>
+              <span className="text-[11px] text-amber-500 mt-2 block font-medium">
+                SaaS Operational Tools
+              </span>
             </div>
           </div>
 
           {/* Configuration Header Controls */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">Resource & Procurement Management</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Track hardware allocations, active SaaS instances, network infrastructure and licensing parameters.</p>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                Resource & Procurement Management
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Track hardware allocations, active SaaS instances, network
+                infrastructure and licensing parameters.
+              </p>
             </div>
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <select 
-                value={assetFilter} 
+              <select
+                value={assetFilter}
                 onChange={(e) => setAssetFilter(e.target.value)}
                 className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold outline-none text-slate-800 dark:text-slate-100 cursor-pointer"
               >
@@ -3108,7 +3476,10 @@ useEffect(() => {
                 <option value="Software">Software Licenses</option>
                 <option value="Networking">Networking</option>
               </select>
-              <button onClick={() => setShowAddAssetModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap">
+              <button
+                onClick={() => setShowAddAssetModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap"
+              >
                 <Plus size={14} /> Procure Asset
               </button>
             </div>
@@ -3132,37 +3503,68 @@ useEffect(() => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
-                  {filteredAssets.length > 0 ? filteredAssets.map((asset) => (
-                    <tr key={asset.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="p-4 font-mono font-bold text-slate-500">{asset.id}</td>
-                      <td className="p-4 font-semibold text-slate-900 dark:text-white">{asset.name}</td>
-                      <td className="p-4">
-                        <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">
-                          {asset.category}
-                        </span>
-                      </td>
-                      <td className="p-4 font-bold">₹{asset.cost.toLocaleString()}</td>
-                      <td className="p-4 font-semibold text-slate-600 dark:text-slate-400">{asset.owner}</td>
-                      <td className="p-4 font-mono text-slate-400">{asset.serial}</td>
-                      <td className="p-4 text-slate-400 font-mono">{asset.purchaseDate}</td>
-                      <td className="p-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          asset.status === 'Operational' || asset.status === 'Active License' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400' :
-                          asset.status === 'Allocated' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400' :
-                          'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'
-                        }`}>
-                          {asset.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-right">
-                        <button onClick={() => handleDecommissionAsset(asset.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors" title="Decommission Asset">
-                          <Trash2 size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  )) : (
+                  {filteredAssets.length > 0 ? (
+                    filteredAssets.map((asset) => (
+                      <tr
+                        key={asset.id}
+                        className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                      >
+                        <td className="p-4 font-mono font-bold text-slate-500">
+                          {asset.id}
+                        </td>
+                        <td className="p-4 font-semibold text-slate-900 dark:text-white">
+                          {asset.name}
+                        </td>
+                        <td className="p-4">
+                          <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">
+                            {asset.category}
+                          </span>
+                        </td>
+                        <td className="p-4 font-bold">
+                          ₹{asset.cost.toLocaleString()}
+                        </td>
+                        <td className="p-4 font-semibold text-slate-600 dark:text-slate-400">
+                          {asset.owner}
+                        </td>
+                        <td className="p-4 font-mono text-slate-400">
+                          {asset.serial}
+                        </td>
+                        <td className="p-4 text-slate-400 font-mono">
+                          {asset.purchaseDate}
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                              asset.status === "Operational" ||
+                              asset.status === "Active License"
+                                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+                                : asset.status === "Allocated"
+                                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
+                                  : "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400"
+                            }`}
+                          >
+                            {asset.status}
+                          </span>
+                        </td>
+                        <td className="p-4 text-right">
+                          <button
+                            onClick={() => handleDecommissionAsset(asset.id)}
+                            className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+                            title="Decommission Asset"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td colSpan="9" className="p-8 text-center text-slate-400">No resources found matching filter matrix criteria.</td>
+                      <td
+                        colSpan="9"
+                        className="p-8 text-center text-slate-400"
+                      >
+                        No resources found matching filter matrix criteria.
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -3175,17 +3577,39 @@ useEffect(() => {
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Procure Company Resource</h3>
-                  <button onClick={() => setShowAddAssetModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    Procure Company Resource
+                  </h3>
+                  <button
+                    onClick={() => setShowAddAssetModal(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
                 <form onSubmit={handleRegisterAsset} className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Asset Name / Description</label>
-                    <input type="text" required value={newAssetName} onChange={(e) => setNewAssetName(e.target.value)} placeholder="e.g. MacBook Pro 14" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Asset Name / Description
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={newAssetName}
+                      onChange={(e) => setNewAssetName(e.target.value)}
+                      placeholder="e.g. MacBook Pro 14"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Category</label>
-                    <select value={newAssetCat} onChange={(e) => setNewAssetCat(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Category
+                    </label>
+                    <select
+                      value={newAssetCat}
+                      onChange={(e) => setNewAssetCat(e.target.value)}
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    >
                       <option value="Hardware">Hardware Devices</option>
                       <option value="Cloud Infra">Cloud Infra Structure</option>
                       <option value="Software">Software License</option>
@@ -3193,20 +3617,54 @@ useEffect(() => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Asset Cost / Purchase Price (INR)</label>
-                    <input type="number" required value={newAssetCost} onChange={(e) => setNewAssetCost(e.target.value)} placeholder="140000" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Asset Cost / Purchase Price (INR)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={newAssetCost}
+                      onChange={(e) => setNewAssetCost(e.target.value)}
+                      placeholder="140000"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Assigned Owner / Department (Optional)</label>
-                    <select value={newAssetOwner} onChange={(e) => setNewAssetOwner(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Assigned Owner / Department (Optional)
+                    </label>
+                    <select
+                      value={newAssetOwner}
+                      onChange={(e) => setNewAssetOwner(e.target.value)}
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    >
                       <option value="">Unassigned (Operational Base)</option>
-                      {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
-                      {teams.map(team => <option key={team.id} value={team.name}>{team.name} (Team)</option>)}
+                      {employees.map((emp) => (
+                        <option key={emp.id} value={emp.name}>
+                          {emp.name}
+                        </option>
+                      ))}
+                      {teams.map((team) => (
+                        <option key={team.id} value={team.name}>
+                          {team.name} (Team)
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
-                    <button type="button" onClick={() => setShowAddAssetModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
-                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Approve Purchase</button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddAssetModal(false)}
+                      className="px-4 py-2 border rounded-xl text-xs font-semibold"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold"
+                    >
+                      Approve Purchase
+                    </button>
                   </div>
                 </form>
               </div>
@@ -3216,53 +3674,88 @@ useEffect(() => {
       );
     }
 
-
     //recruitment panel------------------------------
-    
-    if (activeTab === 'Recruitment') {
-      const activePipelines = candidates.filter(c => c.stage !== 'Offered').length;
-      const filteredApplicants = candidates.filter(c => recruitmentFilter === 'All' || c.stage === recruitmentFilter);
+
+    if (activeTab === "Recruitment") {
+      const activePipelines = candidates.filter(
+        (c) => c.stage !== "Offered",
+      ).length;
+      const filteredApplicants = candidates.filter(
+        (c) => recruitmentFilter === "All" || c.stage === recruitmentFilter,
+      );
 
       return (
         <div className="xl:col-span-4 space-y-6">
-          
           {/* Dashboard Summary Statistics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Active Applicants</span>
-              <h3 className="text-2xl font-black mt-1 text-slate-900 dark:text-white">{candidates.length} Profiles</h3>
-              <span className="text-[11px] text-indigo-500 mt-2 block font-medium">Talent Bench Pipeline</span>
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Total Active Applicants
+              </span>
+              <h3 className="text-2xl font-black mt-1 text-slate-900 dark:text-white">
+                {candidates.length} Profiles
+              </h3>
+              <span className="text-[11px] text-indigo-500 mt-2 block font-medium">
+                Talent Bench Pipeline
+              </span>
             </div>
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Interviews Processing</span>
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Interviews Processing
+              </span>
               <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
-                {candidates.filter(c => ['Screening', 'Technical Round', 'HR Round'].includes(c.stage)).length} In Progress
+                {
+                  candidates.filter((c) =>
+                    ["Screening", "Technical Round", "HR Round"].includes(
+                      c.stage,
+                    ),
+                  ).length
+                }{" "}
+                In Progress
               </h3>
-              <span className="text-[11px] text-amber-500 mt-2 block font-medium">Active vetting schedules</span>
+              <span className="text-[11px] text-amber-500 mt-2 block font-medium">
+                Active vetting schedules
+              </span>
             </div>
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Pending Offers Issued</span>
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Pending Offers Issued
+              </span>
               <h3 className="text-2xl font-bold mt-1 text-emerald-600 dark:text-emerald-400">
-                {candidates.filter(c => c.stage === 'Offered').length} Selected
+                {candidates.filter((c) => c.stage === "Offered").length}{" "}
+                Selected
               </h3>
-              <span className="text-[11px] text-slate-400 mt-2 block font-medium">Awaiting contract signing</span>
+              <span className="text-[11px] text-slate-400 mt-2 block font-medium">
+                Awaiting contract signing
+              </span>
             </div>
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Conversion Velocity</span>
-              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">84%</h3>
-              <span className="text-[11px] text-violet-500 mt-2 block font-medium">Offer acceptance indexing</span>
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                Conversion Velocity
+              </span>
+              <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+                84%
+              </h3>
+              <span className="text-[11px] text-violet-500 mt-2 block font-medium">
+                Offer acceptance indexing
+              </span>
             </div>
           </div>
 
           {/* Action Management Filter Bar */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">Applicant Tracking Workspace (ATS)</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Vet incoming applications, scale interviews, update hiring statuses, and trigger one-click staff onboarding.</p>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                Applicant Tracking Workspace (ATS)
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Vet incoming applications, scale interviews, update hiring
+                statuses, and trigger one-click staff onboarding.
+              </p>
             </div>
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <select 
-                value={recruitmentFilter} 
+              <select
+                value={recruitmentFilter}
                 onChange={(e) => setRecruitmentFilter(e.target.value)}
                 className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold outline-none text-slate-800 dark:text-slate-100 cursor-pointer"
               >
@@ -3274,7 +3767,10 @@ useEffect(() => {
                 <option value="Offered">Offered</option>
                 <option value="Rejected">Rejected</option>
               </select>
-              <button onClick={() => setShowAddCandidateModal(true)} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap">
+              <button
+                onClick={() => setShowAddCandidateModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-sm whitespace-nowrap"
+              >
                 <Plus size={14} /> Add Candidate
               </button>
             </div>
@@ -3297,44 +3793,74 @@ useEffect(() => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
-                  {filteredApplicants.length > 0 ? filteredApplicants.map((can) => (
-                    <tr key={can.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="p-4 font-mono font-bold text-slate-500">{can.id}</td>
-                      <td className="p-4 font-bold text-slate-900 dark:text-white">{can.name}</td>
-                      <td className="p-4"><span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded font-semibold text-[10px]">{can.role}</span></td>
-                      <td className="p-4 text-slate-500">{can.email}</td>
-                      <td className="p-4 text-slate-600 dark:text-slate-400">{can.experience}</td>
-                      <td className="p-4 font-bold font-mono text-slate-700 dark:text-slate-300">{can.rating}</td>
-                      <td className="p-4">
-                        <select 
-                          value={can.stage}
-                          onChange={(e) => handleUpdateCandidateStage(can.id, e.target.value)}
-                          className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold outline-none cursor-pointer text-slate-800 dark:text-slate-100"
-                        >
-                          <option value="Applied">Applied</option>
-                          <option value="Screening">Screening</option>
-                          <option value="Technical Round">Technical Round</option>
-                          <option value="HR Round">HR Round</option>
-                          <option value="Offered">Offered</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
-                      </td>
-                      <td className="p-4 text-right">
-                        {can.stage === 'Offered' ? (
-                          <button 
-                            onClick={() => handleConvertCandidateToEmployee(can)}
-                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold rounded-lg shadow-sm transition-colors animate-pulse"
+                  {filteredApplicants.length > 0 ? (
+                    filteredApplicants.map((can) => (
+                      <tr
+                        key={can.id}
+                        className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                      >
+                        <td className="p-4 font-mono font-bold text-slate-500">
+                          {can.id}
+                        </td>
+                        <td className="p-4 font-bold text-slate-900 dark:text-white">
+                          {can.name}
+                        </td>
+                        <td className="p-4">
+                          <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            {can.role}
+                          </span>
+                        </td>
+                        <td className="p-4 text-slate-500">{can.email}</td>
+                        <td className="p-4 text-slate-600 dark:text-slate-400">
+                          {can.experience}
+                        </td>
+                        <td className="p-4 font-bold font-mono text-slate-700 dark:text-slate-300">
+                          {can.rating}
+                        </td>
+                        <td className="p-4">
+                          <select
+                            value={can.stage}
+                            onChange={(e) =>
+                              handleUpdateCandidateStage(can.id, e.target.value)
+                            }
+                            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold outline-none cursor-pointer text-slate-800 dark:text-slate-100"
                           >
-                            Onboard Staff
-                          </button>
-                        ) : (
-                          <span className="text-[10px] text-slate-400 font-semibold uppercase italic">In Evaluation</span>
-                        )}
-                      </td>
-                    </tr>
-                  )) : (
+                            <option value="Applied">Applied</option>
+                            <option value="Screening">Screening</option>
+                            <option value="Technical Round">
+                              Technical Round
+                            </option>
+                            <option value="HR Round">HR Round</option>
+                            <option value="Offered">Offered</option>
+                            <option value="Rejected">Rejected</option>
+                          </select>
+                        </td>
+                        <td className="p-4 text-right">
+                          {can.stage === "Offered" ? (
+                            <button
+                              onClick={() =>
+                                handleConvertCandidateToEmployee(can)
+                              }
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold rounded-lg shadow-sm transition-colors animate-pulse"
+                            >
+                              Onboard Staff
+                            </button>
+                          ) : (
+                            <span className="text-[10px] text-slate-400 font-semibold uppercase italic">
+                              In Evaluation
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td colSpan="8" className="p-8 text-center text-slate-400">No applicant tracking logs found matching criteria.</td>
+                      <td
+                        colSpan="8"
+                        className="p-8 text-center text-slate-400"
+                      >
+                        No applicant tracking logs found matching criteria.
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -3347,34 +3873,89 @@ useEffect(() => {
             <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">File Applicant Record</h3>
-                  <button onClick={() => setShowAddCandidateModal(false)} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    File Applicant Record
+                  </h3>
+                  <button
+                    onClick={() => setShowAddCandidateModal(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
                 <form onSubmit={handleRegisterCandidate} className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Full Name</label>
-                    <input type="text" required value={newCanName} onChange={(e) => setNewCanName(e.target.value)} placeholder="Esther Howard" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={newCanName}
+                      onChange={(e) => setNewCanName(e.target.value)}
+                      placeholder="Esther Howard"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Target Requisition Opening</label>
-                    <select value={newCanRole} onChange={(e) => setNewCanRole(e.target.value)} className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100">
-                      <option value="Senior Frontend Engineer">Senior Frontend Engineer</option>
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Target Requisition Opening
+                    </label>
+                    <select
+                      value={newCanRole}
+                      onChange={(e) => setNewCanRole(e.target.value)}
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    >
+                      <option value="Senior Frontend Engineer">
+                        Senior Frontend Engineer
+                      </option>
                       <option value="DevOps Architect">DevOps Architect</option>
-                      <option value="Product UI Designer">Product UI Designer</option>
+                      <option value="Product UI Designer">
+                        Product UI Designer
+                      </option>
                       <option value="Backend Dev (Go)">Backend Dev (Go)</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Personal Email Address</label>
-                    <input type="email" required value={newCanEmail} onChange={(e) => setNewCanEmail(e.target.value)} placeholder="candidate@gmail.com" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Personal Email Address
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={newCanEmail}
+                      onChange={(e) => setNewCanEmail(e.target.value)}
+                      placeholder="candidate@gmail.com"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Relevant Experience (Years)</label>
-                    <input type="number" required value={newCanExp} onChange={(e) => setNewCanExp(e.target.value)} placeholder="4" className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100" />
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Relevant Experience (Years)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={newCanExp}
+                      onChange={(e) => setNewCanExp(e.target.value)}
+                      placeholder="4"
+                      className="w-full mt-1 px-3 py-2 border rounded-xl text-xs dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-800 dark:text-slate-100"
+                    />
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
-                    <button type="button" onClick={() => setShowAddCandidateModal(false)} className="px-4 py-2 border rounded-xl text-xs font-semibold">Cancel</button>
-                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">Add to Pipeline</button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddCandidateModal(false)}
+                      className="px-4 py-2 border rounded-xl text-xs font-semibold"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold"
+                    >
+                      Add to Pipeline
+                    </button>
                   </div>
                 </form>
               </div>
@@ -3389,54 +3970,62 @@ useEffect(() => {
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex font-sans antialiased transition-colors duration-200">
-      
       {/* SIDEBAR */}
-      <aside className={`
+      <aside
+        className={`
         fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full'} 
+        ${sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full"} 
         lg:translate-x-0 lg:w-64 overflow-y-auto scrollbar-thin
-      `}>
-        
-
+      `}
+      >
         <div>
           <div className="flex items-center mb-8 justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-500/30 flex-shrink-0">
                 <Award size={24} />
               </div>
-              <span className="text-xl font-bold tracking-wider text-indigo-600 dark:text-indigo-400 transition-opacity">HRise</span>
+              <span className="text-xl font-bold tracking-wider text-indigo-600 dark:text-indigo-400 transition-opacity">
+                HRise
+              </span>
             </div>
-            <button className="lg:hidden text-slate-500" onClick={() => setSidebarOpen(false)}>
+            <button
+              className="lg:hidden text-slate-500"
+              onClick={() => setSidebarOpen(false)}
+            >
               <X size={20} />
             </button>
           </div>
 
           <nav className="space-y-2">
             {[
-              { name: 'Dashboard', icon: LayoutDashboard },
-              { name: 'Attendance', icon: UserCheck },
-              { name: 'Employee', icon: Users },
-              { name: 'Team', icon: Briefcase },
-              { name: 'Leaves', icon: Calendar },
-              { name: 'Payroll', icon: DollarSign },
-              { name: 'Reports', icon: FileText },
-              { name: 'Tasks', icon: CheckSquare },
-              { name: 'ID Cards', icon: QrCode },
-              { name: 'Assets', icon: Layers },
-              { name: 'Recruitment', icon: UserPlus },
-              { name: 'About', icon: Award },
-              { name: 'Query Desk', icon: HelpCircle },
+              { name: "Dashboard", icon: LayoutDashboard },
+              { name: "Attendance", icon: UserCheck },
+              { name: "Employee", icon: Users },
+              { name: "Team", icon: Briefcase },
+              { name: "Leaves", icon: Calendar },
+              { name: "Payroll", icon: DollarSign },
+              { name: "Reports", icon: FileText },
+              { name: "Tasks", icon: CheckSquare },
+              { name: "ID Cards", icon: QrCode },
+              { name: "Assets", icon: Layers },
+              { name: "Recruitment", icon: UserPlus },
+              { name: "About", icon: Award },
+              { name: "Query Desk", icon: HelpCircle },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.name;
               return (
                 <button
                   key={item.name}
-                  onClick={() => { setActiveTab(item.name); setSidebarOpen(false); }}
+                  onClick={() => {
+                    setActiveTab(item.name);
+                    setSidebarOpen(false);
+                  }}
                   className={`flex items-center rounded-xl text-sm font-medium transition-all w-full justify-start gap-3 px-4 py-3
-                    ${isActive 
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
-                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                    ${
+                      isActive
+                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
+                        : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60"
                     }`}
                 >
                   <Icon size={18} className="flex-shrink-0" />
@@ -3448,7 +4037,6 @@ useEffect(() => {
         </div>
       </aside>
 
-      
       {/* MAIN CONTAINER */}
       <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out lg:pl-64">
         <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-40">
