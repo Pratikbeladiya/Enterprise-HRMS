@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Employee = require('../models/Employee');
+const Attendance = require('../models/Attendance'); // Require the Attendance model
 
 // @route   GET /api/employees
 // @desc    Get all employees
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 });
 
 // @route   POST /api/employees
-// @desc    Add a new employee
+// @desc    Add a new employee and initialize default attendance
 router.post('/', async (req, res) => {
   try {
     const { employeeId, name, role, dept, manager, joiningDate } = req.body;
@@ -45,9 +46,22 @@ router.post('/', async (req, res) => {
       joiningDate: joiningDate || new Date().toISOString().split('T')[0],
     });
 
+    // Automatically create a default attendance record for the new employee
+    await Attendance.create({
+      employeeId: newEmployee.employeeId,
+      name: newEmployee.name,
+      status: 'Present',
+      time: new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }),
+      date: new Date().toISOString().split('T')[0],
+    });
+
     return res.status(201).json({
       success: true,
-      message: 'Employee added successfully',
+      message: 'Employee added and attendance initialized successfully',
       data: newEmployee,
     });
   } catch (error) {
@@ -72,9 +86,12 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Employee not found' });
     }
 
+    // Optional: Clean up associated attendance logs when employee is deleted
+    await Attendance.deleteMany({ employeeId: employee.employeeId });
+
     return res.status(200).json({
       success: true,
-      message: 'Employee removed successfully',
+      message: 'Employee and associated attendance logs removed successfully',
       data: employee,
     });
   } catch (error) {
