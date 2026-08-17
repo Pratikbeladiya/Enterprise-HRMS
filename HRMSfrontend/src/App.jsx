@@ -774,6 +774,65 @@ export default function App() {
   //   setAttendance(attendance.filter((att) => att.id !== id));
   // };
 
+  // Add Employee Handler
+  const handleAddEmployee = async (e) => {
+    e.preventDefault();
+    const newEmpPayload = {
+      name: newEmpName,
+      role: newEmpRole || "SDE - Level 1",
+      dept: newEmpDept || "IT and Infrastructure",
+      manager: newEmpManager || "Kailash Yadav",
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/employees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newEmpPayload),
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        const created = json.data;
+        const formattedEmp = {
+          _id: created._id,
+          id: created.employeeId,
+          name: created.name,
+          role: created.role,
+          dept: created.dept,
+          manager: created.manager,
+          joiningDate: created.joiningDate,
+        };
+
+        setEmployees([formattedEmp, ...employees]);
+        setNewEmpName("");
+        setNewEmpRole("");
+        setNewEmpDept("");
+        setNewEmpManager("");
+        setShowAddEmployeeModal(false);
+      } else {
+        alert(json.message);
+      }
+    } catch (err) {
+      console.error("Error saving employee to backend:", err);
+    }
+  };
+
+  // Delete Employee Handler
+  const handleDeleteEmployee = async (id) => {
+    // Optimistic UI update
+    setEmployees(employees.filter((emp) => emp.id !== id && emp._id !== id));
+    setAttendance(attendance.filter((att) => att.id !== id));
+
+    try {
+      await fetch(`http://localhost:5000/api/employees/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.error("Failed to delete employee from backend:", err);
+    }
+  };
+
   // Team Handlers
   const handleAddTeam = (e) => {
     e.preventDefault();
