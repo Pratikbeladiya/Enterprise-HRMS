@@ -94,7 +94,7 @@ export default function App() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = aliasFetch ? await fetch("http://localhost:5000/api/employees") : await fetch("http://localhost:5000/api/employees");
+        const res = await fetch("http://localhost:5000/api/employees");
         const json = await res.json();
         if (json.success) {
           setEmployees(
@@ -204,22 +204,55 @@ export default function App() {
   // Attendance State from MongoDB
   const [attendance, setAttendance] = useState([]);
 
-  // Fetch live attendance records on mount
+  // Fetch live attendance records on mount and sync with employees
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/attendance");
-        const json = await res.json();
-        if (json.success && json.data.length > 0) {
-          setAttendance(
-            json.data.map((item) => ({
-              _id: item._id,
-              id: item.employeeId,
-              name: item.name,
-              status: item.status,
-              time: item.time,
-            })),
-          );
+        const [empRes, attRes] = await Promise.all([
+          fetch("http://localhost:5000/api/employees"),
+          fetch("http://localhost:5000/api/attendance")
+        ]);
+        
+        const empJson = await empRes.json();
+        const attJson = await attRes.json();
+
+        if (empJson.success) {
+          const employeesList = empJson.data;
+          const attendanceList = attJson.success ? attJson.data : [];
+
+          // If an employee exists in the directory but has no attendance log, create one
+          for (const emp of employeesList) {
+            const hasRecord = attendanceList.some(
+              (att) => att.employeeId === emp.employeeId || att.employeeId === emp.id
+            );
+            
+            if (!hasRecord) {
+              await fetch("http://localhost:5000/api/attendance", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  employeeId: emp.employeeId || emp.id,
+                  name: emp.name,
+                  status: "Present",
+                }),
+              });
+            }
+          }
+
+          // Fetch updated attendance list
+          const finalRes = await fetch("http://localhost:5000/api/attendance");
+          const finalJson = await finalRes.json();
+          if (finalJson.success) {
+            setAttendance(
+              finalJson.data.map((item) => ({
+                _id: item._id,
+                id: item.employeeId,
+                name: item.name,
+                status: item.status,
+                time: item.time,
+              }))
+            );
+          }
         }
       } catch (err) {
         console.error("Failed to load attendance from backend:", err);
