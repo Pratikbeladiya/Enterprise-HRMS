@@ -350,7 +350,7 @@ export default function App() {
   const [ticketPriority, setTicketPriority] = useState("Medium");
   const [ticketDescription, setTicketDescription] = useState("");
 
-  // AI Assistant Chat State
+  // AI Assistant Chat State ----------------
   const [chatMessages, setChatMessages] = useState([
     {
       sender: "ai",
